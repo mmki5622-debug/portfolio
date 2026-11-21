@@ -308,6 +308,18 @@
       transform: scale(1) translateY(0);
     }
 
+
+    /* Seamless Frameless Video Blending (Melts black video edges into dark site bg) */
+    .seamless-video-wrap {
+      position: relative;
+      background: transparent;
+      -webkit-mask-image: radial-gradient(ellipse 88% 84% at 50% 50%, #000 58%, transparent 100%);
+      mask-image: radial-gradient(ellipse 88% 84% at 50% 50%, #000 58%, transparent 100%);
+    }
+    .seamless-video-wrap video {
+      mix-blend-mode: screen;
+    }
+
     ::-webkit-scrollbar { width: 7px; height: 7px; }
     ::-webkit-scrollbar-track { background: #0A0908; }
     ::-webkit-scrollbar-thumb { background: #4B3B2D; }
@@ -370,7 +382,8 @@
         muted
         loop
         playsinline
-        class="w-full h-full object-cover opacity-55 mix-blend-lighten"
+        preload="auto"
+        class="w-full h-full object-cover opacity-75 mix-blend-screen"
       ></video>
       <div class="absolute inset-0 bg-gradient-to-r from-[#0A0908] via-[#0A0908]/75 to-[#0A0908]/25"></div>
       <div class="absolute inset-0 bg-gradient-to-t from-[#0A0908] via-transparent to-[#0A0908]/60"></div>
@@ -396,7 +409,7 @@
 
     <!-- Main Hero Left Column -->
     <div class="max-w-[1440px] w-full mx-auto px-4 sm:px-8 relative z-10">
-      <div class="max-w-3xl rounded-3xl border border-[#C59367]/30 bg-[#060D0C]/55 backdrop-blur-md p-6 sm:p-10 space-y-6 shadow-2xl reveal-up">
+      <div class="max-w-3xl py-6 sm:py-10 space-y-6 reveal-up">
         <div class="space-y-1.5">
           <div class="font-display text-lg sm:text-xl font-bold tracking-[0.12em] text-[#C59367] uppercase">KERLOS HANY</div>
           <div class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-[#9A9186]">
@@ -597,9 +610,9 @@
   <section id="motion-feature" class="arch-grid py-20 sm:py-28 border-t border-[#C59367]/15">
     <div class="max-w-[1440px] mx-auto px-4 sm:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-        <!-- Left 3D Video Frame -->
-        <div class="lg:col-span-7 rounded-3xl border border-[#C59367]/35 bg-[#0A1312]/90 overflow-hidden shadow-2xl reveal-up">
-          <div id="hero-reveal-stage" class="relative aspect-video bg-black overflow-hidden">
+        <!-- Left 3D Video (Frameless & Blended Seamlessly Into Site Background) -->
+        <div class="lg:col-span-7 relative group reveal-up">
+          <div id="hero-reveal-stage" class="seamless-video-wrap relative aspect-video overflow-hidden">
             <video
               id="heroRevealVideo"
               src="./Cinematic_logo_reveal_animation_202606051512-cleaned.mp4"
@@ -607,27 +620,26 @@
               muted
               loop
               playsinline
+              preload="auto"
               class="w-full h-full object-cover"
             ></video>
-            <div id="heroRevealFallback" class="hidden absolute inset-0 flex items-center justify-center bg-[#0A0908]">
+            <div id="heroRevealFallback" class="hidden absolute inset-0 flex items-center justify-center">
               <img id="fallbackStageLogoImg" src="./MYLOGO.webp" alt="Logo" class="w-24 h-24 object-contain" />
             </div>
-            <div id="heroRevealStandby" class="hidden absolute inset-0 bg-[#0A0908] flex flex-col items-center justify-center gap-3">
+            <div id="heroRevealStandby" class="hidden absolute inset-0 bg-[#060D0C]/85 flex flex-col items-center justify-center gap-3">
               <span class="font-mono text-xs text-[#9A9186]">STAGE OFF</span>
-              <button onclick="toggleHeroRevealPower()" class="px-4 py-2 bg-[#C59367] text-[#0A0908] font-mono text-xs font-bold uppercase">Turn On</button>
-            </div>
-            <div class="absolute bottom-3 start-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C59367] bg-[#0A0908]/80 px-2.5 py-1 border border-[#C59367]/30">
-              MOTION IDENTITY / 3D
+              <button onclick="toggleHeroRevealPower()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-xs font-bold uppercase">Turn On</button>
             </div>
           </div>
-          <div class="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border-t border-[#C59367]/20 bg-[#0A0908]">
+          <!-- Minimal Floating Controls (Subtle, no heavy frame) -->
+          <div class="mt-3 flex flex-wrap items-center justify-between gap-2 px-2 opacity-75 group-hover:opacity-100 transition-opacity">
             <span id="hero-reveal-dot" class="font-mono text-[10px] text-[#C59367] uppercase">● LIVE 3D REVEAL</span>
             <div class="flex flex-wrap items-center gap-2">
-              <button onclick="switchHeroRevealClip()" id="hero-clip-btn" class="px-3 py-1 rounded-full border border-[#C59367]/40 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#C59367]">01 / 02</button>
-              <button onclick="toggleHeroRevealPower()" id="hero-power-btn" class="px-3 py-1 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[10px] font-bold">Turn Off</button>
-              <button onclick="toggleHeroRevealPlay()" id="hero-play-btn" class="px-3 py-1 rounded-full border border-[#C59367]/40 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#F2EADF]">Pause</button>
-              <button onclick="toggleHeroRevealMute()" id="hero-mute-btn" class="px-3 py-1 rounded-full border border-[#C59367]/40 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#F2EADF]">Unmute</button>
-              <button onclick="replayHeroReveal()" class="px-3 py-1 rounded-full border border-[#C59367]/40 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#F2EADF]">Replay</button>
+              <button onclick="switchHeroRevealClip()" id="hero-clip-btn" class="px-3 py-1 rounded-full bg-[#060D0C]/60 border border-[#C59367]/30 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#C59367]">01 / 02</button>
+              <button onclick="toggleHeroRevealPower()" id="hero-power-btn" class="px-3 py-1 rounded-full bg-[#C59367]/90 text-[#0A0908] font-mono text-[10px] font-bold">Turn Off</button>
+              <button onclick="toggleHeroRevealPlay()" id="hero-play-btn" class="px-3 py-1 rounded-full bg-[#060D0C]/60 border border-[#C59367]/30 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#F2EADF]">Pause</button>
+              <button onclick="toggleHeroRevealMute()" id="hero-mute-btn" class="px-3 py-1 rounded-full bg-[#060D0C]/60 border border-[#C59367]/30 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#F2EADF]">Unmute</button>
+              <button onclick="replayHeroReveal()" class="px-3 py-1 rounded-full bg-[#060D0C]/60 border border-[#C59367]/30 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#F2EADF]">Replay</button>
             </div>
           </div>
         </div>
@@ -1605,6 +1617,27 @@
     document.addEventListener('DOMContentLoaded', () => {
       renderServices();
       initInteractiveAnimations();
+      // Force reliable muted autoplay for Hero & Motion 3D videos
+      ['heroBgAmbientVideo', 'heroRevealVideo'].forEach(vidId => {
+        const v = document.getElementById(vidId);
+        if (!v) return;
+        v.muted = true;
+        v.playsInline = true;
+        v.setAttribute('muted', '');
+        v.setAttribute('playsinline', '');
+        const tryPlay = () => v.play().catch(() => {});
+        tryPlay();
+        v.addEventListener('canplay', tryPlay, { once: true });
+      });
+      const unlockVideosOnce = () => {
+        ['heroBgAmbientVideo', 'heroRevealVideo'].forEach(vidId => {
+          const v = document.getElementById(vidId);
+          if (v && v.paused && heroRevealPowered) v.play().catch(() => {});
+        });
+      };
+      window.addEventListener('pointerdown', unlockVideosOnce, { once: true });
+      window.addEventListener('scroll', unlockVideosOnce, { once: true, passive: true });
+
       renderProjects();
       FlashMediaDeck.init();
       syncBehanceProjects();

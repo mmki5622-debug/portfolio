@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>غرفة التحكم | Kerlos Hany Control Room & SEO</title>
+  <title>غرفة التحكم المتكاملة | Kerlos Hany Control Room v4</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,23 +24,32 @@
       border: 1px solid rgba(197, 147, 103, 0.25);
       border-radius: 1.5rem;
     }
+    .sub-card {
+      background: #070E0D;
+      border: 1px solid rgba(197, 147, 103, 0.22);
+      border-radius: 1.15rem;
+    }
     .inp {
       width: 100%;
-      background: #070E0D;
-      border: 1px solid rgba(197, 147, 103, 0.32);
+      background: #050B0A;
+      border: 1px solid rgba(197, 147, 103, 0.30);
       border-radius: 0.85rem;
-      padding: 0.65rem 0.9rem;
+      padding: 0.62rem 0.88rem;
       color: #F2EADF;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .inp:focus { border-color: #C59367; }
+    .inp:focus {
+      border-color: #C59367;
+      box-shadow: 0 0 0 2px rgba(197, 147, 103, 0.18);
+    }
     .tab-btn {
       border: 1px solid rgba(197, 147, 103, 0.22);
       background: rgba(14, 62, 63, 0.22);
       color: #C9BFB2;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
     .tab-btn:hover { border-color: #C59367; color: #F2EADF; }
     .tab-btn.active {
@@ -49,24 +58,46 @@
       border-color: #C59367;
       font-weight: 800;
     }
+    .kw-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.28rem 0.7rem;
+      border-radius: 9999px;
+      background: rgba(14, 62, 63, 0.55);
+      border: 1px solid rgba(197, 147, 103, 0.45);
+      color: #F2EADF;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .kw-chip button {
+      color: #C59367;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .kw-chip button:hover { color: #f87171; }
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #060D0C; }
+    ::-webkit-scrollbar-thumb { background: #4B3B2D; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #C59367; }
   </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen pb-14">
 
   <!-- LOGIN GATE -->
   <div id="login-gate" class="fixed inset-0 z-50 bg-[#060D0C]/98 backdrop-blur-xl flex items-center justify-center p-4">
     <div class="panel-card w-full max-w-md p-8 space-y-6 text-center shadow-2xl">
-      <div class="w-14 h-14 mx-auto rounded-2xl bg-[#050505] border border-[#C59367]/50 overflow-hidden">
+      <div class="w-16 h-16 mx-auto rounded-2xl bg-[#050505] border border-[#C59367]/50 overflow-hidden shadow-lg">
         <img src="./MYLOGO.webp" alt="Logo" class="w-full h-full object-cover" />
       </div>
       <div>
-        <h1 class="text-xl font-extrabold text-[#F2EADF]">غرفة التحكم — Kerlos Hany</h1>
-        <p class="text-xs text-[#9A9186] mt-1">أدخل كلمة المرور لإدارة الموقع والسيو (SEO)</p>
+        <h1 class="text-xl font-extrabold text-[#F2EADF]">غرفة التحكم المتكاملة — Kerlos Hany</h1>
+        <p class="text-xs text-[#9A9186] mt-1">أدخل كلمة المرور لإدارة جميع أجزاء الموقع والسيو (SEO)</p>
       </div>
       <form onsubmit="unlockAdmin(event)" class="space-y-4">
         <input id="login-pass" type="password" required placeholder="كلمة المرور..." class="inp text-center" />
         <p id="login-err" class="hidden text-xs text-red-400 font-bold">كلمة المرور غير صحيحة</p>
-        <button type="submit" class="w-full py-3 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#060D0C] font-extrabold text-sm">
+        <button type="submit" class="w-full py-3 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#060D0C] font-extrabold text-sm hover:brightness-110 transition-all">
           دخول لغرفة التحكم 🔓
         </button>
       </form>
@@ -76,22 +107,22 @@
   <!-- MAIN ADMIN APP -->
   <div id="admin-app" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
     <!-- Top Header -->
-    <header class="panel-card px-5 py-4 flex flex-wrap items-center justify-between gap-4">
+    <header class="panel-card px-5 py-4 flex flex-wrap items-center justify-between gap-4 sticky top-3 z-30 backdrop-blur-xl shadow-2xl">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-[#050505] border border-[#C59367]/50 overflow-hidden">
           <img src="./MYLOGO.webp" alt="Logo" class="w-full h-full object-cover" />
         </div>
         <div>
           <div class="font-extrabold text-base text-[#F2EADF]">غرفة التحكم المتكاملة — Control Room</div>
-          <div id="sync-status-text" class="text-[11px] text-[#C59367]">متصل بقاعدة بيانات Firebase</div>
+          <div id="sync-status-text" class="text-[11px] text-[#C59367]">تحكم كامل في الموقع، المشاريع، الخطوط، الألوان والسيو</div>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-2.5">
-        <a href="./index.html" target="_blank" class="px-4 py-2 rounded-full border border-[#C59367]/40 text-xs font-bold text-[#F2EADF] hover:border-[#C59367]">
+        <a href="./index.html" target="_blank" class="px-4 py-2 rounded-full border border-[#C59367]/40 text-xs font-bold text-[#F2EADF] hover:border-[#C59367] transition-all">
           معاينة الموقع ↗
         </a>
-        <button onclick="saveAndPublish()" id="save-btn" class="px-5 py-2 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#060D0C] text-xs font-extrabold shadow-lg hover:brightness-110">
+        <button onclick="saveAndPublish()" id="save-btn" class="px-5 py-2 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#060D0C] text-xs font-extrabold shadow-lg hover:brightness-110 transition-all">
           💾 حفظ ونشر مباشر (Firebase)
         </button>
       </div>
@@ -100,22 +131,26 @@
     <!-- Toast -->
     <div id="toast" class="hidden fixed bottom-5 left-5 z-50 px-5 py-3 rounded-2xl bg-[#0E3E3F] border border-[#C59367] text-xs font-bold text-[#F2EADF] shadow-2xl"></div>
 
-    <!-- Navigation Tabs -->
+    <!-- Navigation Tabs (ALL 10 SECTIONS) -->
     <nav class="flex flex-wrap gap-2">
-      <button onclick="switchTab('seo')" data-tab="seo" class="tab-btn active px-4 py-2 rounded-full text-xs">🔍 السيو ومحركات البحث (SEO)</button>
+      <button onclick="switchTab('seo')" data-tab="seo" class="tab-btn active px-4 py-2 rounded-full text-xs">🔍 السيو والكلمات المفتاحية</button>
       <button onclick="switchTab('brand')" data-tab="brand" class="tab-btn px-4 py-2 rounded-full text-xs">🎨 الهوية والتواصل</button>
-      <button onclick="switchTab('hero')" data-tab="hero" class="tab-btn px-4 py-2 rounded-full text-xs">✨ الواجهة والـ 3D</button>
-      <button onclick="switchTab('experience')" data-tab="experience" class="tab-btn px-4 py-2 rounded-full text-xs">💼 الخبرات</button>
+      <button onclick="switchTab('hero')" data-tab="hero" class="tab-btn px-4 py-2 rounded-full text-xs">✨ الواجهة وعروض 3D</button>
+      <button onclick="switchTab('projects')" data-tab="projects" class="tab-btn px-4 py-2 rounded-full text-xs">🖼️ المشاريع و Behance</button>
       <button onclick="switchTab('youtube')" data-tab="youtube" class="tab-btn px-4 py-2 rounded-full text-xs">🎬 فيديوهات يوتيوب</button>
-      <button onclick="switchTab('settings')" data-tab="settings" class="tab-btn px-4 py-2 rounded-full text-xs">⚙️ الأقسام والإعدادات</button>
+      <button onclick="switchTab('experience')" data-tab="experience" class="tab-btn px-4 py-2 rounded-full text-xs">💼 الخبرات</button>
+      <button onclick="switchTab('about')" data-tab="about" class="tab-btn px-4 py-2 rounded-full text-xs">👤 عنّي والإحصائيات والمهارات</button>
+      <button onclick="switchTab('typography')" data-tab="typography" class="tab-btn px-4 py-2 rounded-full text-xs">🔤 الخطوط والألوان</button>
+      <button onclick="switchTab('sections')" data-tab="sections" class="tab-btn px-4 py-2 rounded-full text-xs">🧩 إظهار/إخفاء الأقسام</button>
+      <button onclick="switchTab('settings')" data-tab="settings" class="tab-btn px-4 py-2 rounded-full text-xs">⚙️ النظام والنسخ الاحتياطي</button>
     </nav>
 
     <!-- ======================================================================
-         TAB 1: SEO & SEARCH ENGINE OPTIMIZATION
+         TAB 1: SEO & INTERACTIVE KEYWORDS MANAGER
          ====================================================================== -->
     <section id="tab-seo" class="tab-panel space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- SEO Health Score + Live Google Preview -->
+        <!-- Left Column: Score + Google Preview + Sitemap -->
         <div class="lg:col-span-5 space-y-5">
           <div class="panel-card p-6 space-y-4">
             <div class="flex items-center justify-between">
@@ -128,7 +163,6 @@
             <ul id="seo-checklist" class="space-y-2 text-xs text-[#C9BFB2]"></ul>
           </div>
 
-          <!-- Live Google Snippet Preview -->
           <div class="panel-card p-6 space-y-3">
             <div class="text-xs font-bold text-[#C59367]">🔎 معاينة ظهور موقعك في نتائج بحث جوجل</div>
             <div dir="ltr" class="rounded-2xl bg-white p-4 text-left space-y-1 shadow-inner">
@@ -150,7 +184,6 @@
             </div>
           </div>
 
-          <!-- Sitemap & Robots.txt Generator -->
           <div class="panel-card p-6 space-y-3">
             <h3 class="font-extrabold text-sm text-[#F2EADF]">🤖 ملفات الأرشفة لمحركات البحث</h3>
             <p class="text-xs text-[#9A9186] leading-relaxed">
@@ -167,11 +200,11 @@
           </div>
         </div>
 
-        <!-- SEO Form Controls -->
-        <div class="lg:col-span-7 panel-card p-6 space-y-4">
-          <h2 class="font-extrabold text-base text-[#C59367]">⚙️ إعدادات السيو والميتا تاج (Meta &amp; Open Graph)</h2>
+        <!-- Right Column: Meta + Interactive Keywords Manager -->
+        <div class="lg:col-span-7 space-y-5">
+          <div class="panel-card p-6 space-y-4">
+            <h2 class="font-extrabold text-base text-[#C59367]">⚙️ إعدادات السيو والميتا تاج (Meta &amp; Open Graph)</h2>
 
-          <div class="grid grid-cols-1 gap-4">
             <div>
               <div class="flex justify-between text-xs mb-1">
                 <label class="font-bold text-[#F2EADF]">عنوان الموقع في جوجل (Meta Title)</label>
@@ -188,9 +221,38 @@
               <textarea id="seo-desc" rows="3" oninput="updateSeoLivePreview()" class="inp" placeholder="وصف مختصر وجذاب يظهر تحت اسم موقعك في نتائج بحث جوجل..."></textarea>
             </div>
 
-            <div>
-              <label class="block text-xs font-bold text-[#F2EADF] mb-1">الكلمات المفتاحية (Keywords — مفصولة بفاصلة)</label>
-              <textarea id="seo-keywords" rows="2" oninput="updateSeoLivePreview()" class="inp" placeholder="Kerlos Hany, مصمم جرافيك, هوية بصرية, 3D Designer..."></textarea>
+            <!-- Interactive Keywords Manager -->
+            <div class="sub-card p-4 space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <label class="text-xs font-extrabold text-[#C59367]">🏷️ مدير الكلمات المفتاحية (Keywords Manager)</label>
+                <span id="kw-count-badge" class="text-[11px] font-mono text-[#9A9186]">0 كلمة</span>
+              </div>
+
+              <!-- Add New Keyword Input -->
+              <div class="flex gap-2">
+                <input id="kw-new-input" onkeydown="if(event.key==='Enter'){event.preventDefault();addKeywordFromInput();}" class="inp" placeholder="اكتب كلمة مفتاحية جديدة واضغط Enter (مثال: مصمم شعارات، CGI Ads)..." />
+                <button type="button" onclick="addKeywordFromInput()" class="px-4 py-2 rounded-xl bg-[#C59367] text-[#060D0C] font-extrabold text-xs shrink-0">+ إضافة</button>
+              </div>
+
+              <!-- Quick Suggested Keyword Packs -->
+              <div class="space-y-1.5">
+                <div class="text-[11px] text-[#9A9186]">حزم كلمات مفتاحية جاهزة (اضغط لإضافتها فوراً):</div>
+                <div class="flex flex-wrap gap-1.5">
+                  <button type="button" onclick="addKeywordPack('branding')" class="px-3 py-1 rounded-full bg-[#0E3E3F]/50 hover:bg-[#C59367] hover:text-[#060D0C] border border-[#C59367]/35 text-[11px] font-bold transition-all">+ هوية بصرية وشعارات</button>
+                  <button type="button" onclick="addKeywordPack('3d')" class="px-3 py-1 rounded-full bg-[#0E3E3F]/50 hover:bg-[#C59367] hover:text-[#060D0C] border border-[#C59367]/35 text-[11px] font-bold transition-all">+ 3D و CGI وإعلانات</button>
+                  <button type="button" onclick="addKeywordPack('motion')" class="px-3 py-1 rounded-full bg-[#0E3E3F]/50 hover:bg-[#C59367] hover:text-[#060D0C] border border-[#C59367]/35 text-[11px] font-bold transition-all">+ موشن جرافيك وفيديو</button>
+                  <button type="button" onclick="addKeywordPack('mena')" class="px-3 py-1 rounded-full bg-[#0E3E3F]/50 hover:bg-[#C59367] hover:text-[#060D0C] border border-[#C59367]/35 text-[11px] font-bold transition-all">+ كلمات مصر والخليج</button>
+                </div>
+              </div>
+
+              <!-- Active Chips -->
+              <div id="kw-chips-box" class="flex flex-wrap gap-2 pt-1 max-h-40 overflow-y-auto"></div>
+
+              <!-- Hidden/Synced raw text for advanced editing -->
+              <details class="text-xs text-[#9A9186]">
+                <summary class="cursor-pointer hover:text-[#C59367]">تعديل الكلمات كنص مباشر (مفصولة بفاصلة)</summary>
+                <textarea id="seo-keywords" rows="2" oninput="syncChipsFromTextarea()" class="inp mt-2"></textarea>
+              </details>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -210,11 +272,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-bold text-[#F2EADF] mb-1">عنوان المشاركة على السوشيال (OG Title)</label>
-                <input id="seo-og-title" class="inp" placeholder="Kerlos Hany | Portfolio" />
+                <input id="seo-og-title" class="inp" />
               </div>
               <div>
                 <label class="block text-xs font-bold text-[#F2EADF] mb-1">المسمى الوظيفي في Schema.org (JSON-LD)</label>
-                <input id="seo-schema-job" class="inp" placeholder="Graphic, Brand Identity & 3D Designer" />
+                <input id="seo-schema-job" class="inp" />
               </div>
             </div>
 
@@ -223,14 +285,15 @@
               <input id="seo-og-desc" class="inp" />
             </div>
 
-            <div>
-              <label class="block text-xs font-bold text-[#F2EADF] mb-1">رابط صورة المشاركة (OG Share Image URL)</label>
-              <input id="seo-og-image" oninput="updateSeoLivePreview()" dir="ltr" class="inp" placeholder="https://keloshany.online/Professional_beauty_retouch,_202603252250.png" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-[#F2EADF] mb-1">كود إثبات ملكية Google Search Console (اختياري)</label>
-              <input id="seo-gsc" dir="ltr" class="inp" placeholder="ضع قيمة content فقط من وسم google-site-verification" />
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-[#F2EADF] mb-1">رابط صورة المشاركة (OG Image URL)</label>
+                <input id="seo-og-image" oninput="updateSeoLivePreview()" dir="ltr" class="inp" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-[#F2EADF] mb-1">كود Google Search Console (اختياري)</label>
+                <input id="seo-gsc" dir="ltr" class="inp" placeholder="قيمة content فقط" />
+              </div>
             </div>
           </div>
         </div>
@@ -260,6 +323,17 @@
           <input id="cfg-portraitUrl" dir="ltr" class="inp" />
         </div>
         <div>
+          <label class="block text-xs font-bold mb-1">نمط الصورة الشخصية</label>
+          <select id="cfg-portraitMode" class="inp">
+            <option value="color">ألوان طبيعية (Color)</option>
+            <option value="bw">أبيض وأسود سينمائي (B&amp;W)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">الموقع الجغرافي (Location)</label>
+          <input id="cfg-location" class="inp" placeholder="Tanta, Egypt" />
+        </div>
+        <div>
           <label class="block text-xs font-bold mb-1">رقم الواتساب (بدون +)</label>
           <input id="cfg-whatsapp" dir="ltr" class="inp" />
         </div>
@@ -287,55 +361,77 @@
     </section>
 
     <!-- ======================================================================
-         TAB 3: HERO & 3D SHOWCASE
+         TAB 3: HERO, TEXTS & 3D SHOWCASE STAGE
          ====================================================================== -->
-    <section id="tab-hero" class="tab-panel hidden panel-card p-6 space-y-5">
-      <h2 class="font-extrabold text-base text-[#C59367]">✨ نصوص الواجهة الرئيسية وفيديوهات الـ 3D</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-xs font-bold mb-1">العنوان السطر 1 (EN)</label>
-          <input id="cfg-heroTitle1En" dir="ltr" class="inp" />
+    <section id="tab-hero" class="tab-panel hidden space-y-6">
+      <div class="panel-card p-6 space-y-4">
+        <h2 class="font-extrabold text-base text-[#C59367]">✨ نصوص الواجهة الرئيسية والأزرار</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label class="block text-xs font-bold mb-1">شارة التوفر (EN)</label><input id="cfg-availEn" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">شارة التوفر (AR)</label><input id="cfg-availAr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان الفرعي العلوي (Eyebrow EN)</label><input id="cfg-heroEyebrowEn" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان الفرعي العلوي (Eyebrow AR)</label><input id="cfg-heroEyebrowAr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان السطر 1 (EN)</label><input id="cfg-heroTitle1En" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان السطر 1 (AR)</label><input id="cfg-heroTitle1Ar" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان السطر 2 (EN)</label><input id="cfg-heroTitle2En" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان السطر 2 (AR)</label><input id="cfg-heroTitle2Ar" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان السطر 3 (EN)</label><input id="cfg-heroTitle3En" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان السطر 3 (AR)</label><input id="cfg-heroTitle3Ar" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">نص زر استكشاف الأعمال (EN)</label><input id="cfg-heroBtnWorkEn" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">نص زر استكشاف الأعمال (AR)</label><input id="cfg-heroBtnWorkAr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">نص زر تحميل CV (EN)</label><input id="cfg-heroBtnCvEn" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">نص زر تحميل CV (AR)</label><input id="cfg-heroBtnCvAr" class="inp" /></div>
+          <div class="md:col-span-2"><label class="block text-xs font-bold mb-1">النبذة التعريفية (EN)</label><textarea id="cfg-heroSubEn" dir="ltr" rows="2" class="inp"></textarea></div>
+          <div class="md:col-span-2"><label class="block text-xs font-bold mb-1">النبذة التعريفية (AR)</label><textarea id="cfg-heroSubAr" rows="2" class="inp"></textarea></div>
         </div>
-        <div>
-          <label class="block text-xs font-bold mb-1">العنوان السطر 1 (AR)</label>
-          <input id="cfg-heroTitle1Ar" class="inp" />
+      </div>
+
+      <!-- 3D Showcase Stage Slides -->
+      <div class="panel-card p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="font-extrabold text-base text-[#C59367]">🎥 شرائح مسرح الـ 3D والصور (Hero Showcase)</h2>
+            <p class="text-xs text-[#9A9186]">أضف فيديوهات MP4 أو روابط YouTube أو صور للتنقل بينها تلقائياً</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs flex items-center gap-2">
+              <span>مدة الصورة (ثواني):</span>
+              <input id="cfg-heroSlideSeconds" type="number" min="2" max="30" class="inp !w-20 text-center" />
+            </label>
+            <button type="button" onclick="addShowcaseItem()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة شريحة</button>
+          </div>
         </div>
-        <div>
-          <label class="block text-xs font-bold mb-1">العنوان السطر 2 (EN)</label>
-          <input id="cfg-heroTitle2En" dir="ltr" class="inp" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold mb-1">العنوان السطر 2 (AR)</label>
-          <input id="cfg-heroTitle2Ar" class="inp" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold mb-1">العنوان السطر 3 (EN)</label>
-          <input id="cfg-heroTitle3En" dir="ltr" class="inp" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold mb-1">العنوان السطر 3 (AR)</label>
-          <input id="cfg-heroTitle3Ar" class="inp" />
-        </div>
-        <div class="md:col-span-2">
-          <label class="block text-xs font-bold mb-1">النبذة التعريفية (EN)</label>
-          <textarea id="cfg-heroSubEn" dir="ltr" rows="2" class="inp"></textarea>
-        </div>
-        <div class="md:col-span-2">
-          <label class="block text-xs font-bold mb-1">النبذة التعريفية (AR)</label>
-          <textarea id="cfg-heroSubAr" rows="2" class="inp"></textarea>
-        </div>
+        <div id="showcase-editor-list" class="space-y-3"></div>
       </div>
     </section>
 
     <!-- ======================================================================
-         TAB 4: EXPERIENCE LOG
+         TAB 4: PROJECTS & BEHANCE OVERRIDES
          ====================================================================== -->
-    <section id="tab-experience" class="tab-panel hidden panel-card p-6 space-y-5">
-      <div class="flex items-center justify-between">
-        <h2 class="font-extrabold text-base text-[#C59367]">💼 سجل الخبرات العملية (Experience Log)</h2>
-        <button type="button" onclick="addExperienceItem()" class="px-4 py-1.5 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة خبرة</button>
+    <section id="tab-projects" class="tab-panel hidden space-y-6">
+      <!-- Manual Projects -->
+      <div class="panel-card p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="font-extrabold text-base text-[#C59367]">🖼️ المشاريع اليدوية المضافة للموقع</h2>
+            <p class="text-xs text-[#9A9186]">تظهر بجانب مشاريع Behance ويمكنك إضافة صور متعددة أو روابط فيديو داخل كل مشروع</p>
+          </div>
+          <button type="button" onclick="addManualProject()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة مشروع جديد</button>
+        </div>
+        <div id="projects-editor-list" class="space-y-4"></div>
       </div>
-      <div id="exp-editor-list" class="space-y-4"></div>
+
+      <!-- Behance Overrides -->
+      <div class="panel-card p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="font-extrabold text-base text-[#C59367]">🔗 تخصيص مشاريع Behance (إضافة فيديو أو لوحات إضافية)</h2>
+            <p class="text-xs text-[#9A9186]">ضع رابط أي مشروع من Behance لإجبار نوعه (فيديو / صور) أو إرفاق روابط فيديو وصور إضافية تعمل داخل موقعك</p>
+          </div>
+          <button type="button" onclick="addBehanceOverride()" class="px-4 py-2 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-extrabold">+ إضافة تخصيص Behance</button>
+        </div>
+        <div id="behance-overrides-list" class="space-y-3"></div>
+      </div>
     </section>
 
     <!-- ======================================================================
@@ -343,39 +439,164 @@
          ====================================================================== -->
     <section id="tab-youtube" class="tab-panel hidden panel-card p-6 space-y-5">
       <div class="flex items-center justify-between">
-        <h2 class="font-extrabold text-base text-[#C59367]">🎬 قائمة فيديوهات يوتيوب</h2>
-        <button type="button" onclick="addYouTubeItem()" class="px-4 py-1.5 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة فيديو</button>
+        <h2 class="font-extrabold text-base text-[#C59367]">🎬 قائمة فيديوهات استوديو يوتيوب</h2>
+        <button type="button" onclick="addYouTubeItem()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة فيديو</button>
       </div>
       <div id="yt-editor-list" class="space-y-3"></div>
     </section>
 
     <!-- ======================================================================
-         TAB 6: SECTIONS & SYSTEM SETTINGS
+         TAB 6: EXPERIENCE LOG
          ====================================================================== -->
-    <section id="tab-settings" class="tab-panel hidden panel-card p-6 space-y-5">
-      <h2 class="font-extrabold text-base text-[#C59367]">⚙️ إظهار وإخفاء الأقسام وإعدادات النظام</h2>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-        <label class="flex items-center gap-2 p-3 rounded-xl bg-[#070E0D] border border-[#C59367]/25 cursor-pointer">
-          <input type="checkbox" id="sec-work" class="accent-[#C59367]" /> قسم الأعمال (Behance)
-        </label>
-        <label class="flex items-center gap-2 p-3 rounded-xl bg-[#070E0D] border border-[#C59367]/25 cursor-pointer">
-          <input type="checkbox" id="sec-cinema" class="accent-[#C59367]" /> استوديو يوتيوب
-        </label>
-        <label class="flex items-center gap-2 p-3 rounded-xl bg-[#070E0D] border border-[#C59367]/25 cursor-pointer">
-          <input type="checkbox" id="sec-experience" class="accent-[#C59367]" /> سجل الخبرات
-        </label>
-        <label class="flex items-center gap-2 p-3 rounded-xl bg-[#070E0D] border border-[#C59367]/25 cursor-pointer">
-          <input type="checkbox" id="sec-about" class="accent-[#C59367]" /> قسم عني والبورتريه
-        </label>
+    <section id="tab-experience" class="tab-panel hidden panel-card p-6 space-y-5">
+      <div class="flex items-center justify-between">
+        <h2 class="font-extrabold text-base text-[#C59367]">💼 سجل الخبرات العملية (Experience Log)</h2>
+        <button type="button" onclick="addExperienceItem()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة خبرة</button>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-[#C59367]/20">
-        <div>
-          <label class="block text-xs font-bold mb-1">رابط قاعدة بيانات Firebase</label>
-          <input id="cfg-firebaseUrl" dir="ltr" class="inp" />
+      <div id="exp-editor-list" class="space-y-4"></div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 7: ABOUT, STATS & SKILLS
+         ====================================================================== -->
+    <section id="tab-about" class="tab-panel hidden space-y-6">
+      <div class="panel-card p-6 space-y-4">
+        <h2 class="font-extrabold text-base text-[#C59367]">👤 النبذة التعريفية (About Me)</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label class="block text-xs font-bold mb-1">الوصف بالإنجليزية (About EN)</label><textarea id="cfg-aboutDescEn" dir="ltr" rows="4" class="inp"></textarea></div>
+          <div><label class="block text-xs font-bold mb-1">الوصف بالعربية (About AR)</label><textarea id="cfg-aboutDescAr" rows="4" class="inp"></textarea></div>
         </div>
-        <div>
-          <label class="block text-xs font-bold mb-1">كلمة مرور غرفة التحكم</label>
-          <input id="cfg-adminPassword" dir="ltr" class="inp" />
+      </div>
+
+      <div class="panel-card p-6 space-y-4">
+        <h2 class="font-extrabold text-base text-[#C59367]">📈 أرقام الإحصائيات (Stats)</h2>
+        <div id="stats-editor-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+      </div>
+
+      <div class="panel-card p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="font-extrabold text-base text-[#C59367]">🛠️ المهارات والبرامج (Skills)</h2>
+          <button type="button" onclick="addSkillItem()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة مهارة</button>
+        </div>
+        <div id="skills-editor-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 8: TYPOGRAPHY & COLORS
+         ====================================================================== -->
+    <section id="tab-typography" class="tab-panel hidden space-y-6">
+      <div class="panel-card p-6 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="font-extrabold text-base text-[#C59367]">🔤 الخطوط والأحجام وتباعد الأسطر</h2>
+          <button type="button" onclick="resetTypographyDefaults()" class="px-4 py-1.5 rounded-full border border-[#C59367]/40 text-xs font-bold hover:border-[#C59367]">استعادة الافتراضي</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold mb-1">الخط العربي (Arabic Font)</label>
+            <input id="typ-fontAr" list="ar-fonts-list" class="inp" />
+            <datalist id="ar-fonts-list">
+              <option value="Cairo"></option>
+              <option value="Tajawal"></option>
+              <option value="Almarai"></option>
+              <option value="IBM Plex Sans Arabic"></option>
+              <option value="Readex Pro"></option>
+            </datalist>
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">الخط الإنجليزي (English Font)</label>
+            <input id="typ-fontEn" list="en-fonts-list" dir="ltr" class="inp" />
+            <datalist id="en-fonts-list">
+              <option value="Plus Jakarta Sans"></option>
+              <option value="Space Grotesk"></option>
+              <option value="Inter"></option>
+              <option value="Montserrat"></option>
+              <option value="Poppins"></option>
+            </datalist>
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">الخط المميز (Accent Font)</label>
+            <input id="typ-fontAccent" dir="ltr" class="inp" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div><label class="block text-xs font-bold mb-1">حجم الخط الأساسي (px)</label><input id="typ-baseFontSize" type="number" min="12" max="22" class="inp text-center" /></div>
+          <div><label class="block text-xs font-bold mb-1">حجم العناوين (%)</label><input id="typ-headingScale" type="number" min="75" max="140" class="inp text-center" /></div>
+          <div><label class="block text-xs font-bold mb-1">تباعد أسطر الفقرات</label><input id="typ-bodyLineHeight" type="number" step="0.05" min="1.1" max="2.5" class="inp text-center" /></div>
+          <div><label class="block text-xs font-bold mb-1">تباعد أسطر العناوين</label><input id="typ-headingLineHeight" type="number" step="0.05" min="0.95" max="1.8" class="inp text-center" /></div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-3 border-t border-[#C59367]/20">
+          <div><label class="block text-xs font-bold mb-1">لون النص الأساسي</label><input id="typ-primaryTextColor" type="color" class="w-full h-10 rounded-xl bg-transparent cursor-pointer" /></div>
+          <div><label class="block text-xs font-bold mb-1">لون النص الثانوي</label><input id="typ-secondaryTextColor" type="color" class="w-full h-10 rounded-xl bg-transparent cursor-pointer" /></div>
+          <div><label class="block text-xs font-bold mb-1">اللون النحاسي/الذهبي</label><input id="typ-accentTextColor" type="color" class="w-full h-10 rounded-xl bg-transparent cursor-pointer" /></div>
+          <div><label class="block text-xs font-bold mb-1">لون نص الأقسام الفاتحة</label><input id="typ-lightSectionTextColor" type="color" class="w-full h-10 rounded-xl bg-transparent cursor-pointer" /></div>
+        </div>
+      </div>
+
+      <!-- Custom External Fonts + Direct Font File Upload -->
+      <div class="panel-card p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="font-extrabold text-sm text-[#C59367]">📥 إضافة خطوط جديدة (رابط خارجي أو رفع ملف خط من جهازك)</h3>
+            <p class="text-xs text-[#9A9186] mt-0.5">يدعم ملفات <span class="font-mono">.woff2 / .woff / .ttf / .otf</span> أو روابط Google Fonts CSS — وبعد الإضافة اكتب اسم الخط في خانة الخط العربي أو الإنجليزي بالأعلى.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <label class="px-4 py-2 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-extrabold cursor-pointer transition-all">
+              ⬆ رفع ملف خط من الجهاز
+              <input type="file" accept=".woff2,.woff,.ttf,.otf" onchange="uploadLocalFontFile(event)" class="hidden" />
+            </label>
+            <button type="button" onclick="addCustomFont()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة رابط خط</button>
+          </div>
+        </div>
+        <div id="custom-fonts-list" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 9: SECTIONS VISIBILITY
+         ====================================================================== -->
+    <section id="tab-sections" class="tab-panel hidden panel-card p-6 space-y-5">
+      <h2 class="font-extrabold text-base text-[#C59367]">🧩 التحكم في إظهار وإخفاء جميع أقسام الموقع</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+        <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-heroReveal" class="accent-[#C59367] w-4 h-4" /> مسرح الـ 3D Reveal</label>
+        <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-work" class="accent-[#C59367] w-4 h-4" /> قسم الأعمال والمشاريع</label>
+        <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-behanceSync" class="accent-[#C59367] w-4 h-4" /> المزامنة المباشرة مع Behance</label>
+        <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-cinema" class="accent-[#C59367] w-4 h-4" /> استوديو فيديوهات يوتيوب</label>
+        <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-experience" class="accent-[#C59367] w-4 h-4" /> سجل الخبرات العملية</label>
+        <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-about" class="accent-[#C59367] w-4 h-4" /> قسم عنّي والبورتريه</label>
+        <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-skills" class="accent-[#C59367] w-4 h-4" /> قسم المهارات والبرامج</label>
+        <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-cta" class="accent-[#C59367] w-4 h-4" /> قسم ابدأ مشروعك (CTA)</label>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 10: SYSTEM, CLOUDINARY & BACKUP
+         ====================================================================== -->
+    <section id="tab-settings" class="tab-panel hidden space-y-6">
+      <div class="panel-card p-6 space-y-4">
+        <h2 class="font-extrabold text-base text-[#C59367]">⚙️ إعدادات الربط والأمان</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label class="block text-xs font-bold mb-1">رابط قاعدة بيانات Firebase</label><input id="cfg-firebaseUrl" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">كلمة مرور غرفة التحكم</label><input id="cfg-adminPassword" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">Cloudinary Cloud Name (اختياري)</label><input id="cfg-cloudinaryCloud" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">Cloudinary Upload Preset (اختياري)</label><input id="cfg-cloudinaryPreset" dir="ltr" class="inp" /></div>
+        </div>
+      </div>
+
+      <div class="panel-card p-6 space-y-4">
+        <h2 class="font-extrabold text-base text-[#C59367]">💾 النسخ الاحتياطي واستعادة البيانات (site-data.json)</h2>
+        <p class="text-xs text-[#9A9186]">يمكنك تحميل نسخة احتياطية كاملة من جميع إعدادات موقعك ومشاريعك أو استعادتها في أي وقت.</p>
+        <div class="flex flex-wrap gap-3">
+          <button type="button" onclick="exportSiteDataJson()" class="px-5 py-2.5 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 text-xs font-bold hover:bg-[#C59367] hover:text-[#060D0C] transition-all">
+            ⬇ تصدير نسخة احتياطية (site-data.json)
+          </button>
+          <label class="px-5 py-2.5 rounded-full bg-[#070E0D] border border-[#C59367]/40 text-xs font-bold hover:border-[#C59367] cursor-pointer transition-all">
+            ⬆ استيراد ملف JSON
+            <input type="file" accept=".json" onchange="importSiteDataJson(event)" class="hidden" />
+          </label>
         </div>
       </div>
     </section>
@@ -383,6 +604,18 @@
 
   <script>
     let cfg = null;
+    let keywordsArray = [];
+
+    const KEYWORD_PACKS = {
+      branding: ['Brand Identity Designer', 'Logo Design', 'Visual Identity', 'تصميم شعارات', 'هوية بصرية كاملة', 'بروفايل شركات'],
+      '3d': ['3D Product Visualization', 'CGI Advertising', 'FOOH Ads', 'Cinema 4D', 'Blender 3D', 'تصميم ثلاثي الأبعاد', 'إعلانات CGI'],
+      motion: ['Motion Graphics', 'Logo Animation', '3D Logo Reveal', 'After Effects', 'موشن جرافيك', 'تحريك شعارات'],
+      mena: ['Graphic Designer Egypt', 'مصمم جرافيك محترف', 'مصمم جرافيك مصر', 'مصمم هوية بصرية السعودية', 'مصمم جرافيك الإمارات', 'Freelance Brand Designer MENA']
+    };
+
+    function esc(val) {
+      return String(val == null ? '' : val).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
 
     function showToast(msg) {
       const t = document.getElementById('toast');
@@ -400,7 +633,17 @@
 
     async function initAdmin() {
       cfg = await window.KHControlRoom.loadConfig();
-      if (!cfg.seo) cfg.seo = window.KHControlRoom.getDefaultConfig().seo;
+      const def = window.KHControlRoom.getDefaultConfig();
+      if (!cfg.seo) cfg.seo = { ...def.seo };
+      if (!cfg.typography) cfg.typography = { ...def.typography };
+      if (!cfg.sections) cfg.sections = { ...def.sections };
+      if (!Array.isArray(cfg.stats) || cfg.stats.length < 3) cfg.stats = def.stats;
+      if (!Array.isArray(cfg.skills)) cfg.skills = def.skills;
+      if (!Array.isArray(cfg.experience)) cfg.experience = def.experience;
+      if (!Array.isArray(cfg.youtubeVideos)) cfg.youtubeVideos = def.youtubeVideos;
+      if (!Array.isArray(cfg.projects)) cfg.projects = [];
+      if (!Array.isArray(cfg.heroShowcaseItems)) cfg.heroShowcaseItems = def.heroShowcaseItems;
+      if (!cfg.behanceOverrides || typeof cfg.behanceOverrides !== 'object') cfg.behanceOverrides = {};
       populateForms();
     }
 
@@ -416,11 +659,67 @@
       }
     }
 
+    /* ---------------- KEYWORDS CHIPS MANAGER ---------------- */
+    function renderKeywordChips() {
+      const box = document.getElementById('kw-chips-box');
+      const raw = document.getElementById('seo-keywords');
+      const badge = document.getElementById('kw-count-badge');
+      raw.value = keywordsArray.join(', ');
+      badge.textContent = `${keywordsArray.length} كلمة مفتاحية`;
+      box.innerHTML = keywordsArray.map((kw, i) => `
+        <span class="kw-chip">
+          <span>${esc(kw)}</span>
+          <button type="button" onclick="removeKeyword(${i})" title="حذف">×</button>
+        </span>
+      `).join('');
+      updateSeoLivePreview();
+    }
+
+    function addKeywordFromInput() {
+      const inp = document.getElementById('kw-new-input');
+      const parts = inp.value.split(/[،,]/).map(s => s.trim()).filter(Boolean);
+      parts.forEach(p => {
+        if (!keywordsArray.some(k => k.toLowerCase() === p.toLowerCase())) keywordsArray.push(p);
+      });
+      inp.value = '';
+      renderKeywordChips();
+    }
+
+    function addKeywordPack(packName) {
+      const list = KEYWORD_PACKS[packName] || [];
+      let added = 0;
+      list.forEach(p => {
+        if (!keywordsArray.some(k => k.toLowerCase() === p.toLowerCase())) {
+          keywordsArray.push(p);
+          added++;
+        }
+      });
+      renderKeywordChips();
+      showToast(added > 0 ? `تمت إضافة ${added} كلمة مفتاحية جديدة` : 'جميع كلمات هذه الحزمة مضافة بالفعل');
+    }
+
+    function removeKeyword(idx) {
+      keywordsArray.splice(idx, 1);
+      renderKeywordChips();
+    }
+
+    function syncChipsFromTextarea() {
+      const val = document.getElementById('seo-keywords').value;
+      keywordsArray = val.split(/[،,]/).map(s => s.trim()).filter(Boolean);
+      const box = document.getElementById('kw-chips-box');
+      document.getElementById('kw-count-badge').textContent = `${keywordsArray.length} كلمة مفتاحية`;
+      box.innerHTML = keywordsArray.map((kw, i) => `
+        <span class="kw-chip"><span>${esc(kw)}</span><button type="button" onclick="removeKeyword(${i})">×</button></span>
+      `).join('');
+      updateSeoLivePreview();
+    }
+
+    /* ---------------- POPULATE ALL FORMS ---------------- */
     function populateForms() {
       const s = cfg.seo || {};
       document.getElementById('seo-title').value = s.siteTitle || '';
       document.getElementById('seo-desc').value = s.metaDescription || '';
-      document.getElementById('seo-keywords').value = s.keywords || '';
+      keywordsArray = (s.keywords || '').split(/[،,]/).map(x => x.trim()).filter(Boolean);
       document.getElementById('seo-canonical').value = s.canonicalUrl || 'https://keloshany.online/';
       document.getElementById('seo-robots').value = s.robots || 'index, follow, max-image-preview:large';
       document.getElementById('seo-og-title').value = s.ogTitle || '';
@@ -428,27 +727,45 @@
       document.getElementById('seo-og-image').value = s.ogImage || '';
       document.getElementById('seo-gsc').value = s.googleVerification || '';
       document.getElementById('seo-schema-job').value = s.schemaJobTitle || '';
-      updateSeoLivePreview();
+      renderKeywordChips();
 
-      ['brandName','brandTagline','logoUrl','portraitUrl','whatsapp','email','behanceUrl','youtubeUrl','linkedinUrl','cvUrl','heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar','heroSubEn','heroSubAr','firebaseUrl','adminPassword'].forEach(k => {
+      const simpleFields = [
+        'brandName','brandTagline','logoUrl','portraitUrl','portraitMode','location','whatsapp','email',
+        'behanceUrl','youtubeUrl','linkedinUrl','cvUrl','availEn','availAr','heroEyebrowEn','heroEyebrowAr',
+        'heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar',
+        'heroBtnWorkEn','heroBtnWorkAr','heroBtnCvEn','heroBtnCvAr','heroSubEn','heroSubAr','heroSlideSeconds',
+        'aboutDescEn','aboutDescAr','firebaseUrl','adminPassword','cloudinaryCloud','cloudinaryPreset'
+      ];
+      simpleFields.forEach(k => {
         const el = document.getElementById('cfg-' + k);
-        if (el) el.value = cfg[k] || '';
+        if (el) el.value = cfg[k] != null ? cfg[k] : '';
+      });
+
+      const t = cfg.typography || {};
+      ['fontAr','fontEn','fontAccent','baseFontSize','headingScale','bodyLineHeight','headingLineHeight','primaryTextColor','secondaryTextColor','accentTextColor','lightSectionTextColor'].forEach(k => {
+        const el = document.getElementById('typ-' + k);
+        if (el && t[k] != null) el.value = t[k];
       });
 
       const sec = cfg.sections || {};
-      document.getElementById('sec-work').checked = sec.work !== false;
-      document.getElementById('sec-cinema').checked = sec.cinema !== false;
-      document.getElementById('sec-experience').checked = sec.experience !== false;
-      document.getElementById('sec-about').checked = sec.about !== false;
+      ['heroReveal','work','behanceSync','cinema','experience','about','skills','cta'].forEach(k => {
+        const el = document.getElementById('sec-' + k);
+        if (el) el.checked = sec[k] !== false;
+      });
 
-      renderExpEditor();
+      renderShowcaseEditor();
+      renderProjectsEditor();
+      renderBehanceOverridesEditor();
       renderYtEditor();
+      renderExpEditor();
+      renderStatsEditor();
+      renderSkillsEditor();
+      renderCustomFontsEditor();
     }
 
     function updateSeoLivePreview() {
       const title = document.getElementById('seo-title').value.trim();
       const desc = document.getElementById('seo-desc').value.trim();
-      const kw = document.getElementById('seo-keywords').value.trim();
       const canon = document.getElementById('seo-canonical').value.trim();
       const ogImg = document.getElementById('seo-og-image').value.trim();
       const robots = document.getElementById('seo-robots').value;
@@ -462,7 +779,7 @@
       const checks = [
         { ok: title.length >= 25 && title.length <= 65, msg: 'طول عنوان الصفحة مثالي لمحركات البحث (25–65 حرف)' },
         { ok: desc.length >= 90 && desc.length <= 165, msg: 'طول الوصف (Meta Description) مثالي لجوجل (90–165 حرف)' },
-        { ok: kw.split(',').filter(x => x.trim()).length >= 4, msg: 'يحتوي على كلمات مفتاحية كافية بالعربية والإنجليزية' },
+        { ok: keywordsArray.length >= 5, msg: 'يحتوي على 5 كلمات مفتاحية أو أكثر بالعربية والإنجليزية' },
         { ok: /^https?:\/\//i.test(canon), msg: 'الرابط الأساسي (Canonical URL) مضبوط بشكل صحيح' },
         { ok: /^https?:\/\//i.test(ogImg), msg: 'صورة المشاركة الاجتماعية (Open Graph Image) مضافة' },
         { ok: robots.includes('index') && !robots.includes('noindex'), msg: 'الأرشفة في جوجل (index, follow) مُفعّلة' }
@@ -479,57 +796,260 @@
       `).join('');
     }
 
-    function renderExpEditor() {
-      const box = document.getElementById('exp-editor-list');
-      const list = Array.isArray(cfg.experience) ? cfg.experience : [];
-      box.innerHTML = list.map((ex, i) => `
-        <div class="p-4 rounded-2xl bg-[#070E0D] border border-[#C59367]/25 space-y-3">
-          <div class="flex justify-between items-center">
-            <span class="text-xs font-bold text-[#C59367]">خبرة #${i + 1}</span>
-            <button type="button" onclick="removeExperienceItem(${i})" class="text-xs text-red-400 hover:underline">حذف</button>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <input value="${(ex.period || '').replace(/"/g, '&quot;')}" oninput="cfg.experience[${i}].period=this.value" class="inp" placeholder="الفترة (2023 — Present)" />
-            <input value="${(ex.company || '').replace(/"/g, '&quot;')}" oninput="cfg.experience[${i}].company=this.value" class="inp" placeholder="الشركة" />
-            <input value="${(ex.role || '').replace(/"/g, '&quot;')}" oninput="cfg.experience[${i}].role=this.value" class="inp" placeholder="المسمى الوظيفي" />
-          </div>
-          <textarea rows="2" oninput="cfg.experience[${i}].desc=this.value" class="inp" placeholder="وصف المهام...">${ex.desc || ''}</textarea>
+    /* ---------------- SHOWCASE EDITOR ---------------- */
+    function renderShowcaseEditor() {
+      const box = document.getElementById('showcase-editor-list');
+      const list = Array.isArray(cfg.heroShowcaseItems) ? cfg.heroShowcaseItems : [];
+      if (list.length === 0) {
+        box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-4">لا توجد شرائح حالياً — اضغط "+ إضافة شريحة"</p>';
+        return;
+      }
+      box.innerHTML = list.map((it, i) => `
+        <div class="sub-card p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+          <select onchange="cfg.heroShowcaseItems[${i}].type=this.value" class="inp md:col-span-2">
+            <option value="video" ${it.type==='video'?'selected':''}>فيديو 🎬</option>
+            <option value="image" ${it.type==='image'?'selected':''}>صورة 🖼️</option>
+          </select>
+          <input value="${esc(it.url)}" oninput="cfg.heroShowcaseItems[${i}].url=this.value" dir="ltr" class="inp md:col-span-4" placeholder="رابط الفيديو أو الصورة" />
+          <input value="${esc(it.titleEn)}" oninput="cfg.heroShowcaseItems[${i}].titleEn=this.value" dir="ltr" class="inp md:col-span-3" placeholder="Title EN" />
+          <input value="${esc(it.titleAr)}" oninput="cfg.heroShowcaseItems[${i}].titleAr=this.value" class="inp md:col-span-2" placeholder="العنوان عربي" />
+          <button type="button" onclick="cfg.heroShowcaseItems.splice(${i},1);renderShowcaseEditor()" class="text-xs text-red-400 font-bold md:col-span-1">حذف</button>
         </div>
       `).join('');
     }
-
-    function addExperienceItem() {
-      if (!Array.isArray(cfg.experience)) cfg.experience = [];
-      cfg.experience.unshift({ period: '2026 — Present', company: 'New Company', role: 'Senior Designer', desc: '' });
-      renderExpEditor();
+    function addShowcaseItem() {
+      cfg.heroShowcaseItems.push({ type: 'video', url: '', titleEn: 'New 3D Slide', titleAr: 'عرض 3D جديد' });
+      renderShowcaseEditor();
     }
-    function removeExperienceItem(i) { cfg.experience.splice(i, 1); renderExpEditor(); }
 
+    /* ---------------- MANUAL PROJECTS EDITOR ---------------- */
+    function renderProjectsEditor() {
+      const box = document.getElementById('projects-editor-list');
+      const list = Array.isArray(cfg.projects) ? cfg.projects : [];
+      if (list.length === 0) {
+        box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-4">لا توجد مشاريع يدوية مضافة بعد (الموقع يعرض مشاريع Behance تلقائياً).</p>';
+        return;
+      }
+      box.innerHTML = list.map((p, i) => `
+        <div class="sub-card p-4 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-[#C59367]">مشروع #${i + 1}</span>
+            <button type="button" onclick="cfg.projects.splice(${i},1);renderProjectsEditor()" class="text-xs text-red-400 font-bold">حذف المشروع</button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <input value="${esc(p.titleEn)}" oninput="cfg.projects[${i}].titleEn=this.value" dir="ltr" class="inp" placeholder="Project Title EN" />
+            <input value="${esc(p.titleAr)}" oninput="cfg.projects[${i}].titleAr=this.value" class="inp" placeholder="اسم المشروع بالعربي" />
+            <select onchange="cfg.projects[${i}].category=this.value" class="inp">
+              <option value="branding" ${p.category==='branding'?'selected':''}>Branding &amp; Logo</option>
+              <option value="3d" ${p.category==='3d'?'selected':''}>3D Visualization</option>
+              <option value="social" ${p.category==='social'?'selected':''}>Social &amp; Ads</option>
+            </select>
+            <select onchange="cfg.projects[${i}].contentType=this.value" class="inp">
+              <option value="auto" ${(p.contentType||'auto')==='auto'?'selected':''}>نوع تلقائي</option>
+              <option value="images" ${p.contentType==='images'?'selected':''}>صور فقط</option>
+              <option value="video" ${p.contentType==='video'?'selected':''}>فيديو</option>
+              <option value="mixed" ${p.contentType==='mixed'?'selected':''}>فيديو + صور</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <input value="${esc(p.image)}" oninput="cfg.projects[${i}].image=this.value" dir="ltr" class="inp" placeholder="رابط صورة الغلاف (Cover Image URL)" />
+            <input value="${esc(p.url)}" oninput="cfg.projects[${i}].url=this.value" dir="ltr" class="inp" placeholder="رابط المشروع على Behance (اختياري)" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <textarea rows="2" oninput="cfg.projects[${i}].descEn=this.value" dir="ltr" class="inp" placeholder="Description EN">${esc(p.descEn)}</textarea>
+            <textarea rows="2" oninput="cfg.projects[${i}].descAr=this.value" class="inp" placeholder="وصف المشروع بالعربي">${esc(p.descAr)}</textarea>
+          </div>
+          <div>
+            <label class="block text-[11px] text-[#9A9186] mb-1">روابط صور أو فيديوهات إضافية داخل المشروع (رابط في كل سطر)</label>
+            <textarea rows="2" dir="ltr" oninput="cfg.projects[${i}].extraBoards=this.value.split(/\\n+/).map(s=>s.trim()).filter(Boolean)" class="inp">${esc((p.extraBoards||[]).join('\n'))}</textarea>
+          </div>
+        </div>
+      `).join('');
+    }
+    function addManualProject() {
+      cfg.projects.unshift({
+        id: 'proj-' + Date.now(),
+        category: 'branding',
+        contentType: 'auto',
+        titleEn: 'New Brand Project',
+        titleAr: 'مشروع هوية بصرية جديد',
+        roleEn: 'Brand Identity & 3D',
+        roleAr: 'هوية بصرية و 3D',
+        descEn: '',
+        descAr: '',
+        image: '',
+        url: '',
+        tags: ['Branding'],
+        extraBoards: []
+      });
+      renderProjectsEditor();
+    }
+
+    /* ---------------- BEHANCE OVERRIDES EDITOR ---------------- */
+    function renderBehanceOverridesEditor() {
+      const box = document.getElementById('behance-overrides-list');
+      const entries = Object.entries(cfg.behanceOverrides || {});
+      if (entries.length === 0) {
+        box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-3">لا توجد تخصيصات Behance حالياً.</p>';
+        return;
+      }
+      box.innerHTML = entries.map(([url, ov], i) => `
+        <div class="sub-card p-4 space-y-2.5">
+          <div class="flex justify-between items-center gap-2">
+            <span class="text-xs font-mono text-[#C59367] truncate" dir="ltr">${esc(url)}</span>
+            <button type="button" onclick="deleteBehanceOverride(${i})" class="text-xs text-red-400 font-bold shrink-0">حذف</button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+            <select onchange="updateBehanceOverrideType(${i}, this.value)" class="inp md:col-span-3">
+              <option value="auto" ${(ov.contentType||'auto')==='auto'?'selected':''}>تلقائي</option>
+              <option value="video" ${ov.contentType==='video'?'selected':''}>فيديو ▶</option>
+              <option value="mixed" ${ov.contentType==='mixed'?'selected':''}>فيديو + صور 🎬</option>
+              <option value="images" ${ov.contentType==='images'?'selected':''}>صور فقط 🖼️</option>
+            </select>
+            <textarea rows="2" dir="ltr" oninput="updateBehanceOverrideMedia(${i}, this.value)" class="inp md:col-span-9" placeholder="روابط فيديو أو صور إضافية (رابط في كل سطر)">${esc((ov.extraMedia||[]).join('\n'))}</textarea>
+          </div>
+        </div>
+      `).join('');
+    }
+    function addBehanceOverride() {
+      const url = prompt('ضع رابط مشروع Behance بالكامل:');
+      if (!url || !url.trim()) return;
+      cfg.behanceOverrides[url.trim()] = { contentType: 'video', extraMedia: [] };
+      renderBehanceOverridesEditor();
+    }
+    function deleteBehanceOverride(idx) {
+      const key = Object.keys(cfg.behanceOverrides)[idx];
+      if (key) delete cfg.behanceOverrides[key];
+      renderBehanceOverridesEditor();
+    }
+    function updateBehanceOverrideType(idx, val) {
+      const key = Object.keys(cfg.behanceOverrides)[idx];
+      if (key) cfg.behanceOverrides[key].contentType = val;
+    }
+    function updateBehanceOverrideMedia(idx, val) {
+      const key = Object.keys(cfg.behanceOverrides)[idx];
+      if (key) cfg.behanceOverrides[key].extraMedia = val.split(/\n+/).map(s => s.trim()).filter(Boolean);
+    }
+
+    /* ---------------- YOUTUBE, EXPERIENCE, STATS, SKILLS, FONTS ---------------- */
     function renderYtEditor() {
       const box = document.getElementById('yt-editor-list');
-      const list = Array.isArray(cfg.youtubeVideos) ? cfg.youtubeVideos : [];
-      box.innerHTML = list.map((v, i) => `
-        <div class="p-4 rounded-2xl bg-[#070E0D] border border-[#C59367]/25 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-          <input value="${v.id || ''}" oninput="cfg.youtubeVideos[${i}].id=this.value" dir="ltr" class="inp md:col-span-3" placeholder="YouTube ID" />
-          <input value="${(v.titleEn || '').replace(/"/g, '&quot;')}" oninput="cfg.youtubeVideos[${i}].titleEn=this.value" class="inp md:col-span-4" placeholder="Title EN" />
-          <input value="${(v.titleAr || '').replace(/"/g, '&quot;')}" oninput="cfg.youtubeVideos[${i}].titleAr=this.value" class="inp md:col-span-3" placeholder="العنوان بالعربي" />
-          <input value="${v.duration || ''}" oninput="cfg.youtubeVideos[${i}].duration=this.value" dir="ltr" class="inp md:col-span-1" placeholder="0:30" />
-          <button type="button" onclick="removeYouTubeItem(${i})" class="text-xs text-red-400 font-bold md:col-span-1">حذف</button>
+      box.innerHTML = cfg.youtubeVideos.map((v, i) => `
+        <div class="sub-card p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+          <input value="${esc(v.id)}" oninput="cfg.youtubeVideos[${i}].id=this.value" dir="ltr" class="inp md:col-span-3" placeholder="YouTube Video ID" />
+          <input value="${esc(v.titleEn)}" oninput="cfg.youtubeVideos[${i}].titleEn=this.value" dir="ltr" class="inp md:col-span-4" placeholder="Title EN" />
+          <input value="${esc(v.titleAr)}" oninput="cfg.youtubeVideos[${i}].titleAr=this.value" class="inp md:col-span-3" placeholder="العنوان بالعربي" />
+          <input value="${esc(v.duration)}" oninput="cfg.youtubeVideos[${i}].duration=this.value" dir="ltr" class="inp md:col-span-1" placeholder="0:30" />
+          <button type="button" onclick="cfg.youtubeVideos.splice(${i},1);renderYtEditor()" class="text-xs text-red-400 font-bold md:col-span-1">حذف</button>
         </div>
       `).join('');
     }
     function addYouTubeItem() {
-      if (!Array.isArray(cfg.youtubeVideos)) cfg.youtubeVideos = [];
       cfg.youtubeVideos.unshift({ id: '', titleEn: 'New Video', titleAr: 'فيديو جديد', duration: '0:30' });
       renderYtEditor();
     }
-    function removeYouTubeItem(i) { cfg.youtubeVideos.splice(i, 1); renderYtEditor(); }
 
+    function renderExpEditor() {
+      const box = document.getElementById('exp-editor-list');
+      box.innerHTML = cfg.experience.map((ex, i) => `
+        <div class="sub-card p-4 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-[#C59367]">خبرة #${i + 1}</span>
+            <button type="button" onclick="cfg.experience.splice(${i},1);renderExpEditor()" class="text-xs text-red-400 hover:underline">حذف</button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input value="${esc(ex.period)}" oninput="cfg.experience[${i}].period=this.value" class="inp" placeholder="الفترة (2023 — Present)" />
+            <input value="${esc(ex.company)}" oninput="cfg.experience[${i}].company=this.value" class="inp" placeholder="الشركة" />
+            <input value="${esc(ex.role)}" oninput="cfg.experience[${i}].role=this.value" class="inp" placeholder="المسمى الوظيفي" />
+          </div>
+          <textarea rows="2" oninput="cfg.experience[${i}].desc=this.value" class="inp" placeholder="وصف المهام...">${esc(ex.desc)}</textarea>
+        </div>
+      `).join('');
+    }
+    function addExperienceItem() {
+      cfg.experience.unshift({ period: '2026 — Present', company: 'New Company', role: 'Senior Designer', desc: '' });
+      renderExpEditor();
+    }
+
+    function renderStatsEditor() {
+      const box = document.getElementById('stats-editor-list');
+      box.innerHTML = cfg.stats.slice(0, 3).map((st, i) => `
+        <div class="sub-card p-4 space-y-2.5">
+          <div class="text-xs font-bold text-[#C59367]">إحصائية #${i + 1}</div>
+          <input value="${esc(st.num)}" oninput="cfg.stats[${i}].num=this.value" dir="ltr" class="inp" placeholder="الرقم (مثال: 06)" />
+          <input value="${esc(st.en)}" oninput="cfg.stats[${i}].en=this.value" dir="ltr" class="inp" placeholder="Label EN" />
+          <input value="${esc(st.ar)}" oninput="cfg.stats[${i}].ar=this.value" class="inp" placeholder="العنوان بالعربي" />
+        </div>
+      `).join('');
+    }
+
+    function renderSkillsEditor() {
+      const box = document.getElementById('skills-editor-list');
+      box.innerHTML = cfg.skills.map((sk, i) => `
+        <div class="sub-card p-3.5 grid grid-cols-12 gap-2 items-center">
+          <input value="${esc(sk.code)}" oninput="cfg.skills[${i}].code=this.value" dir="ltr" class="inp col-span-2 text-center" placeholder="Ps" />
+          <input value="${esc(sk.name)}" oninput="cfg.skills[${i}].name=this.value" dir="ltr" class="inp col-span-3" placeholder="Photoshop" />
+          <input value="${esc(sk.subtitle)}" oninput="cfg.skills[${i}].subtitle=this.value" dir="ltr" class="inp col-span-4" placeholder="Retouch" />
+          <input type="number" min="10" max="100" value="${Number(sk.percent)||90}" oninput="cfg.skills[${i}].percent=Number(this.value)" class="inp col-span-2 text-center" />
+          <button type="button" onclick="cfg.skills.splice(${i},1);renderSkillsEditor()" class="text-xs text-red-400 font-bold col-span-1">×</button>
+        </div>
+      `).join('');
+    }
+    function addSkillItem() {
+      cfg.skills.push({ code: 'BL', name: 'Blender', subtitle: '3D Modeling & Render', percent: 95 });
+      renderSkillsEditor();
+    }
+
+    function renderCustomFontsEditor() {
+      const box = document.getElementById('custom-fonts-list');
+      const list = Array.isArray(cfg.typography.customFonts) ? cfg.typography.customFonts : [];
+      if (list.length === 0) {
+        box.innerHTML = '<p class="text-xs text-[#9A9186]">لا توجد خطوط خارجية مضافة (يتم تحميل خطوط Google تلقائياً).</p>';
+        return;
+      }
+      box.innerHTML = list.map((cf, i) => `
+        <div class="sub-card p-3.5 grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
+          <input value="${esc(cf.name)}" oninput="cfg.typography.customFonts[${i}].name=this.value" dir="ltr" class="inp md:col-span-3" placeholder="Font Family Name" />
+          <input value="${esc(cf.url)}" oninput="cfg.typography.customFonts[${i}].url=this.value" dir="ltr" class="inp md:col-span-8" placeholder="Direct .woff2 / .ttf / CSS URL" />
+          <button type="button" onclick="cfg.typography.customFonts.splice(${i},1);renderCustomFontsEditor()" class="text-xs text-red-400 font-bold md:col-span-1">حذف</button>
+        </div>
+      `).join('');
+    }
+
+    function uploadLocalFontFile(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      if (file.size > 1.5 * 1024 * 1024) {
+        showToast('⚠️ يفضل أن يكون حجم ملف الخط أقل من 1.5 ميجابايت (استخدم صيغة woff2 لأفضل سرعة)');
+      }
+      const cleanName = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim();
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (!Array.isArray(cfg.typography.customFonts)) cfg.typography.customFonts = [];
+        cfg.typography.customFonts.push({ name: cleanName, url: reader.result });
+        renderCustomFontsEditor();
+        showToast(`✅ تم رفع الخط "${cleanName}" — يمكنك الآن كتابة اسمه في خانة الخط العربي أو الإنجليزي`);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function addCustomFont() {
+      if (!Array.isArray(cfg.typography.customFonts)) cfg.typography.customFonts = [];
+      cfg.typography.customFonts.push({ name: '', url: '' });
+      renderCustomFontsEditor();
+    }
+    function resetTypographyDefaults() {
+      cfg.typography = { ...window.KHControlRoom.getDefaultConfig().typography };
+      populateForms();
+      showToast('تمت استعادة إعدادات الخطوط والألوان الافتراضية');
+    }
+
+    /* ---------------- COLLECT & PUBLISH ---------------- */
     function collectFormIntoConfig() {
       cfg.seo = {
         siteTitle: document.getElementById('seo-title').value.trim(),
         metaDescription: document.getElementById('seo-desc').value.trim(),
-        keywords: document.getElementById('seo-keywords').value.trim(),
+        keywords: keywordsArray.join(', '),
         canonicalUrl: document.getElementById('seo-canonical').value.trim() || 'https://keloshany.online/',
         robots: document.getElementById('seo-robots').value,
         ogTitle: document.getElementById('seo-og-title').value.trim(),
@@ -539,17 +1059,44 @@
         schemaJobTitle: document.getElementById('seo-schema-job').value.trim()
       };
 
-      ['brandName','brandTagline','logoUrl','portraitUrl','whatsapp','email','behanceUrl','youtubeUrl','linkedinUrl','cvUrl','heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar','heroSubEn','heroSubAr','firebaseUrl','adminPassword'].forEach(k => {
+      const simpleFields = [
+        'brandName','brandTagline','logoUrl','portraitUrl','portraitMode','location','whatsapp','email',
+        'behanceUrl','youtubeUrl','linkedinUrl','cvUrl','availEn','availAr','heroEyebrowEn','heroEyebrowAr',
+        'heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar',
+        'heroBtnWorkEn','heroBtnWorkAr','heroBtnCvEn','heroBtnCvAr','heroSubEn','heroSubAr',
+        'aboutDescEn','aboutDescAr','firebaseUrl','adminPassword','cloudinaryCloud','cloudinaryPreset'
+      ];
+      simpleFields.forEach(k => {
         const el = document.getElementById('cfg-' + k);
         if (el) cfg[k] = el.value.trim();
       });
+      cfg.heroSlideSeconds = Number(document.getElementById('cfg-heroSlideSeconds').value) || 5;
+      cfg.heroShowcaseEmpty = !Array.isArray(cfg.heroShowcaseItems) || cfg.heroShowcaseItems.length === 0;
+
+      cfg.typography = {
+        ...(cfg.typography || {}),
+        fontAr: document.getElementById('typ-fontAr').value.trim() || 'Cairo',
+        fontEn: document.getElementById('typ-fontEn').value.trim() || 'Plus Jakarta Sans',
+        fontAccent: document.getElementById('typ-fontAccent').value.trim() || 'Playfair Display',
+        baseFontSize: Number(document.getElementById('typ-baseFontSize').value) || 16,
+        headingScale: Number(document.getElementById('typ-headingScale').value) || 100,
+        bodyLineHeight: Number(document.getElementById('typ-bodyLineHeight').value) || 1.65,
+        headingLineHeight: Number(document.getElementById('typ-headingLineHeight').value) || 1.15,
+        primaryTextColor: document.getElementById('typ-primaryTextColor').value,
+        secondaryTextColor: document.getElementById('typ-secondaryTextColor').value,
+        accentTextColor: document.getElementById('typ-accentTextColor').value,
+        lightSectionTextColor: document.getElementById('typ-lightSectionTextColor').value
+      };
 
       cfg.sections = {
-        ...(cfg.sections || {}),
+        heroReveal: document.getElementById('sec-heroReveal').checked,
         work: document.getElementById('sec-work').checked,
+        behanceSync: document.getElementById('sec-behanceSync').checked,
         cinema: document.getElementById('sec-cinema').checked,
         experience: document.getElementById('sec-experience').checked,
-        about: document.getElementById('sec-about').checked
+        about: document.getElementById('sec-about').checked,
+        skills: document.getElementById('sec-skills').checked,
+        cta: document.getElementById('sec-cta').checked
       };
     }
 
@@ -569,7 +1116,7 @@
           });
           if (!res.ok) throw new Error('Firebase PUT failed');
         }
-        showToast('✅ تم حفظ ونشر التعديلات وإعدادات السيو بنجاح!');
+        showToast('✅ تم حفظ ونشر جميع التعديلات وإعدادات السيو بنجاح!');
       } catch (err) {
         showToast('⚠️ تم الحفظ محلياً — تأكد من رابط وقواعد Firebase');
       } finally {
@@ -600,6 +1147,31 @@
       const txt = `User-agent: *\nAllow: /\nDisallow: /admin.html\n\nSitemap: ${base}/sitemap.xml\n`;
       triggerDownload('robots.txt', txt, 'text/plain');
       showToast('تم تحميل robots.txt بنجاح');
+    }
+
+    function exportSiteDataJson() {
+      collectFormIntoConfig();
+      triggerDownload('site-data.json', JSON.stringify(cfg, null, 2), 'application/json');
+      showToast('تم تصدير النسخة الاحتياطية site-data.json');
+    }
+
+    function importSiteDataJson(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          if (parsed && typeof parsed === 'object') {
+            cfg = { ...window.KHControlRoom.getDefaultConfig(), ...parsed };
+            populateForms();
+            showToast('✅ تم استيراد الملف — اضغط "حفظ ونشر مباشر" لتفعيله');
+          }
+        } catch (e) {
+          showToast('❌ ملف JSON غير صالح');
+        }
+      };
+      reader.readAsText(file);
     }
 
     initAdmin();

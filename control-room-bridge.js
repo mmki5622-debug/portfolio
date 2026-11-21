@@ -330,8 +330,15 @@
         color: ${pColor} !important;
         line-height: ${bodyLH} !important;
       }
+      .font-display, h1, h2, h3 {
+        font-family: '${safeEn}', '${safeAr}', sans-serif !important;
+      }
       html[dir="rtl"] body,
-      html[dir="rtl"] .font-arabic {
+      html[dir="rtl"] .font-arabic,
+      html[dir="rtl"] .font-display,
+      html[dir="rtl"] h1,
+      html[dir="rtl"] h2,
+      html[dir="rtl"] h3 {
         font-family: '${safeAr}', '${safeEn}', sans-serif !important;
       }
       .font-editorial-italic {
@@ -1527,6 +1534,18 @@
               { type: 'video', url: cfg.revealVideo2 || './Cinematic_logo_reveal_animation_202606051517.mp4', titleEn: '3D Reveal 02', titleAr: 'تحريك 3D — 02' }
             ]);
     KHHeroShowcase.setup(showcaseItems, cfg.heroSlideSeconds || 5);
+    const ambientVid = document.getElementById('heroBgAmbientVideo');
+    const firstVideoItem = showcaseItems.find(it => it && it.type === 'video' && it.url && !classifyVideoUrl(it.url)?.kind?.includes('iframe'));
+    if (ambientVid) {
+      const targetSrc = (firstVideoItem && firstVideoItem.url) || cfg.revealVideo1;
+      if (targetSrc && ambientVid.getAttribute('data-active-url') !== targetSrc) {
+        ambientVid.src = targetSrc;
+        ambientVid.setAttribute('data-active-url', targetSrc);
+        ambientVid.load();
+      }
+      ambientVid.muted = true;
+      ambientVid.play().catch(() => {});
+    }
 
     const skillsGrid = document.querySelector('#skills .lg\\:col-span-7.grid');
     if (skillsGrid && Array.isArray(cfg.skills)) {
