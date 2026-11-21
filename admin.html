@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>غرفة التحكم المتكاملة | Kerlos Hany Control Room v7 (Media &amp; Video Manager)</title>
+  <title>غرفة التحكم المتكاملة | Kerlos Hany Control Room v9 (Behance Editor &amp; Audio)</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -487,16 +487,24 @@
         <div id="projects-editor-list" class="space-y-4"></div>
       </div>
 
-      <!-- Behance Overrides -->
-      <div class="panel-card p-6 space-y-4">
+      <!-- Behance Full Project Editor & Live Importer -->
+      <div class="panel-card p-6 space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 class="font-extrabold text-base text-[#C59367]">🔗 تخصيص مشاريع Behance (إضافة فيديو أو لوحات إضافية)</h2>
-            <p class="text-xs text-[#9A9186]">ضع رابط أي مشروع من Behance لإجبار نوعه (فيديو / صور) أو إرفاق روابط فيديو وصور إضافية تعمل داخل موقعك</p>
+            <h2 class="font-extrabold text-base text-[#C59367]">✏️ تعديل مشاريع Behance (النصوص، الصور، الفيديو، والموسيقى)</h2>
+            <p class="text-xs text-[#9A9186] mt-0.5">اجلب مشاريعك من Behance بضغطة زر وعدّل أي مشروع (الاسم، الوصف، الغلاف، إضافة صور أو فيديوهات أو موسيقى، أو إخفاء المشروع).</p>
           </div>
-          <button type="button" onclick="addBehanceOverride()" class="px-4 py-2 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-extrabold">+ إضافة تخصيص Behance</button>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="fetchBehanceListForAdmin()" id="btn-fetch-behance-admin" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] hover:brightness-110 text-xs font-extrabold transition-all">🔄 جلب مشاريع Behance للتعديل</button>
+            <button type="button" onclick="addBehanceOverride()" class="px-4 py-2 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-extrabold">+ إضافة برابط مباشر</button>
+          </div>
         </div>
-        <div id="behance-overrides-list" class="space-y-3"></div>
+
+        <!-- Live Behance Picker Grid -->
+        <div id="behance-live-picker" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-3.5 rounded-2xl bg-[#050B0A] border border-[#C59367]/25"></div>
+
+        <!-- Active Behance Project Editors -->
+        <div id="behance-overrides-list" class="space-y-4"></div>
       </div>
     </section>
 
@@ -997,8 +1005,24 @@
 
     async function handleDeviceMediaUpload(file, forceType) {
       if (!file) return null;
-      const isVideo = forceType === 'video' || (file.type && file.type.startsWith('video/')) || /\.(mp4|webm|mov|m4v)$/i.test(file.name);
-      const resourceType = isVideo ? 'video' : 'image';
+      const isAudio = forceType === 'audio' || (file.type && file.type.startsWith('audio/')) || /\.(mp3|wav|ogg|m4a|aac)$/i.test(file.name);
+      const isVideo = !isAudio && (forceType === 'video' || (file.type && file.type.startsWith('video/')) || /\.(mp4|webm|mov|m4v)$/i.test(file.name));
+      const resourceType = (isVideo || isAudio) ? 'video' : 'image';
+
+      if (isAudio && !( (document.getElementById('cfg-cloudinaryCloud')?.value || cfg.cloudinaryCloud || '').trim() && (document.getElementById('cfg-cloudinaryPreset')?.value || cfg.cloudinaryPreset || '').trim() )) {
+        if (file.size <= 4.5 * 1024 * 1024) {
+          setUploadProgress(true, '🎵 جاري تجهيز ملف الموسيقى...', 60);
+          return await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => { setUploadProgress(false); showToast('✅ تم رفع الموسيقى بنجاح! اضغط حفظ ونشر'); resolve({ url: reader.result, type: 'audio' }); };
+            reader.onerror = () => { setUploadProgress(false); showToast('❌ تعذر قراءة ملف الصوت'); resolve(null); };
+            reader.readAsDataURL(file);
+          });
+        } else {
+          alert(`حجم ملف الموسيقى (${(file.size/(1024*1024)).toFixed(1)} MB) أكبر من 4.5 MB. ارفعه على GitHub واكتب اسمه مثل ./${file.name} أو استخدم Cloudinary.`);
+          return null;
+        }
+      }
 
       // 1. Try Cloudinary first if configured (supports up to 100MB videos + HD images)
       const cloud = (document.getElementById('cfg-cloudinaryCloud')?.value || cfg.cloudinaryCloud || '').trim();
@@ -1193,6 +1217,16 @@
             <textarea rows="2" oninput="cfg.projects[${i}].descEn=this.value" dir="ltr" class="inp" placeholder="Description EN">${esc(p.descEn)}</textarea>
             <textarea rows="2" oninput="cfg.projects[${i}].descAr=this.value" class="inp" placeholder="وصف المشروع بالعربي">${esc(p.descAr)}</textarea>
           </div>
+          <!-- Project Music / Audio -->
+          <div class="p-3 rounded-xl bg-[#050B0A] border border-[#C59367]/20 flex flex-wrap items-center gap-2.5">
+            <span class="text-xs font-bold text-[#C59367] shrink-0">🎵 موسيقى المشروع:</span>
+            <input value="${esc(p.audioUrl || '')}" oninput="cfg.projects[${i}].audioUrl=this.value" dir="ltr" class="inp flex-1 min-w-[180px]" placeholder="رابط MP3 / WAV أو ارفع من جهازك" />
+            <label class="px-3 py-2 rounded-xl bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-bold cursor-pointer shrink-0">
+              ⬆ صوت من جهازي
+              <input type="file" accept="audio/*" onchange="uploadProjectAudio(event, ${i})" class="hidden" />
+            </label>
+            <button type="button" onclick="cfg.projects[${i}].audioUrl='';renderProjectsEditor()" class="px-2.5 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 text-xs font-bold">🗑️</button>
+          </div>
 
           <!-- Visual Project Gallery (Images & Videos from Device or Link) -->
           <div class="p-3.5 rounded-xl bg-[#050B0A] border border-[#C59367]/20 space-y-2.5">
@@ -1260,6 +1294,15 @@
         }
       }
     }
+    async function uploadProjectAudio(event, pIdx) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      const res = await handleDeviceMediaUpload(file, 'audio');
+      if (res && res.url && cfg.projects[pIdx]) {
+        cfg.projects[pIdx].audioUrl = res.url;
+        renderProjectsEditor();
+      }
+    }
     function addProjectBoardLink(pIdx) {
       if (!cfg.projects[pIdx]) return;
       if (!Array.isArray(cfg.projects[pIdx].extraBoards)) cfg.projects[pIdx].extraBoards = [];
@@ -1267,54 +1310,176 @@
       renderProjectsEditor();
     }
 
-    /* ---------------- BEHANCE OVERRIDES EDITOR (DEVICE UPLOAD + LINKS + DELETE) ---------------- */
+    /* ---------------- FULL BEHANCE PROJECT EDITOR (LIVE PICKER + TEXTS + MEDIA + AUDIO) ---------------- */
+    let adminBehanceList = [];
+
+    async function fetchBehanceListForAdmin() {
+      const btn = document.getElementById('btn-fetch-behance-admin');
+      const picker = document.getElementById('behance-live-picker');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ جاري جلب مشاريع Behance...'; }
+      try {
+        const rssUrl = 'https://www.behance.net/feeds/user?username=kerloshany11';
+        const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
+        if (!res.ok) throw new Error('RSS failed');
+        const data = await res.json();
+        const items = (data && Array.isArray(data.items)) ? data.items : [];
+        adminBehanceList = items.map(it => {
+          const rawHtml = it.content || it.description || '';
+          const imgM = rawHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
+          return {
+            title: it.title || 'Behance Project',
+            url: it.link || '',
+            thumb: it.thumbnail || (imgM ? imgM[1] : ''),
+            desc: rawHtml.replace(/<[^>]*>/g, '').trim().slice(0, 200)
+          };
+        }).filter(x => x.url);
+
+        if (picker) {
+          picker.classList.remove('hidden');
+          picker.innerHTML = adminBehanceList.map((it, idx) => {
+            const isEdited = Boolean(cfg.behanceOverrides && cfg.behanceOverrides[it.url]);
+            return `
+              <div class="sub-card p-3 flex items-center gap-3">
+                <img src="${esc(it.thumb)}" alt="" class="w-16 h-12 rounded-lg object-cover bg-black shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <div class="text-xs font-bold text-[#F2EADF] truncate">${esc(it.title)}</div>
+                  <button type="button" onclick="openBehanceItemForEdit(${idx})" class="mt-1.5 px-3 py-1 rounded-full ${isEdited ? 'bg-emerald-700 text-white' : 'bg-[#C59367] text-[#060D0C]'} text-[10px] font-extrabold">
+                    ${isEdited ? '✅ قيد التعديل (افتح)' : '✏️ تعديل هذا المشروع'}
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('') || '<p class="col-span-full text-xs text-[#9A9186] text-center py-3">لم يتم العثور على مشاريع حالياً.</p>';
+        }
+        showToast(`✅ تم جلب ${adminBehanceList.length} مشروع من Behance`);
+      } catch (e) {
+        showToast('⚠️ تعذر جلب القائمة الآن — يمكنك إضافة رابط المشروع يدوياً');
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = '🔄 جلب مشاريع Behance للتعديل'; }
+      }
+    }
+
+    function openBehanceItemForEdit(idx) {
+      const it = adminBehanceList[idx];
+      if (!it || !it.url) return;
+      if (!cfg.behanceOverrides[it.url]) {
+        cfg.behanceOverrides[it.url] = {
+          titleEn: it.title,
+          titleAr: it.title,
+          descEn: it.desc,
+          descAr: '',
+          roleEn: 'Behance Project',
+          roleAr: 'مشروع Behance',
+          category: 'branding',
+          contentType: 'auto',
+          coverImage: '',
+          audioUrl: '',
+          tags: ['Behance'],
+          extraMedia: [],
+          hidden: false
+        };
+      }
+      renderBehanceOverridesEditor();
+      document.getElementById('behance-overrides-list')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     function renderBehanceOverridesEditor() {
       const box = document.getElementById('behance-overrides-list');
       const entries = Object.entries(cfg.behanceOverrides || {});
       if (entries.length === 0) {
-        box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-3">لا توجد تخصيصات Behance حالياً.</p>';
+        box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-4">اضغط "🔄 جلب مشاريع Behance للتعديل" بالأعلى لاختيار أي مشروع وتعديله بالكامل.</p>';
         return;
       }
       box.innerHTML = entries.map(([url, ov], i) => {
         const media = Array.isArray(ov.extraMedia) ? ov.extraMedia : [];
         return `
-        <div class="sub-card p-4 space-y-3">
-          <div class="flex flex-wrap justify-between items-center gap-2">
-            <span class="text-xs font-mono text-[#C59367] truncate" dir="ltr">${esc(url)}</span>
-            <div class="flex items-center gap-2">
-              <select onchange="updateBehanceOverrideType(${i}, this.value)" class="inp !w-36 !py-1.5 text-xs">
-                <option value="auto" ${(ov.contentType||'auto')==='auto'?'selected':''}>تلقائي</option>
-                <option value="video" ${ov.contentType==='video'?'selected':''}>فيديو ▶</option>
-                <option value="mixed" ${ov.contentType==='mixed'?'selected':''}>فيديو + صور 🎬</option>
-                <option value="images" ${ov.contentType==='images'?'selected':''}>صور فقط 🖼️</option>
-              </select>
-              <button type="button" onclick="deleteBehanceOverride(${i})" class="px-3 py-1.5 rounded-xl bg-red-950/60 border border-red-500/40 text-xs text-red-300 font-bold shrink-0">🗑️ حذف</button>
+        <div class="sub-card p-4 space-y-3.5 border-[#C59367]/35">
+          <div class="flex flex-wrap justify-between items-center gap-2 pb-2 border-b border-[#C59367]/15">
+            <div class="min-w-0 flex-1">
+              <div class="text-xs font-extrabold text-[#C59367] truncate">${esc(ov.titleEn || ov.titleAr || 'مشروع Behance')}</div>
+              <div class="text-[10px] font-mono text-[#9A9186] truncate" dir="ltr">${esc(url)}</div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <label class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#050B0A] border border-[#C59367]/25 text-[11px] cursor-pointer">
+                <input type="checkbox" ${ov.hidden ? 'checked' : ''} onchange="updateBehanceField(${i}, 'hidden', this.checked)" class="accent-red-500" /> إخفاء من الموقع
+              </label>
+              <button type="button" onclick="deleteBehanceOverride(${i})" class="px-3 py-1.5 rounded-xl bg-red-950/60 border border-red-500/40 text-xs text-red-300 font-bold shrink-0">🗑️ إلغاء التخصيص</button>
             </div>
           </div>
-          <div class="flex flex-wrap gap-2">
-            <label class="px-3 py-1.5 rounded-full bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-[11px] font-bold cursor-pointer">
-              ⬆ إرفاق فيديو/صورة من جهازي
-              <input type="file" accept="video/*,image/*" multiple onchange="uploadBehanceOverrideFiles(event, ${i})" class="hidden" />
-            </label>
-            <button type="button" onclick="addBehanceOverrideLink(${i})" class="px-3 py-1.5 rounded-full bg-[#C59367] text-[#060D0C] text-[11px] font-extrabold">+ إضافة رابط خارجي</button>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5">
+            <input value="${esc(ov.titleEn || '')}" oninput="updateBehanceField(${i}, 'titleEn', this.value)" dir="ltr" class="inp" placeholder="Title EN (اختياري)" />
+            <input value="${esc(ov.titleAr || '')}" oninput="updateBehanceField(${i}, 'titleAr', this.value)" class="inp" placeholder="العنوان بالعربي (اختياري)" />
+            <select onchange="updateBehanceField(${i}, 'category', this.value)" class="inp">
+              <option value="branding" ${(ov.category||'branding')==='branding'?'selected':''}>Branding &amp; Logo</option>
+              <option value="3d" ${ov.category==='3d'?'selected':''}>3D Visualization</option>
+              <option value="social" ${ov.category==='social'?'selected':''}>Social &amp; Ads</option>
+            </select>
+            <select onchange="updateBehanceField(${i}, 'contentType', this.value)" class="inp">
+              <option value="auto" ${(ov.contentType||'auto')==='auto'?'selected':''}>نوع تلقائي</option>
+              <option value="video" ${ov.contentType==='video'?'selected':''}>فيديو ▶</option>
+              <option value="mixed" ${ov.contentType==='mixed'?'selected':''}>فيديو + صور 🎬</option>
+              <option value="images" ${ov.contentType==='images'?'selected':''}>صور فقط 🖼️</option>
+            </select>
           </div>
-          <div class="space-y-2">
-            ${media.map((mUrl, mIdx) => `
-              <div class="flex items-center gap-2">
-                ${renderMiniPreview(mUrl)}
-                <input value="${esc(mUrl)}" oninput="updateBehanceOverrideItem(${i}, ${mIdx}, this.value)" dir="ltr" class="inp flex-1" placeholder="رابط فيديو أو صورة" />
-                <button type="button" onclick="removeBehanceOverrideItem(${i}, ${mIdx})" class="px-2.5 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 text-xs font-bold">🗑️</button>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+            <textarea rows="2" oninput="updateBehanceField(${i}, 'descEn', this.value)" dir="ltr" class="inp" placeholder="Description EN">${esc(ov.descEn || '')}</textarea>
+            <textarea rows="2" oninput="updateBehanceField(${i}, 'descAr', this.value)" class="inp" placeholder="الوصف بالعربي">${esc(ov.descAr || '')}</textarea>
+          </div>
+
+          <!-- Custom Cover Image -->
+          <div class="p-3 rounded-xl bg-[#050B0A] border border-[#C59367]/20 flex flex-wrap items-center gap-2.5">
+            ${renderMiniPreview(ov.coverImage || '', 'image')}
+            <input value="${esc(ov.coverImage || '')}" oninput="updateBehanceField(${i}, 'coverImage', this.value)" dir="ltr" class="inp flex-1 min-w-[180px]" placeholder="تغيير صورة الغلاف (رابط أو ارفع من جهازك — اتركه فارغاً للأصلي)" />
+            <label class="px-3 py-2 rounded-xl bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-bold cursor-pointer shrink-0">
+              ⬆ غلاف من جهازي
+              <input type="file" accept="image/*" onchange="uploadBehanceCover(event, ${i})" class="hidden" />
+            </label>
+          </div>
+
+          <!-- Project Music / Audio -->
+          <div class="p-3 rounded-xl bg-[#050B0A] border border-[#C59367]/20 flex flex-wrap items-center gap-2.5">
+            <span class="text-xs font-bold text-[#C59367] shrink-0">🎵 موسيقى المشروع:</span>
+            <input value="${esc(ov.audioUrl || '')}" oninput="updateBehanceField(${i}, 'audioUrl', this.value)" dir="ltr" class="inp flex-1 min-w-[180px]" placeholder="رابط MP3 / WAV أو ارفع ملف موسيقى من جهازك" />
+            <label class="px-3 py-2 rounded-xl bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-bold cursor-pointer shrink-0">
+              ⬆ موسيقى من جهازي
+              <input type="file" accept="audio/*" onchange="uploadBehanceAudio(event, ${i})" class="hidden" />
+            </label>
+            <button type="button" onclick="updateBehanceField(${i}, 'audioUrl', '');renderBehanceOverridesEditor()" class="px-2.5 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 text-xs font-bold">🗑️</button>
+          </div>
+
+          <!-- Extra Images & Videos -->
+          <div class="p-3 rounded-xl bg-[#050B0A] border border-[#C59367]/20 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs font-bold text-[#C59367]">📂 صور وفيديوهات مضافة على المشروع (${media.length})</span>
+              <div class="flex flex-wrap gap-2">
+                <label class="px-3 py-1.5 rounded-full bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-[11px] font-bold cursor-pointer">
+                  ⬆ إرفاق فيديو/صورة من جهازي
+                  <input type="file" accept="video/*,image/*" multiple onchange="uploadBehanceOverrideFiles(event, ${i})" class="hidden" />
+                </label>
+                <button type="button" onclick="addBehanceOverrideLink(${i})" class="px-3 py-1.5 rounded-full bg-[#C59367] text-[#060D0C] text-[11px] font-extrabold">+ إضافة رابط خارجي</button>
               </div>
-            `).join('')}
+            </div>
+            <div class="space-y-2">
+              ${media.map((mUrl, mIdx) => `
+                <div class="flex items-center gap-2">
+                  ${renderMiniPreview(mUrl)}
+                  <input value="${esc(mUrl)}" oninput="updateBehanceOverrideItem(${i}, ${mIdx}, this.value)" dir="ltr" class="inp flex-1" placeholder="رابط فيديو (MP4 / YouTube / Drive) أو صورة" />
+                  <button type="button" onclick="removeBehanceOverrideItem(${i}, ${mIdx})" class="px-2.5 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 text-xs font-bold">🗑️</button>
+                </div>
+              `).join('') || '<p class="text-[11px] text-[#9A9186]">لا توجد وسائط مضافة بعد.</p>'}
+            </div>
           </div>
         </div>
       `;
       }).join('');
     }
+
     function addBehanceOverride() {
       const url = prompt('ضع رابط مشروع Behance بالكامل:');
       if (!url || !url.trim()) return;
-      cfg.behanceOverrides[url.trim()] = { contentType: 'video', extraMedia: [] };
+      cfg.behanceOverrides[url.trim()] = { contentType: 'auto', extraMedia: [], audioUrl: '', hidden: false };
       renderBehanceOverridesEditor();
     }
     function deleteBehanceOverride(idx) {
@@ -1322,9 +1487,31 @@
       if (key) delete cfg.behanceOverrides[key];
       renderBehanceOverridesEditor();
     }
-    function updateBehanceOverrideType(idx, val) {
+    function updateBehanceField(idx, field, val) {
       const key = Object.keys(cfg.behanceOverrides)[idx];
-      if (key) cfg.behanceOverrides[key].contentType = val;
+      if (key) cfg.behanceOverrides[key][field] = val;
+    }
+    async function uploadBehanceCover(event, idx) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      const key = Object.keys(cfg.behanceOverrides)[idx];
+      if (!key) return;
+      const res = await handleDeviceMediaUpload(file, 'image');
+      if (res && res.url) {
+        cfg.behanceOverrides[key].coverImage = res.url;
+        renderBehanceOverridesEditor();
+      }
+    }
+    async function uploadBehanceAudio(event, idx) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      const key = Object.keys(cfg.behanceOverrides)[idx];
+      if (!key) return;
+      const res = await handleDeviceMediaUpload(file, 'audio');
+      if (res && res.url) {
+        cfg.behanceOverrides[key].audioUrl = res.url;
+        renderBehanceOverridesEditor();
+      }
     }
     function addBehanceOverrideLink(idx) {
       const key = Object.keys(cfg.behanceOverrides)[idx];

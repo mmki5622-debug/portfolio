@@ -320,6 +320,69 @@
       mix-blend-mode: screen;
     }
 
+
+    /* Transparent Glass Brand Logos Marquee */
+    .marquee-shell {
+      position: relative;
+      background: rgba(6, 13, 12, 0.42);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(197, 147, 103, 0.18);
+      border-bottom: 1px solid rgba(197, 147, 103, 0.18);
+      overflow: hidden;
+    }
+    .marquee-viewport {
+      overflow: hidden;
+      width: 100%;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    }
+    .marquee-track {
+      display: flex;
+      align-items: center;
+      width: max-content;
+      gap: 2.75rem;
+      padding: 0.35rem 0;
+      animation: khMarqueeScroll var(--marquee-speed, 28s) linear infinite;
+      will-change: transform;
+    }
+    .marquee-viewport:hover .marquee-track {
+      animation-play-state: paused;
+    }
+    @keyframes khMarqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .brand-marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.55rem 1.15rem;
+      border-radius: 9999px;
+      background: rgba(242, 234, 223, 0.03);
+      border: 1px solid rgba(197, 147, 103, 0.16);
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    .brand-marquee-item:hover {
+      background: rgba(197, 147, 103, 0.10);
+      border-color: rgba(197, 147, 103, 0.65);
+      transform: translateY(-2px);
+    }
+    .brand-marquee-logo {
+      height: 30px;
+      max-width: 115px;
+      object-fit: contain;
+      filter: grayscale(100%) brightness(1.15);
+      opacity: 0.78;
+      transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+    }
+    .brand-marquee-item:hover .brand-marquee-logo {
+      filter: grayscale(0%) brightness(1);
+      opacity: 1;
+      transform: scale(1.06);
+    }
+
     ::-webkit-scrollbar { width: 7px; height: 7px; }
     ::-webkit-scrollbar-track { background: #0A0908; }
     ::-webkit-scrollbar-thumb { background: #4B3B2D; }
@@ -442,6 +505,27 @@
     </div>
   </section>
 
+
+  <!-- ========================================================================
+       TRANSPARENT ANIMATED BRAND LOGOS MARQUEE (#clients-marquee)
+       ======================================================================== -->
+  <section id="clients-marquee" class="arch-grid py-6 relative z-20">
+    <div class="marquee-shell py-4">
+      <div class="max-w-[1440px] mx-auto px-4 sm:px-8 mb-3 flex items-center justify-between">
+        <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-[#C59367]">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#C59367]"></span>
+          <span data-i18n="clientsMarqueeTitle">TRUSTED BY BRANDS &amp; PARTNERS</span>
+        </div>
+        <span class="hidden sm:inline font-mono text-[9px] uppercase tracking-[0.2em] text-[#9A9186]">HOVER TO PAUSE</span>
+      </div>
+      <div class="marquee-viewport" dir="ltr">
+        <div id="clients-marquee-track" class="marquee-track">
+          <!-- Populated dynamically from Control Room -->
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ========================================================================
        SECTION 2: PRACTICE STATEMENT (WARM CREAM #E8D8C3)
        ======================================================================== -->
@@ -539,7 +623,7 @@
       </div>
 
       <!-- Projects Grid -->
-      <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start"></div>
     </div>
   </section>
 
@@ -988,6 +1072,7 @@
         heroSubtitle: 'A visual designer turning brand intent into identity, campaign, motion, and crafted 3D imagery with a stronger point of view.',
         heroBtnWork: 'EXPLORE THE WORK',
         heroBtnCv: 'DOWNLOAD CV',
+        clientsMarqueeTitle: 'TRUSTED BY BRANDS & PARTNERS',
         practiceTag: 'THE PRACTICE',
         practiceSide: 'DESIGN WITH INTELLIGENCE',
         practiceTitle1: 'EVERY DETAIL',
@@ -1044,6 +1129,7 @@
         heroSubtitle: 'مصمم بصري يحوّل رؤية العلامات التجارية إلى هويات بصرية وحملات وموشن جرافيك وتجارب 3D متقنة.',
         heroBtnWork: 'استكشف الأعمال',
         heroBtnCv: 'تحميل السيرة الذاتية',
+        clientsMarqueeTitle: 'شركاء النجاح والعلامات التجارية',
         practiceTag: 'الفلسفة التصميمية',
         practiceSide: 'التصميم بذكاء ورؤية',
         practiceTitle1: 'كل تفصيلة',
@@ -1198,7 +1284,9 @@
           return;
         }
         standby.classList.add('hidden');
-        iframe.src = `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=${auto ? 1 : 0}&mute=${this.isMuted ? 1 : 0}&rel=0&playsinline=1`;
+        const ytIdMatch = String(v.id || '').match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+        const cleanYtId = ytIdMatch ? ytIdMatch[1] : String(v.id || '').trim();
+        iframe.src = `https://www.youtube-nocookie.com/embed/${cleanYtId}?autoplay=${auto ? 1 : 0}&mute=${this.isMuted ? 1 : 0}&rel=0&playsinline=1`;
         this.isPlaying = auto;
       },
       playAt(idx) {
@@ -1246,7 +1334,7 @@
         return `
           <button onclick="FlashMediaDeck.playAt(${idx})" class="text-start rounded-2xl border ${active ? 'border-[#C59367] shadow-lg shadow-[#A06620]/20' : 'border-[#C59367]/25'} bg-[#0A1312]/90 hover:border-[#C59367] hover:-translate-y-1 transition-all overflow-hidden group">
             <div class="relative aspect-video bg-black overflow-hidden">
-              <img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+              <img src="https://i.ytimg.com/vi/${(String(v.id||'').match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i)||[])[1]||v.id}/hqdefault.jpg" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
               <div class="absolute inset-0 flex items-center justify-center bg-black/25 group-hover:bg-black/10 transition-colors">
                 <span class="w-10 h-10 rounded-full bg-[#0A0908]/85 border border-[#C59367] flex items-center justify-center text-[#F2EADF] text-xs">▶</span>
               </div>
@@ -1301,9 +1389,15 @@
 
     function classifyProjectVideoUrl(rawUrl) {
       if (!rawUrl || typeof rawUrl !== 'string') return null;
-      const url = rawUrl.trim();
+      let url = rawUrl.trim();
       if (!url) return null;
-      if (url.startsWith('data:video/') || /\.(mp4|webm|mov|m4v)(\?|$)/i.test(url)) return { url, kind: 'mp4' };
+      if (/dropbox\.com/i.test(url)) {
+        url = url.replace(/[?&]dl=0/i, '').replace(/www\.dropbox\.com/i, 'dl.dropboxusercontent.com');
+        if (/\.(mp4|webm|mov|m4v)/i.test(url)) return { url, kind: 'mp4' };
+      }
+      const gdrive = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9_-]{10,})/i);
+      if (gdrive) return { url: `https://drive.google.com/file/d/${gdrive[1]}/preview`, kind: 'iframe' };
+      if (url.startsWith('data:video/') || /\.(mp4|webm|mov|m4v)(\?|$)/i.test(url) || /res\.cloudinary\.com\/.*\/video\/upload/i.test(url)) return { url, kind: 'mp4' };
       const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
       if (yt) return { url: `https://www.youtube-nocookie.com/embed/${yt[1]}?rel=0&playsinline=1`, kind: 'iframe' };
       const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
@@ -1323,15 +1417,77 @@
       return { hasVid, vidCount, imgCount, type, label };
     }
 
+    function playCardInlineVideo(event, projectId) {
+      if (event) event.stopPropagation();
+      const p = projectsData.find(x => x.id === projectId);
+      if (!p) return;
+      const box = document.getElementById(`card-media-${projectId}`);
+      if (!box) return;
+
+      // Find first playable video
+      let firstVid = null;
+      if (Array.isArray(p.videos) && p.videos.length > 0) {
+        const v0 = p.videos[0];
+        firstVid = typeof v0 === 'string' ? classifyProjectVideoUrl(v0) : v0;
+      }
+      if (!firstVid && Array.isArray(p.extraBoards)) {
+        for (const b of p.extraBoards) {
+          const c = classifyProjectVideoUrl(b);
+          if (c) { firstVid = c; break; }
+        }
+      }
+      if (!firstVid) {
+        openProjectModal(projectId, true);
+        return;
+      }
+
+      const ytBar = `
+        <div class="flex items-center justify-between gap-2 px-3 py-1.5 bg-[#0A0908] border-t border-[#C59367]/30 font-mono text-[10px]">
+          <span class="text-[#C59367] font-bold">▶ INLINE PLAYER</span>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="event.stopPropagation(); openProjectModal('${projectId}', true)" class="px-2.5 py-0.5 rounded-full bg-[#C59367] text-[#0A0908] font-bold">تكبير ↗</button>
+            <button type="button" onclick="event.stopPropagation(); renderProjects()" class="px-2 py-0.5 rounded-full border border-[#C59367]/40 text-[#F2EADF]">✕</button>
+          </div>
+        </div>
+      `;
+
+      if (firstVid.kind === 'iframe') {
+        const sep = firstVid.url.includes('?') ? '&' : '?';
+        box.innerHTML = `
+          <div class="w-full aspect-video bg-black" onclick="event.stopPropagation()">
+            <iframe src="${firstVid.url}${sep}autoplay=1" class="w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          ${ytBar}
+        `;
+      } else {
+        box.innerHTML = `
+          <div class="w-full aspect-video bg-black" onclick="event.stopPropagation()">
+            <video src="${firstVid.url}" controls autoplay playsinline class="w-full h-full object-contain bg-black"></video>
+          </div>
+          ${ytBar}
+        `;
+      }
+    }
+
+    function formatShortDate(rawDate) {
+      if (!rawDate) return '';
+      try {
+        const d = new Date(rawDate);
+        if (isNaN(d.getTime())) return '';
+        return d.toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', { year: 'numeric', month: 'short' });
+      } catch (e) { return ''; }
+    }
+
     function renderProjects() {
       const grid = document.getElementById('projects-grid');
       if (!grid) return;
 
+      const visibleProjects = projectsData.filter(p => !p.hidden);
       const filtered = activeFilter === 'all'
-        ? projectsData
+        ? visibleProjects
         : activeFilter === 'video'
-          ? projectsData.filter(p => getProjectContentMeta(p).hasVid)
-          : projectsData.filter(p => p.category === activeFilter);
+          ? visibleProjects.filter(p => getProjectContentMeta(p).hasVid)
+          : visibleProjects.filter(p => p.category === activeFilter);
 
       if (filtered.length === 0) {
         grid.innerHTML = `
@@ -1351,24 +1507,48 @@
         const num = String(idx + 1).padStart(2, '0');
         const title = currentLang === 'ar' ? (p.titleAr || p.titleEn) : (p.titleEn || p.titleAr);
         const role = currentLang === 'ar' ? (p.roleAr || p.roleEn || 'مشروع Behance') : (p.roleEn || p.roleAr || 'Behance Project');
+        const desc = (currentLang === 'ar' ? (p.descAr || p.descEn) : (p.descEn || p.descAr)) || '';
         const imgSrc = (p.imageCandidates && p.imageCandidates[0]) || p.image || '';
         const meta = getProjectContentMeta(p);
         const behanceUrl = getProjectBehanceLink(p.url);
+        const dateStr = formatShortDate(p.pubDate);
+        const hasAudio = Boolean(p.audioUrl && String(p.audioUrl).trim());
+        const tagsList = Array.isArray(p.tags) ? p.tags.slice(0, 3) : [];
 
         return `
           <article onclick="openProjectModal('${p.id}', ${meta.hasVid ? 'true' : 'false'})" class="project-card cursor-pointer group flex flex-col justify-between">
             <div>
-              <div class="relative aspect-[16/11] bg-[#0A0908] overflow-hidden">
-                <img data-project-thumb="${p.id}" src="${imgSrc}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+              <!-- Natural Behance Aspect Ratio Container + Inline YouTube-Style Player Slot -->
+              <div id="card-media-${p.id}" class="relative w-full bg-[#0A0908] overflow-hidden">
+                <img data-project-thumb="${p.id}" src="${imgSrc}" alt="${title}" class="w-full h-auto block group-hover:scale-[1.03] transition-transform duration-500" loading="lazy" />
                 <span class="absolute top-3 start-3 w-8 h-8 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[11px] font-bold flex items-center justify-center shadow-md z-10">${num}</span>
-                <span class="kh-video-badge absolute top-3 end-3 px-3 py-1 rounded-full ${meta.hasVid ? 'bg-[#C59367] text-[#0A0908]' : 'bg-[#0A0908]/85 text-[#C59367] border border-[#C59367]/35'} font-mono text-[10px] font-bold uppercase z-10">
-                  ${meta.label}
-                </span>
-                ${meta.hasVid ? `<div class="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25"><span class="w-12 h-12 rounded-full bg-[#C59367]/90 text-[#0A0908] flex items-center justify-center text-lg shadow-xl">▶</span></div>` : ''}
+                <div class="absolute top-3 end-3 flex items-center gap-1.5 z-10">
+                  ${hasAudio ? `<span class="px-2.5 py-1 rounded-full bg-[#0E3E3F]/90 border border-[#C59367]/60 text-[#F2EADF] font-mono text-[10px] font-bold">🎵</span>` : ''}
+                  <span class="kh-video-badge px-3 py-1 rounded-full ${meta.hasVid ? 'bg-[#C59367] text-[#0A0908]' : 'bg-[#0A0908]/85 text-[#C59367] border border-[#C59367]/35'} font-mono text-[10px] font-bold uppercase">
+                    ${meta.label}
+                  </span>
+                </div>
+                ${meta.hasVid ? `
+                  <button type="button" onclick="playCardInlineVideo(event, '${p.id}')" title="${currentLang === 'ar' ? 'تشغيل الفيديو داخل الكارت' : 'Play video inline'}" class="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/15 transition-colors z-10">
+                    <span class="w-14 h-10 rounded-xl bg-red-600/95 hover:bg-red-600 text-white flex items-center justify-center text-lg shadow-2xl border border-white/20 transition-transform group-hover:scale-110">▶</span>
+                  </button>
+                ` : ''}
               </div>
-              <div class="p-5 space-y-2">
-                <div class="font-mono text-[10px] uppercase tracking-wider text-[#9A9186]">${role}</div>
-                <h3 class="font-display font-bold uppercase text-lg text-[#F2EADF] group-hover:text-[#C59367] transition-colors line-clamp-1">${title}</h3>
+
+              <!-- Full Imported Behance Metadata -->
+              <div class="p-5 space-y-2.5">
+                <div class="flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wider text-[#C59367]">
+                  <span class="truncate">${role}</span>
+                  ${dateStr ? `<span class="text-[#9A9186] shrink-0">${dateStr}</span>` : ''}
+                </div>
+                <h3 class="font-display font-bold uppercase text-lg text-[#F2EADF] group-hover:text-[#C59367] transition-colors line-clamp-2">${title}</h3>
+                ${desc ? `<p class="text-xs text-[#9A9186] leading-relaxed line-clamp-2">${desc}</p>` : ''}
+                ${tagsList.length > 0 ? `
+                  <div class="flex flex-wrap gap-1.5 pt-1">
+                    ${tagsList.map(t => `<span class="px-2 py-0.5 rounded-md bg-[#0E3E3F]/40 border border-[#C59367]/20 font-mono text-[9px] text-[#C9BFB2]">${t}</span>`).join('')}
+                    ${meta.imgCount > 1 ? `<span class="px-2 py-0.5 rounded-md bg-[#0A0908] border border-[#C59367]/20 font-mono text-[9px] text-[#C59367]">${meta.imgCount} ${currentLang === 'ar' ? 'صور' : 'Boards'}</span>` : ''}
+                  </div>
+                ` : ''}
               </div>
             </div>
 
@@ -1377,12 +1557,13 @@
                 ? `<a href="${behanceUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="px-3.5 py-1.5 rounded-full border border-[#C59367]/50 bg-[#0E3E3F]/45 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#0A0908] font-bold transition-all">${currentLang === 'ar' ? 'صفحة Behance ↗' : 'BEHANCE PAGE ↗'}</a>`
                 : '<span></span>'}
               ${meta.hasVid
-                ? `<button type="button" onclick="event.stopPropagation(); openProjectModal('${p.id}', true)" class="px-3.5 py-1.5 rounded-full bg-[#C59367] hover:bg-[#D4A478] text-[#0A0908] font-bold transition-all">${currentLang === 'ar' ? '▶ مشاهدة الفيديو' : '▶ WATCH VIDEO'}</button>`
-                : `<span class="text-[#C59367] font-bold">${currentLang === 'ar' ? 'عرض التفاصيل ←' : 'OPEN FULL CASE STUDY →'}</span>`}
+                ? `<button type="button" onclick="playCardInlineVideo(event, '${p.id}')" class="px-3.5 py-1.5 rounded-full bg-[#C59367] hover:bg-[#D4A478] text-[#0A0908] font-bold transition-all">${currentLang === 'ar' ? '▶ تشغيل هنا' : '▶ PLAY INLINE'}</button>`
+                : `<span class="text-[#C59367] font-bold">${currentLang === 'ar' ? 'عرض المشروع كامل ←' : 'OPEN CASE STUDY →'}</span>`}
             </div>
           </article>
         `;
       }).join('');
+      if (typeof observeRevealElements === 'function') observeRevealElements();
     }
 
     async function syncBehanceProjects() {
@@ -1465,13 +1646,23 @@
         </figure>
       `).join('');
 
+      const audioHtml = (p.audioUrl && String(p.audioUrl).trim()) ? `
+        <div class="p-4 rounded-2xl bg-[#0A0908] border border-[#C59367]/45 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5 text-xs font-bold text-[#C59367]">
+            <span class="text-base">🎵</span>
+            <span>${currentLang === 'ar' ? 'موسيقى / صوت المشروع' : 'Project Soundtrack / Audio'}</span>
+          </div>
+          <audio src="${p.audioUrl}" controls class="h-9 flex-1 min-w-[220px]"></audio>
+        </div>
+      ` : '';
+
       const imgsHtml = imgs.map((m, i) => `
-        <figure class="border border-[#C59367]/25 bg-[#0A0908]">
-          <img src="${(m.srcCandidates && m.srcCandidates[0]) || m.src}" alt="Board ${i + 1}" class="w-full h-auto max-h-[78vh] object-contain mx-auto" />
+        <figure class="overflow-hidden bg-[#0A0908]">
+          <img src="${(m.srcCandidates && m.srcCandidates[0]) || m.src}" alt="Board ${i + 1}" class="w-full h-auto block" loading="lazy" />
         </figure>
       `).join('');
 
-      streamEl.innerHTML = vidsHtml + imgsHtml;
+      streamEl.innerHTML = audioHtml + vidsHtml + `<div class="rounded-2xl overflow-hidden border border-[#C59367]/25 divide-y divide-[#C59367]/10">${imgsHtml}</div>`;
       if (countEl) countEl.textContent = vids.length > 0 ? `${vids.length} Video(s) · ${imgs.length} Board(s)` : `${imgs.length} High-Res Board(s)`;
     }
 
@@ -1515,7 +1706,7 @@
       const modal = document.getElementById('project-modal');
       modal.classList.add('hidden');
       modal.classList.remove('flex');
-      document.querySelectorAll('#pm-media-stream video').forEach(v => v.pause());
+      document.querySelectorAll('#pm-media-stream video, #pm-media-stream audio').forEach(v => v.pause());
       document.querySelectorAll('#pm-media-stream iframe').forEach(f => { f.src = 'about:blank'; });
     }
 
@@ -1617,7 +1808,12 @@
     document.addEventListener('DOMContentLoaded', () => {
       renderServices();
       initInteractiveAnimations();
-      // Force reliable muted autoplay for Hero & Motion 3D videos
+      // Force reliable muted autoplay + automatic filename fallback for Hero & Motion 3D videos
+      const fallbackVideoCandidates = [
+        './Cinematic_logo_reveal_animation_202606051512-cleaned.mp4',
+        './Cinematic_logo_reveal_animation_202606051517.mp4',
+        './Cinematic_logo_reveal_animation_202606051512.mp4'
+      ];
       ['heroBgAmbientVideo', 'heroRevealVideo'].forEach(vidId => {
         const v = document.getElementById(vidId);
         if (!v) return;
@@ -1625,9 +1821,24 @@
         v.playsInline = true;
         v.setAttribute('muted', '');
         v.setAttribute('playsinline', '');
+        let fbIdx = 0;
+        v.addEventListener('error', () => {
+          const curSrc = v.getAttribute('src') || '';
+          const nextCand = fallbackVideoCandidates.find((c, i) => i >= fbIdx && c !== curSrc);
+          if (nextCand) {
+            fbIdx = fallbackVideoCandidates.indexOf(nextCand) + 1;
+            v.src = nextCand;
+            v.setAttribute('data-active-url', nextCand);
+            v.load();
+            v.play().catch(() => {});
+          } else if (vidId === 'heroRevealVideo') {
+            const fb = document.getElementById('heroRevealFallback');
+            if (fb) fb.classList.remove('hidden');
+          }
+        });
         const tryPlay = () => v.play().catch(() => {});
         tryPlay();
-        v.addEventListener('canplay', tryPlay, { once: true });
+        v.addEventListener('canplay', tryPlay);
       });
       const unlockVideosOnce = () => {
         ['heroBgAmbientVideo', 'heroRevealVideo'].forEach(vidId => {

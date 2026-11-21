@@ -594,6 +594,21 @@
     const ov = overrides[p.url];
     if (!ov) return;
 
+    if (ov.hidden === true) p.hidden = true;
+    if (ov.titleEn && ov.titleEn.trim()) p.titleEn = ov.titleEn.trim();
+    if (ov.titleAr && ov.titleAr.trim()) p.titleAr = ov.titleAr.trim();
+    if (ov.descEn && ov.descEn.trim()) p.descEn = ov.descEn.trim();
+    if (ov.descAr && ov.descAr.trim()) p.descAr = ov.descAr.trim();
+    if (ov.roleEn && ov.roleEn.trim()) p.roleEn = ov.roleEn.trim();
+    if (ov.roleAr && ov.roleAr.trim()) p.roleAr = ov.roleAr.trim();
+    if (ov.category && ov.category.trim()) p.category = ov.category.trim();
+    if (ov.audioUrl && ov.audioUrl.trim()) p.audioUrl = ov.audioUrl.trim();
+    if (Array.isArray(ov.tags) && ov.tags.length > 0) p.tags = ov.tags;
+    if (ov.coverImage && ov.coverImage.trim()) {
+      const cov = normalizeExternalImageUrl(ov.coverImage.trim());
+      p.image = cov;
+      p.imageCandidates = upgradeImageCandidates(cov);
+    }
     if (ov.contentType && ov.contentType !== 'auto') {
       p.contentType = ov.contentType;
     }
@@ -612,11 +627,12 @@
             p.hasVideo = true;
           }
         } else if (rawUrl && !existingImgSet.has(rawUrl)) {
-          existingImgSet.add(rawUrl);
+          const imgNorm = normalizeExternalImageUrl(rawUrl);
+          existingImgSet.add(imgNorm);
           if (!Array.isArray(p.mediaGallery)) p.mediaGallery = [];
           p.mediaGallery.push({
-            src: rawUrl,
-            srcCandidates: upgradeImageCandidates(rawUrl),
+            src: imgNorm,
+            srcCandidates: upgradeImageCandidates(imgNorm),
             fallbackArt: p.fallbackArt,
             captionEn: `Manual Board 0${idx + 1}`,
             captionAr: `لوحة مضافة يدوياً 0${idx + 1}`
@@ -1220,7 +1236,15 @@
       if (imageOnlyGallery.length > 0 && typeof origRenderMediaStream === 'function') {
         origRenderMediaStream(clonedProject);
       } else if (streamEl) {
-        streamEl.innerHTML = '';
+        streamEl.innerHTML = (p.audioUrl && String(p.audioUrl).trim()) ? `
+          <div class="p-4 rounded-2xl bg-[#0A0908] border border-[#C59367]/45 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 text-xs font-bold text-[#C59367]">
+              <span class="text-base">🎵</span>
+              <span>${lang === 'ar' ? 'موسيقى / صوت المشروع' : 'Project Soundtrack / Audio'}</span>
+            </div>
+            <audio src="${p.audioUrl}" controls class="h-9 flex-1 min-w-[220px]"></audio>
+          </div>
+        ` : '';
       }
 
       if (streamEl && collectedVideos.length > 0) {
