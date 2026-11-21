@@ -631,20 +631,60 @@
       document.querySelector(`.tab-btn[data-tab="${name}"]`)?.classList.add('active');
     }
 
+    function normalizeCfg(raw, def) {
+      const merged = { ...def, ...(raw || {}) };
+      // Fill empty string critical fields with defaults so forms are never blank
+      ['brandName','brandTagline','logoUrl','portraitUrl','whatsapp','email','location','behanceUrl','youtubeUrl','linkedinUrl','cvUrl','availEn','availAr','heroEyebrowEn','heroEyebrowAr','heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar','heroBtnWorkEn','heroBtnWorkAr','heroBtnCvEn','heroBtnCvAr','heroSubEn','heroSubAr','aboutDescEn','aboutDescAr','firebaseUrl','adminPassword'].forEach(k => {
+        if (!merged[k]) merged[k] = def[k];
+      });
+      merged.seo = { ...def.seo, ...(merged.seo || {}) };
+      merged.typography = { ...def.typography, ...(merged.typography || {}) };
+      merged.sections = { ...def.sections, ...(merged.sections || {}) };
+      if (!Array.isArray(merged.stats) || merged.stats.length < 3) merged.stats = def.stats;
+      if (!Array.isArray(merged.skills) || merged.skills.length === 0) merged.skills = def.skills;
+      if (!Array.isArray(merged.experience) || merged.experience.length === 0) merged.experience = def.experience;
+      if (!Array.isArray(merged.youtubeVideos) || merged.youtubeVideos.length === 0) merged.youtubeVideos = def.youtubeVideos;
+      if (!Array.isArray(merged.projects)) merged.projects = [];
+      if (!Array.isArray(merged.heroShowcaseItems)) merged.heroShowcaseItems = def.heroShowcaseItems;
+      if (!merged.behanceOverrides || typeof merged.behanceOverrides !== 'object') merged.behanceOverrides = {};
+      return merged;
+    }
+
     async function initAdmin() {
-      cfg = await window.KHControlRoom.loadConfig();
-      const def = window.KHControlRoom.getDefaultConfig();
-      if (!cfg.seo) cfg.seo = { ...def.seo };
-      if (!cfg.typography) cfg.typography = { ...def.typography };
-      if (!cfg.sections) cfg.sections = { ...def.sections };
-      if (!Array.isArray(cfg.stats) || cfg.stats.length < 3) cfg.stats = def.stats;
-      if (!Array.isArray(cfg.skills)) cfg.skills = def.skills;
-      if (!Array.isArray(cfg.experience)) cfg.experience = def.experience;
-      if (!Array.isArray(cfg.youtubeVideos)) cfg.youtubeVideos = def.youtubeVideos;
-      if (!Array.isArray(cfg.projects)) cfg.projects = [];
-      if (!Array.isArray(cfg.heroShowcaseItems)) cfg.heroShowcaseItems = def.heroShowcaseItems;
-      if (!cfg.behanceOverrides || typeof cfg.behanceOverrides !== 'object') cfg.behanceOverrides = {};
+      const statusEl = document.getElementById('sync-status-text');
+      const def = (window.KHControlRoom && window.KHControlRoom.getDefaultConfig)
+        ? window.KHControlRoom.getDefaultConfig()
+        : { seo: {}, typography: {}, sections: {}, stats: [], skills: [], experience: [], youtubeVideos: [], projects: [], heroShowcaseItems: [], behanceOverrides: {} };
+
+      // 1. Instant load from localStorage or defaults so fields are NEVER empty
+      let localSaved = null;
+      try { localSaved = JSON.parse(localStorage.getItem('kh_control_room_config_v1') || 'null'); } catch (e) {}
+      cfg = normalizeCfg(localSaved, def);
       populateForms();
+      if (statusEl) statusEl.textContent = '⏳ جاري مزامنة أحدث البيانات من Firebase...';
+
+      // 2. Fetch Firebase with 5-second timeout so slow internet never hangs the UI
+      try {
+        const fbUrl = (cfg.firebaseUrl || def.firebaseUrl || '').replace(/\/+$/, '');
+        if (!fbUrl) throw new Error('No Firebase URL');
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 5000);
+        const res = await fetch(`${fbUrl}/portfolioConfig.json?t=${Date.now()}`, { signal: ctrl.signal });
+        clearTimeout(timer);
+        if (res.ok) {
+          const remote = await res.json();
+          if (remote && typeof remote === 'object') {
+            cfg = normalizeCfg(remote, def);
+            try { localStorage.setItem('kh_control_room_config_v1', JSON.stringify(cfg)); } catch (e) {}
+            populateForms();
+          }
+          if (statusEl) statusEl.textContent = '✅ متصل بـ Firebase ومحدّث بالكامل';
+        } else {
+          if (statusEl) statusEl.textContent = '⚠️ تم تحميل الإعدادات المحلية (تعذر القراءة من Firebase)';
+        }
+      } catch (e) {
+        if (statusEl) statusEl.textContent = '⚠️ تم تحميل الإعدادات الافتراضية/المحلية (بطء أو انقطاع الاتصال بـ Firebase)';
+      }
     }
 
     function unlockAdmin(e) {
