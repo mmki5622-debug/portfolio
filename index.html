@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kerlos Hany | Designed To Be Remembered</title>
+  <meta name="description" content="Kerlos Hany Nassif — Independent Visual Designer turning brand intent into identity, campaign, motion, and crafted 3D imagery." />
+
+  <link id="site-favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='12' fill='%230A0908'/%3E%3Crect x='4' y='4' width='112' height='112' rx='8' fill='none' stroke='%23C59367' stroke-width='4'/%3E%3Cpath d='M96 18 C78 38 64 52 52 61 C45 61 39 57 37 49 C36 49 35 52 36 58 C37 62 39 65 40 67 L22 76 C21 80 23 86 26 88 L59 71 L69 72 L21 104 L32 104 C52 87 74 72 97 62 C98 56 95 48 92 45 L74 44 C84 36 93 27 99 20 Z' fill='%23F2EADF'/%3E%3C/svg%3E" />
+
+  <!-- Fonts: Space Grotesk (Display), Space Mono (Editorial Meta), Inter, Cairo & Tajawal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#0A0908',
+            surface: '#110F0D',
+            copper: '#C59367',
+            copperDark: '#A06620',
+            cream: '#E8D8C3',
+            creamText: '#F2EADF',
+            muted: '#9A9186',
+            ink: '#12100E',
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', '"Cairo"', 'sans-serif'],
+            sans: ['"Inter"', '"Tajawal"', 'sans-serif'],
+            mono: ['"Space Mono"', '"Cairo"', 'monospace'],
+            arabic: ['"Cairo"', '"Tajawal"', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --bg-dark: #0A0908;
+      --bg-cream: #E8D8C3;
+      --accent-copper: #C59367;
+      --text-light: #F2EADF;
+      --text-dark: #12100E;
+    }
+
+    body {
+      background-color: #0A0908;
+      color: #F2EADF;
+      font-family: 'Inter', 'Tajawal', sans-serif;
+      overflow-x: hidden;
+    }
+
+    html[dir="rtl"] body {
+      font-family: 'Cairo', 'Tajawal', sans-serif;
+    }
+
+    .font-display {
+      font-family: 'Space Grotesk', 'Cairo', sans-serif;
+      letter-spacing: -0.03em;
+    }
+
+    html[dir="rtl"] .font-display {
+      font-family: 'Cairo', sans-serif;
+      letter-spacing: 0;
+    }
+
+    /* Fusion Background: Deep Obsidian-Petrol + Architectural Grid */
+    .arch-grid {
+      background-color: #060D0C;
+      background-image:
+        radial-gradient(circle at 15% 20%, rgba(14, 62, 63, 0.32) 0%, transparent 48%),
+        radial-gradient(circle at 85% 75%, rgba(160, 102, 32, 0.16) 0%, transparent 45%),
+        linear-gradient(to right, rgba(242, 234, 223, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(242, 234, 223, 0.035) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px;
+    }
+
+    .service-card {
+      background: linear-gradient(155deg, rgba(14, 62, 63, 0.36) 0%, rgba(10, 13, 12, 0.92) 100%);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(197, 147, 103, 0.26);
+      border-radius: 1.5rem;
+      transition: border-color 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+    }
+    .service-card:hover {
+      border-color: rgba(197, 147, 103, 0.85);
+      transform: translateY(-6px);
+      box-shadow: 0 22px 48px rgba(160, 102, 32, 0.16), 0 10px 24px rgba(2, 20, 17, 0.7);
+    }
+
+    .project-card {
+      background: linear-gradient(155deg, rgba(14, 62, 63, 0.32) 0%, rgba(10, 13, 12, 0.94) 100%);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(197, 147, 103, 0.25);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      transition: border-color 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+    }
+    .project-card:hover {
+      border-color: #C59367;
+      transform: translateY(-6px);
+      box-shadow: 0 22px 48px rgba(160, 102, 32, 0.18), 0 10px 24px rgba(2, 20, 17, 0.75);
+    }
+
+    /* Smooth Scroll-Reveal Animations */
+    .reveal-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-up.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @keyframes subtleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .animate-subtle-float {
+      animation: subtleFloat 5.5s ease-in-out infinite;
+    }
+
+    .filter-pill {
+      border: 1px solid rgba(197, 147, 103, 0.28);
+      background: rgba(17, 15, 13, 0.85);
+      color: #C9BFB2;
+      transition: all 0.2s ease;
+    }
+    .filter-pill:hover {
+      border-color: #C59367;
+      color: #F2EADF;
+    }
+    .filter-pill.active {
+      background: #C59367;
+      border-color: #C59367;
+      color: #0A0908;
+    }
+
+    .exp-row {
+      border-top: 1px solid rgba(18, 16, 14, 0.16);
+      transition: background-color 0.2s ease, padding-inline 0.2s ease;
+    }
+    .exp-row:last-child {
+      border-bottom: 1px solid rgba(18, 16, 14, 0.16);
+    }
+    .exp-row:hover {
+      background-color: rgba(18, 16, 14, 0.04);
+    }
+
+    .portrait-bw {
+      filter: grayscale(100%) contrast(1.12);
+    }
+    .portrait-color {
+      filter: grayscale(0%) contrast(1.04) saturate(1.05);
+    }
+
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #0A0908; }
+    ::-webkit-scrollbar-thumb { background: #4B3B2D; }
+    ::-webkit-scrollbar-thumb:hover { background: #C59367; }
+  </style>
+</head>
+<body class="antialiased selection:bg-[#C59367] selection:text-[#0A0908]">
+
+  <!-- ========================================================================
+       STICKY EDITORIAL HEADER
+       ======================================================================== -->
+  <header class="fixed top-0 inset-x-0 z-40 bg-[#0A0908]/92 backdrop-blur-md border-b border-[#C59367]/20">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
+      <a href="#top" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-[#F2EADF] flex items-center justify-center p-1 overflow-hidden shadow-md">
+          <img id="headerLogoImg" src="./MYLOGO.webp" alt="Kerlos Hany" class="w-full h-full object-contain" />
+          <svg id="headerLogoVector" viewBox="0 0 120 120" class="hidden w-6 h-6" aria-hidden="true">
+            <path d="M96 18 C78 38 64 52 52 61 C45 61 39 57 37 49 C36 49 35 52 36 58 C37 62 39 65 40 67 L22 76 C21 80 23 86 26 88 L59 71 L69 72 L21 104 L32 104 C52 87 74 72 97 62 C98 56 95 48 92 45 L74 44 C84 36 93 27 99 20 Z" fill="#0A0908" />
+          </svg>
+        </div>
+        <div class="hidden sm:flex flex-col leading-none">
+          <span class="text-xs font-display font-bold tracking-[0.16em] text-[#F2EADF] uppercase">KERLOS HANY</span>
+          <span class="text-[10px] font-mono text-[#C59367] mt-0.5">KHN / 01</span>
+        </div>
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-7 font-mono text-[11px] uppercase tracking-[0.14em] text-[#9A9186]">
+        <span class="inline-flex items-center gap-2 text-[#C59367]">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#C59367] animate-pulse"></span>
+          <span data-i18n="availableBadge">AVAILABLE FOR SELECTED PROJECTS</span>
+        </span>
+        <a href="#work" class="hover:text-[#F2EADF] transition-colors" data-i18n="navWork">WORK</a>
+        <a href="#services" class="hover:text-[#F2EADF] transition-colors" data-i18n="navServices">SERVICES</a>
+        <a href="#cinema" class="hover:text-[#F2EADF] transition-colors" data-i18n="navCinema">MOTION</a>
+        <a href="#experience" class="hover:text-[#F2EADF] transition-colors" data-i18n="navExperience">EXPERIENCE</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5">
+        <button id="langToggleBtn" onclick="toggleLanguage()" class="px-3.5 py-1.5 rounded-full border border-[#C59367]/40 bg-[#0E3E3F]/40 font-mono text-[11px] text-[#F2EADF] hover:border-[#C59367] transition-all">
+          AR / EN
+        </button>
+        <button onclick="openContactModal()" class="px-4 sm:px-5 py-2 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] hover:brightness-110 text-[#0A0908] font-mono text-[11px] font-bold uppercase tracking-wider shadow-lg shadow-[#A06620]/25 transition-all">
+          <span data-i18n="navCta">START A PROJECT</span> ↗
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       SECTION 1: HERO (DARK ARCHITECTURAL + 3D REVEAL BACKDROP)
+       ======================================================================== -->
+  <section id="top" class="relative min-h-[92vh] pt-24 pb-16 flex items-center arch-grid overflow-hidden border-b border-[#C59367]/15">
+    <!-- Subtle Full-Bleed Ambient 3D Video Backdrop -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <video
+        id="heroBgAmbientVideo"
+        src="./Cinematic_logo_reveal_animation_202606051512-cleaned.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+        class="w-full h-full object-cover opacity-55 mix-blend-lighten"
+      ></video>
+      <div class="absolute inset-0 bg-gradient-to-r from-[#0A0908] via-[#0A0908]/75 to-[#0A0908]/25"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-[#0A0908] via-transparent to-[#0A0908]/60"></div>
+    </div>
+
+    <!-- Top Right Practice Metadata -->
+    <div class="hidden md:block absolute top-24 end-8 text-end font-mono text-[10px] uppercase tracking-[0.2em] text-[#9A9186] z-10">
+      <div>INDEPENDENT DESIGN PRACTICE</div>
+      <div class="text-[#C59367] mt-1">VISUAL IDENTITY · 3D · MOTION</div>
+    </div>
+
+    <!-- Giant Watermark Bottom Right -->
+    <div class="pointer-events-none select-none hidden lg:block absolute bottom-20 end-8 text-end z-0 opacity-15 animate-subtle-float">
+      <div class="font-display font-bold text-[7.5rem] leading-[0.82] tracking-tighter text-[#F2EADF]/40">KERLOS</div>
+      <div class="font-display font-bold text-[7.5rem] leading-[0.82] tracking-tighter text-[#C59367]/50">HANY</div>
+    </div>
+
+    <!-- Bottom Right Coordinates -->
+    <div class="hidden sm:block absolute bottom-6 end-8 text-end font-mono text-[10px] tracking-[0.18em] text-[#F2EADF] z-10 border-t border-[#C59367]/40 pt-2">
+      <div class="font-bold">KHN / 01</div>
+      <div class="text-[#9A9186]">TANTA / EG</div>
+    </div>
+
+    <!-- Main Hero Left Column -->
+    <div class="max-w-[1440px] w-full mx-auto px-4 sm:px-8 relative z-10">
+      <div class="max-w-3xl rounded-3xl border border-[#C59367]/30 bg-[#060D0C]/55 backdrop-blur-md p-6 sm:p-10 space-y-6 shadow-2xl reveal-up">
+        <div class="space-y-1.5">
+          <div class="font-display text-lg sm:text-xl font-bold tracking-[0.12em] text-[#C59367] uppercase">KERLOS HANY</div>
+          <div class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-[#9A9186]">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#C59367]"></span>
+            <span data-i18n="heroEyebrow">FULL-SERVICE CREATIVE DIRECTION</span>
+          </div>
+        </div>
+
+        <h1 class="font-display font-bold uppercase text-5xl sm:text-7xl lg:text-[5.5rem] leading-[0.92] tracking-tight text-[#F2EADF]">
+          <span class="block" data-i18n="heroTitle1">DESIGNED TO</span>
+          <span class="block text-[#C59367]" data-i18n="heroTitle2">BE</span>
+          <span class="block text-[#C59367]" data-i18n="heroTitle3">REMEMBERED</span>
+        </h1>
+
+        <p class="text-sm sm:text-base text-[#C9BFB2] max-w-md leading-relaxed" data-i18n="heroSubtitle">
+          A visual designer turning brand intent into identity, campaign, motion, and crafted 3D imagery with a stronger point of view.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-6 pt-3">
+          <a href="#work" class="inline-flex items-center gap-3 pb-1.5 border-b border-[#C59367] font-mono text-xs uppercase tracking-[0.18em] text-[#F2EADF] hover:text-[#C59367] transition-colors">
+            <span data-i18n="heroBtnWork">EXPLORE THE WORK</span>
+            <span>↓</span>
+          </a>
+          <a id="cvDownloadLink" href="./media/local-uploads/kerloshanyresname.pdf" download="Kerlos_Hany_Nassif_CV.pdf" class="inline-flex items-center gap-2 pb-1.5 border-b border-[#9A9186]/50 font-mono text-xs uppercase tracking-[0.18em] text-[#9A9186] hover:text-[#F2EADF] hover:border-[#F2EADF] transition-colors">
+            <span data-i18n="heroBtnCv">DOWNLOAD CV</span>
+            <span>↓</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 2: PRACTICE STATEMENT (WARM CREAM #E8D8C3)
+       ======================================================================== -->
+  <section id="practice" class="bg-[#E8D8C3] text-[#12100E] py-20 sm:py-32">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8 space-y-12">
+      <div class="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#6B5A48]">
+        <span>01</span>
+        <span class="w-10 h-px bg-[#12100E]/30"></span>
+        <span data-i18n="practiceTag">THE PRACTICE</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-3 font-mono text-[10px] uppercase tracking-[0.2em] text-[#6B5A48]" data-i18n="practiceSide">
+          DESIGN WITH INTELLIGENCE
+        </div>
+
+        <div class="lg:col-span-6">
+          <h2 class="font-display font-bold uppercase text-4xl sm:text-6xl lg:text-[4.5rem] leading-[0.94] tracking-tight text-[#12100E]">
+            <span class="block" data-i18n="practiceTitle1">EVERY DETAIL</span>
+            <span class="block" data-i18n="practiceTitle2">HAS A</span>
+            <span class="block text-[#B8845A]" data-i18n="practiceTitle3">REASON TO EXIST.</span>
+          </h2>
+        </div>
+
+        <div class="lg:col-span-3 text-xs sm:text-sm text-[#12100E]/80 leading-relaxed" data-i18n="practiceDesc">
+          Kerlos blends creative instinct with disciplined visual thinking—bringing clarity, craft, and momentum to every brand touchpoint.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 3: SERVICES GRID (01 - 09, DARK ARCHITECTURAL)
+       ======================================================================== -->
+  <section id="services" class="arch-grid py-20 sm:py-28 border-t border-[#C59367]/15">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8 space-y-10">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div class="space-y-2">
+          <div class="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C59367]">
+            <span>02</span>
+            <span class="w-10 h-px bg-[#C59367]/40"></span>
+            <span data-i18n="servicesTag">CAPABILITIES &amp; SERVICES</span>
+          </div>
+          <h2 class="font-display font-bold uppercase text-3xl sm:text-5xl text-[#F2EADF]" data-i18n="servicesHeading">
+            FULL-SPECTRUM <span class="text-[#C59367]">CREATIVE OUTPUT.</span>
+          </h2>
+        </div>
+      </div>
+
+      <div id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Populated cleanly via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 4: SELECTED WORK / BEHANCE LIVE PORTFOLIO (#work)
+       ======================================================================== -->
+  <section id="work" class="arch-grid py-20 sm:py-28 border-t border-[#C59367]/15">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8 space-y-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+        <div class="lg:col-span-5 space-y-4">
+          <div class="font-mono text-[10px] uppercase tracking-[0.22em] text-[#C59367]" data-i18n="workEyebrow">
+            03 — REAL PROJECTS / REAL OUTPUT
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button onclick="syncBehanceProjects()" class="px-4 py-2 rounded-full border border-[#C59367]/40 bg-[#0E3E3F]/40 hover:border-[#C59367] font-mono text-[11px] text-[#F2EADF] inline-flex items-center gap-2 transition-all">
+              <span id="behance-sync-icon" class="text-[#C59367]">↻</span>
+              <span id="behance-sync-status">BEHANCE LIVE SYNC</span>
+            </button>
+            <a href="https://www.behance.net/kerloshany11" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-full border border-[#C59367]/40 bg-[#0E3E3F]/30 hover:bg-[#C59367] hover:text-[#0A0908] font-mono text-[11px] text-[#C59367] transition-all">
+              BEHANCE PROFILE ↗
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7">
+          <h2 class="font-display font-bold uppercase text-4xl sm:text-6xl lg:text-[4.5rem] leading-[0.94] text-[#F2EADF]">
+            <span class="block" data-i18n="workTitle1">CRAFTED FOR</span>
+            <span class="block text-[#C59367]" data-i18n="workTitle2">REAL ATTENTION.</span>
+          </h2>
+        </div>
+      </div>
+
+      <!-- Category Filters -->
+      <div class="space-y-3 border-t border-b border-[#C59367]/15 py-5">
+        <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#9A9186]" data-i18n="filterLabel">FILTER BY CATEGORY</div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button data-filter="all" class="filter-btn filter-pill active rounded-full px-4 py-2 font-mono text-[11px] uppercase font-bold" data-i18n="filterAll">00 · ALL WORK</button>
+          <button data-filter="branding" class="filter-btn filter-pill rounded-full px-4 py-2 font-mono text-[11px] uppercase font-bold" data-i18n="filterBranding">01 · BRANDING &amp; LOGO</button>
+          <button data-filter="3d" class="filter-btn filter-pill rounded-full px-4 py-2 font-mono text-[11px] uppercase font-bold" data-i18n="filter3d">02 · 3D VISUALIZATION</button>
+          <button data-filter="social" class="filter-btn filter-pill rounded-full px-4 py-2 font-mono text-[11px] uppercase font-bold" data-i18n="filterSocial">03 · SOCIAL &amp; ADS</button>
+          <button data-filter="video" class="filter-btn filter-pill rounded-full px-4 py-2 font-mono text-[11px] uppercase font-bold">04 · 🎬 VIDEO / فيديو</button>
+        </div>
+      </div>
+
+      <!-- Projects Grid -->
+      <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 5: YOUTUBE MOTION STUDIO (WATCH THE WORK IN MOTION)
+       ======================================================================== -->
+  <section id="cinema" class="arch-grid py-20 sm:py-28 border-t border-[#C59367]/15">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8 space-y-10">
+      <div class="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C59367]">
+        <span>04</span>
+        <span class="w-10 h-px bg-[#C59367]/40"></span>
+        <span id="yt-feed-badge">YOUTUBE CHANNEL · @KERLOSHANY-M8E</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+        <div class="lg:col-span-7">
+          <h2 class="font-display font-bold uppercase text-4xl sm:text-6xl lg:text-[4.5rem] leading-[0.94] text-[#F2EADF]">
+            <span class="block" data-i18n="ytTitle1">WATCH THE WORK</span>
+            <span class="block text-[#C59367]" data-i18n="ytTitle2">IN MOTION.</span>
+          </h2>
+        </div>
+        <div class="lg:col-span-5 space-y-4">
+          <p class="text-xs sm:text-sm text-[#9A9186] leading-relaxed" data-i18n="ytIntro">
+            A selected window into campaign motion, 3D visuals, creative experiments, and design tutorials from the official Kerlos Hany YouTube channel.
+          </p>
+          <a href="https://www.youtube.com/@kerloshany-m8e" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 pb-1 border-b border-[#C59367] font-mono text-[11px] uppercase tracking-wider text-[#F2EADF] hover:text-[#C59367]">
+            <span data-i18n="ytSubscribe">VISIT THE CHANNEL</span> ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Embedded Active Video Player Stage -->
+      <div class="rounded-3xl border border-[#C59367]/35 bg-[#0A1312]/90 overflow-hidden shadow-2xl reveal-up">
+        <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-b border-[#C59367]/20 bg-[#0A0908]">
+          <span id="yt-now-playing-title" class="font-mono text-xs font-bold text-[#F2EADF] truncate">Nestle Nesquik ADS — Commercial Motion</span>
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="deck-power-btn" onclick="FlashMediaDeck.togglePower()" class="px-3 py-1 bg-[#C59367] text-[#0A0908] font-mono text-[10px] font-bold uppercase">Turn Off</button>
+            <button id="deck-play-btn" onclick="FlashMediaDeck.togglePlay()" class="px-3 py-1 border border-[#C59367]/35 font-mono text-[10px] text-[#F2EADF] uppercase">Pause</button>
+            <button id="deck-mute-btn" onclick="FlashMediaDeck.toggleMute()" class="px-3 py-1 border border-[#C59367]/35 font-mono text-[10px] text-[#F2EADF] uppercase">Unmute</button>
+            <a id="deck-direct-yt-link" href="https://www.youtube.com/@kerloshany-m8e" target="_blank" rel="noopener noreferrer" class="px-3 py-1 border border-[#C59367]/35 font-mono text-[10px] text-[#C59367] uppercase">YouTube ↗</a>
+          </div>
+        </div>
+        <div class="relative aspect-video max-h-[540px] w-full bg-black">
+          <iframe
+            id="yt-player-iframe"
+            title="Kerlos Hany YouTube Studio"
+            src="about:blank"
+            class="w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+          <div id="yt-standby-overlay" class="hidden absolute inset-0 bg-[#0A0908] flex flex-col items-center justify-center gap-3 p-6 text-center">
+            <p class="font-mono text-xs text-[#9A9186]">YOUTUBE PLAYER IS OFF</p>
+            <button onclick="FlashMediaDeck.togglePower()" class="px-4 py-2 bg-[#C59367] text-[#0A0908] font-mono text-xs font-bold uppercase">Turn On Video</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4-Column Horizontal Video Cards Row (Matches Reference) -->
+      <div id="yt-playlist-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 6: MAKE THE BRAND MOVE (3D LOGO REVEAL STAGE)
+       ======================================================================== -->
+  <section id="motion-feature" class="arch-grid py-20 sm:py-28 border-t border-[#C59367]/15">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <!-- Left 3D Video Frame -->
+        <div class="lg:col-span-7 rounded-3xl border border-[#C59367]/35 bg-[#0A1312]/90 overflow-hidden shadow-2xl reveal-up">
+          <div id="hero-reveal-stage" class="relative aspect-video bg-black overflow-hidden">
+            <video
+              id="heroRevealVideo"
+              src="./Cinematic_logo_reveal_animation_202606051512-cleaned.mp4"
+              autoplay
+              muted
+              loop
+              playsinline
+              class="w-full h-full object-cover"
+            ></video>
+            <div id="heroRevealFallback" class="hidden absolute inset-0 flex items-center justify-center bg-[#0A0908]">
+              <img id="fallbackStageLogoImg" src="./MYLOGO.webp" alt="Logo" class="w-24 h-24 object-contain" />
+            </div>
+            <div id="heroRevealStandby" class="hidden absolute inset-0 bg-[#0A0908] flex flex-col items-center justify-center gap-3">
+              <span class="font-mono text-xs text-[#9A9186]">STAGE OFF</span>
+              <button onclick="toggleHeroRevealPower()" class="px-4 py-2 bg-[#C59367] text-[#0A0908] font-mono text-xs font-bold uppercase">Turn On</button>
+            </div>
+            <div class="absolute bottom-3 start-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C59367] bg-[#0A0908]/80 px-2.5 py-1 border border-[#C59367]/30">
+              MOTION IDENTITY / 3D
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border-t border-[#C59367]/20 bg-[#0A0908]">
+            <span id="hero-reveal-dot" class="font-mono text-[10px] text-[#C59367] uppercase">● LIVE 3D REVEAL</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="switchHeroRevealClip()" id="hero-clip-btn" class="px-3 py-1 rounded-full border border-[#C59367]/40 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#C59367]">01 / 02</button>
+              <button onclick="toggleHeroRevealPower()" id="hero-power-btn" class="px-3 py-1 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[10px] font-bold">Turn Off</button>
+              <button onclick="toggleHeroRevealPlay()" id="hero-play-btn" class="px-3 py-1 rounded-full border border-[#C59367]/40 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#F2EADF]">Pause</button>
+              <button onclick="toggleHeroRevealMute()" id="hero-mute-btn" class="px-3 py-1 rounded-full border border-[#C59367]/40 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#F2EADF]">Unmute</button>
+              <button onclick="replayHeroReveal()" class="px-3 py-1 rounded-full border border-[#C59367]/40 font-mono text-[10px] hover:border-[#C59367] transition-colors text-[#F2EADF]">Replay</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Copy -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="font-mono text-[10px] uppercase tracking-[0.22em] text-[#C59367]">MOTION · BRAND PRESENCE</div>
+          <h2 class="font-display font-bold uppercase text-4xl sm:text-6xl leading-[0.94] text-[#F2EADF]">
+            <span class="block" data-i18n="moveTitle1">MAKE THE</span>
+            <span class="block text-[#C59367]" data-i18n="moveTitle2">BRAND</span>
+            <span class="block text-[#C59367]" data-i18n="moveTitle3">MOVE.</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-[#9A9186] leading-relaxed max-w-md" data-i18n="moveDesc">
+            Motion design turns a static visual into a living moment—building rhythm, recognition, and a more memorable story frame by frame.
+          </p>
+          <button onclick="openContactModal('Motion Graphics & Logo Reveal')" class="inline-flex items-center gap-2 pb-1.5 border-b border-[#C59367] font-mono text-xs uppercase tracking-[0.16em] text-[#F2EADF] hover:text-[#C59367]">
+            <span data-i18n="moveBtn">BUILD A MOVING IDENTITY</span> ↗
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 7: EXPERIENCE LOG (WARM CREAM #E8D8C3)
+       ======================================================================== -->
+  <section id="experience" class="bg-[#E8D8C3] text-[#12100E] py-20 sm:py-28">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8 space-y-12">
+      <div class="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#6B5A48]">
+        <span>05</span>
+        <span class="w-10 h-px bg-[#12100E]/30"></span>
+        <span data-i18n="expEyebrow">EXPERIENCE LOG</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+        <div class="lg:col-span-8">
+          <h2 class="font-display font-bold uppercase text-4xl sm:text-6xl leading-[0.94] text-[#12100E]">
+            <span class="block" data-i18n="expTitle1">BUILT THROUGH PRACTICE,</span>
+            <span class="block text-[#B8845A]" data-i18n="expTitle2">PRESSURE, AND DETAIL.</span>
+          </h2>
+        </div>
+        <div class="lg:col-span-4 text-xs sm:text-sm text-[#12100E]/75 leading-relaxed" data-i18n="expIntro">
+          Six years across brand systems, print production, campaign design, social media, motion, and technical 3D work.
+        </div>
+      </div>
+
+      <div id="experience-list" class="divide-y divide-[#12100E]/15 border-t border-b border-[#12100E]/15">
+        <div class="exp-row py-5 grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-2 sm:col-span-1 font-mono text-[11px] text-[#6B5A48]">01</div>
+          <div class="col-span-10 sm:col-span-2 font-mono text-[11px] uppercase text-[#6B5A48]">2023 — PRESENT</div>
+          <div class="col-span-12 sm:col-span-4 font-display font-bold text-sm sm:text-base uppercase text-[#12100E]">SHAWAHID INDUSTRIAL ROADS CO.</div>
+          <div class="col-span-10 sm:col-span-4 text-xs text-[#12100E]/75">Graphic &amp; 3D Machine Designer</div>
+          <div class="col-span-2 sm:col-span-1 text-end font-mono text-xs text-[#B8845A]">↗</div>
+        </div>
+        <div class="exp-row py-5 grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-2 sm:col-span-1 font-mono text-[11px] text-[#6B5A48]">02</div>
+          <div class="col-span-10 sm:col-span-2 font-mono text-[11px] uppercase text-[#6B5A48]">2022 — 2023</div>
+          <div class="col-span-12 sm:col-span-4 font-display font-bold text-sm sm:text-base uppercase text-[#12100E]">EL GAZZAR COMPANY</div>
+          <div class="col-span-10 sm:col-span-4 text-xs text-[#12100E]/75">Graphic Designer — Color Separation</div>
+          <div class="col-span-2 sm:col-span-1 text-end font-mono text-xs text-[#B8845A]">↗</div>
+        </div>
+        <div class="exp-row py-5 grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-2 sm:col-span-1 font-mono text-[11px] text-[#6B5A48]">03</div>
+          <div class="col-span-10 sm:col-span-2 font-mono text-[11px] uppercase text-[#6B5A48]">2019 — 2022</div>
+          <div class="col-span-12 sm:col-span-4 font-display font-bold text-sm sm:text-base uppercase text-[#12100E]">TECHNO PRINT</div>
+          <div class="col-span-10 sm:col-span-4 text-xs text-[#12100E]/75">Senior Graphic Designer — Social &amp; Print</div>
+          <div class="col-span-2 sm:col-span-1 text-end font-mono text-xs text-[#B8845A]">↗</div>
+        </div>
+        <div class="exp-row py-5 grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-2 sm:col-span-1 font-mono text-[11px] text-[#6B5A48]">04</div>
+          <div class="col-span-10 sm:col-span-2 font-mono text-[11px] uppercase text-[#6B5A48]">2018 — 2019</div>
+          <div class="col-span-12 sm:col-span-4 font-display font-bold text-sm sm:text-base uppercase text-[#12100E]">PRO MEDIA COMPANY</div>
+          <div class="col-span-10 sm:col-span-4 text-xs text-[#12100E]/75">Graphic &amp; Motion Designer</div>
+          <div class="col-span-2 sm:col-span-1 text-end font-mono text-xs text-[#B8845A]">↗</div>
+        </div>
+        <div class="exp-row py-5 grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-2 sm:col-span-1 font-mono text-[11px] text-[#6B5A48]">05</div>
+          <div class="col-span-10 sm:col-span-2 font-mono text-[11px] uppercase text-[#6B5A48]">2015 — PRESENT</div>
+          <div class="col-span-12 sm:col-span-4 font-display font-bold text-sm sm:text-base uppercase text-[#12100E]">INDEPENDENT PRACTICE</div>
+          <div class="col-span-10 sm:col-span-4 text-xs text-[#12100E]/75">Branding, Motion &amp; 3D Visualization</div>
+          <div class="col-span-2 sm:col-span-1 text-end font-mono text-xs text-[#B8845A]">↗</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 8: STRATEGY BEFORE DESIGN / ABOUT PORTRAIT (#about)
+       ======================================================================== -->
+  <section id="about" class="arch-grid py-20 sm:py-28 border-t border-[#C59367]/15">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Dramatic Studio Portrait -->
+        <div class="lg:col-span-5">
+          <div class="relative rounded-3xl border border-[#C59367]/35 bg-[#0A1312] overflow-hidden shadow-2xl reveal-up">
+            <img
+              id="portraitImg"
+              src="./Professional_beauty_retouch,_202603252250.png"
+              alt="Kerlos Hany Nassif"
+              class="w-full aspect-[4/4.6] object-cover portrait-color transition-all duration-500"
+            />
+            <div id="portraitFallback" class="hidden w-full aspect-[4/4.6] flex items-center justify-center bg-[#110F0D] font-display text-2xl text-[#C59367]">KERLOS HANY</div>
+            <div class="flex items-center justify-between px-4 py-2.5 border-t border-[#C59367]/20 bg-[#0A0908] font-mono text-[10px] text-[#9A9186]">
+              <span>KERLOS HANY · PORTRAIT</span>
+              <div class="flex items-center gap-2">
+                <button id="btn-portrait-color" onclick="setPortraitMode('color')" class="text-[#C59367] font-bold">COLOR</button>
+                <span>/</span>
+                <button id="btn-portrait-bw" onclick="setPortraitMode('bw')" class="hover:text-[#F2EADF]">B&amp;W</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Editorial Approach -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="font-mono text-[10px] uppercase tracking-[0.22em] text-[#C59367]" data-i18n="aboutEyebrow">THE APPROACH</div>
+
+          <h2 class="font-display font-bold uppercase text-4xl sm:text-6xl leading-[0.94] text-[#F2EADF]">
+            <span class="block" data-i18n="aboutTitle1">STRATEGY BEFORE</span>
+            <span class="block" data-i18n="aboutTitle2">DESIGN.</span>
+            <span class="block text-[#C59367]" data-i18n="aboutTitle3">MAKE IT COUNT.</span>
+          </h2>
+
+          <p class="text-xs sm:text-sm text-[#C9BFB2] leading-relaxed max-w-xl" data-i18n="aboutDesc">
+            Every project begins with a simple question: what should people feel, know, or do next? From there, the work becomes a precise visual system built to deliver it.
+          </p>
+
+          <div class="divide-y divide-[#C59367]/20 border-t border-b border-[#C59367]/20 max-w-xl font-mono text-[11px] uppercase tracking-[0.14em] text-[#C9BFB2]">
+            <div class="py-3">INDEPENDENT PRACTICE / 2015—PRESENT</div>
+            <div class="py-3">EGYPT &amp; REMOTE COLLABORATION</div>
+            <div class="py-3 text-[#C59367]">PHOTOSHOP · ILLUSTRATOR · AFTER EFFECTS · CINEMA 4D · BLENDER</div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-6 max-w-md pt-2">
+            <div>
+              <div class="font-display text-3xl sm:text-4xl font-bold text-[#F2EADF]">06<span class="text-[#C59367]">+</span></div>
+              <div class="font-mono text-[10px] uppercase text-[#9A9186] mt-1" data-i18n="statYears">YEARS EXP</div>
+            </div>
+            <div>
+              <div class="font-display text-3xl sm:text-4xl font-bold text-[#F2EADF]">60<span class="text-[#C59367]">+</span></div>
+              <div class="font-mono text-[10px] uppercase text-[#9A9186] mt-1" data-i18n="statProjects">PROJECTS</div>
+            </div>
+            <div>
+              <div class="font-display text-3xl sm:text-4xl font-bold text-[#F2EADF]">25<span class="text-[#C59367]">+</span></div>
+              <div class="font-mono text-[10px] uppercase text-[#9A9186] mt-1" data-i18n="statClients">BRANDS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 9: CTA & FOOTER (#cta)
+       ======================================================================== -->
+  <section id="cta" class="arch-grid py-20 sm:py-24 border-t border-[#C59367]/20">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8">
+      <div class="rounded-3xl border border-[#C59367]/40 bg-gradient-to-br from-[#0E3E3F]/40 via-[#0A1312]/95 to-[#060D0C] backdrop-blur-md p-8 sm:p-14 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl reveal-up">
+        <div class="space-y-3 max-w-2xl">
+          <div class="font-mono text-[10px] uppercase tracking-[0.22em] text-[#C59367]" data-i18n="ctaEyebrow">START A CONVERSATION</div>
+          <h2 class="font-display font-bold uppercase text-3xl sm:text-5xl text-[#F2EADF]">
+            <span data-i18n="ctaTitle1">READY TO BUILD SOMETHING</span>
+            <span class="text-[#C59367]" data-i18n="ctaTitle2">UNFORGETTABLE?</span>
+          </h2>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <button onclick="openContactModal()" class="px-6 py-3.5 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] hover:brightness-110 text-[#0A0908] font-mono text-xs font-bold uppercase tracking-wider shadow-lg transition-all">
+            <span data-i18n="ctaBtn">START A PROJECT</span> ↗
+          </button>
+          <a href="https://wa.me/201011410996" target="_blank" rel="noopener noreferrer" class="px-6 py-3.5 rounded-full border border-[#C59367]/45 bg-[#0E3E3F]/30 hover:border-[#C59367] font-mono text-xs uppercase text-[#F2EADF] transition-all">
+            WHATSAPP · +20 101 141 0996
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-[#0A0908] border-t border-[#C59367]/20 py-10">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-wider text-[#9A9186]">
+      <div class="flex items-center gap-3">
+        <img id="footerLogoImg" src="./MYLOGO.webp" alt="Logo" class="w-7 h-7 object-contain bg-[#F2EADF] p-0.5" />
+        <span class="text-[#F2EADF] font-bold">KERLOS HANY NASSIF</span>
+        <span class="text-[#C59367]">· TANTA, EGYPT · HKERLOS@GMAIL.COM</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-5">
+        <a href="https://www.behance.net/kerloshany11" target="_blank" rel="noopener noreferrer" class="hover:text-[#C59367]">BEHANCE</a>
+        <a href="https://www.youtube.com/@kerloshany-m8e" target="_blank" rel="noopener noreferrer" class="hover:text-[#C59367]">YOUTUBE</a>
+        <a href="https://www.linkedin.com/in/kerlos-hany-391453187/" target="_blank" rel="noopener noreferrer" class="hover:text-[#C59367]">LINKEDIN</a>
+        <a href="mailto:hkerlos@gmail.com" class="hover:text-[#C59367]">EMAIL</a>
+      </div>
+      <div>© 2026 KERLOS HANY</div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       PROJECT CASE STUDY MODAL (#project-modal)
+       ======================================================================== -->
+  <div id="project-modal" class="hidden fixed inset-0 z-50 bg-[#0A0908]/95 backdrop-blur-md items-center justify-center p-3 sm:p-6">
+    <div class="w-full max-w-5xl max-h-[92vh] rounded-3xl bg-[#0A1312] border border-[#C59367]/45 flex flex-col overflow-hidden shadow-2xl">
+      <div class="flex items-center justify-between gap-4 px-5 sm:px-7 py-4 bg-[#0A0908] border-b border-[#C59367]/25 shrink-0">
+        <div class="flex items-center gap-3 min-w-0">
+          <span id="pm-badge" class="px-3 py-1 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[10px] font-bold uppercase shrink-0">CASE STUDY</span>
+          <span id="pm-content-type" class="px-2.5 py-1 border border-[#C59367]/45 text-[#C59367] font-mono text-[10px] font-bold uppercase shrink-0">🖼️ صور</span>
+          <h3 id="pm-title" class="font-display text-sm sm:text-lg font-bold uppercase text-[#F2EADF] truncate">Project Title</h3>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="navigateProjectModal(-1)" class="px-3 py-1.5 border border-[#C59367]/35 font-mono text-xs text-[#F2EADF] hover:border-[#C59367]">‹</button>
+          <button onclick="navigateProjectModal(1)" class="px-3 py-1.5 border border-[#C59367]/35 font-mono text-xs text-[#F2EADF] hover:border-[#C59367]">›</button>
+          <button onclick="closeProjectModal()" class="w-9 h-9 rounded-full bg-[#C59367] text-[#0A0908] font-bold text-sm">✕</button>
+        </div>
+      </div>
+
+      <div id="pm-scroll-body" class="overflow-y-auto p-5 sm:p-8 space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div class="lg:col-span-8 space-y-3">
+            <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#C59367]">PROJECT OVERVIEW &amp; MEDIA</div>
+            <p id="pm-desc" class="text-xs sm:text-sm text-[#C9BFB2] leading-relaxed"></p>
+            <div id="pm-tags" class="flex flex-wrap gap-2 pt-1"></div>
+          </div>
+
+          <div class="lg:col-span-4 border border-[#C59367]/25 bg-[#0A0908] p-4 space-y-3">
+            <div>
+              <div class="font-mono text-[10px] uppercase text-[#9A9186]">DISCIPLINE</div>
+              <div id="pm-role" class="text-xs font-bold text-[#F2EADF] mt-0.5">Brand Identity</div>
+            </div>
+            <div>
+              <div class="font-mono text-[10px] uppercase text-[#9A9186]">MEDIA ASSETS</div>
+              <div id="pm-media-count" class="text-xs font-bold text-[#C59367] mt-0.5">High-Res Boards</div>
+            </div>
+            <div class="pt-2 flex flex-col gap-2">
+              <a id="pm-behance-link" href="https://www.behance.net/kerloshany11" target="_blank" rel="noopener noreferrer" class="w-full text-center px-4 py-2.5 border border-[#C59367]/50 hover:bg-[#C59367] hover:text-[#0A0908] font-mono text-[11px] font-bold uppercase text-[#F2EADF] transition-colors">
+                OPEN ON BEHANCE ↗
+              </a>
+              <button onclick="closeProjectModal(); openContactModal();" class="w-full px-4 py-2.5 bg-[#C59367] hover:bg-[#D4A478] text-[#0A0908] font-mono text-[11px] font-bold uppercase transition-colors">
+                REQUEST SIMILAR PROJECT ↗
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="pm-media-stream" class="space-y-5"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       CONTACT MODAL (#contact-modal)
+       ======================================================================== -->
+  <div id="contact-modal" class="hidden fixed inset-0 z-50 bg-[#0A0908]/92 backdrop-blur-md items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-3xl bg-[#0A1312] border border-[#C59367]/45 p-6 sm:p-8 space-y-5 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-[#C59367]/20 pb-3">
+        <h3 class="font-display text-lg font-bold uppercase text-[#F2EADF]" data-i18n="contactModalTitle">START A PROJECT</h3>
+        <button onclick="closeContactModal()" class="w-8 h-8 rounded-full bg-[#C59367] text-[#0A0908] font-bold text-sm">✕</button>
+      </div>
+      <form onsubmit="submitInquiryForm(event)" class="space-y-4">
+        <div>
+          <label class="block font-mono text-[10px] uppercase text-[#C59367] mb-1.5">YOUR NAME / BRAND</label>
+          <input id="inq-name" type="text" required placeholder="e.g. Ahmed / Horizon Brand" class="w-full px-4 py-3 bg-[#0A0908] border border-[#C59367]/35 text-xs text-[#F2EADF] focus:outline-none focus:border-[#C59367]" />
+        </div>
+        <div>
+          <label class="block font-mono text-[10px] uppercase text-[#C59367] mb-1.5">SERVICE NEEDED</label>
+          <select id="inq-service" class="w-full px-4 py-3 bg-[#0A0908] border border-[#C59367]/35 text-xs text-[#F2EADF] focus:outline-none focus:border-[#C59367]">
+            <option value="Branding & Visual Identity">Branding &amp; Visual Identity</option>
+            <option value="CGI & 3D Advertising">CGI &amp; 3D Advertising</option>
+            <option value="Motion Design">Motion Design &amp; Logo Reveal</option>
+            <option value="AI Video Production">AI Video Production</option>
+            <option value="Social Media Management">Social Media Management</option>
+            <option value="Advertising & Media Buying">Advertising &amp; Media Buying</option>
+            <option value="Web Design & Development">Web Design &amp; Development</option>
+            <option value="Video Production & Editing">Video Production &amp; Editing</option>
+            <option value="Print & Packaging Design">Print &amp; Packaging Design</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-mono text-[10px] uppercase text-[#C59367] mb-1.5">PROJECT BRIEF</label>
+          <textarea id="inq-msg" rows="3" required placeholder="Tell me about your brand, timeline, and goals..." class="w-full px-4 py-3 bg-[#0A0908] border border-[#C59367]/35 text-xs text-[#F2EADF] focus:outline-none focus:border-[#C59367]"></textarea>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <button type="submit" class="px-5 py-3 bg-[#C59367] hover:bg-[#D4A478] text-[#0A0908] font-mono text-xs font-bold uppercase">WHATSAPP ↗</button>
+          <button type="button" onclick="sendViaEmail()" class="px-5 py-3 border border-[#C59367]/40 hover:border-[#C59367] font-mono text-xs uppercase text-[#F2EADF]">EMAIL ✉</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       APPLICATION SCRIPT
+       ======================================================================== -->
+  <script>
+    let currentLang = 'en';
+
+    const servicesData = [
+      { num: '01', en: 'SOCIAL MEDIA MANAGEMENT', ar: 'إدارة السوشيال ميديا', shortEn: 'Strategic social media management that turns your brand into a consistent and engaging digital presence.', shortAr: 'إدارة استراتيجية لحسابات التواصل الاجتماعي تحوّل علامتك لحضور رقمي متماسك ومؤثر.', detailEn: 'Content strategy, monthly planning, creative direction, post & reel concepts, publishing, and performance reviews.' },
+      { num: '02', en: 'ADVERTISING & MEDIA BUYING', ar: 'الإعلانات وشراء المساحات', shortEn: 'Performance-driven advertising campaigns built to increase awareness, leads, and sales.', shortAr: 'حملات إعلانية مدروسة لزيادة الوعي بالعلامة التجارية وتحقيق المبيعات.', detailEn: 'Meta & Google paid campaigns, audience targeting, creative testing, A/B optimization, and reporting.' },
+      { num: '03', en: 'AI VIDEO PRODUCTION', ar: 'إنتاج الفيديو بالذكاء الاصطناعي', shortEn: 'Next-generation AI-powered advertising and cinematic content built around strong creative concepts.', shortAr: 'إعلانات سينمائية ومحتوى مرئي متطور باستخدام أحدث تقنيات الذكاء الاصطناعي.', detailEn: 'Commercials, cinematic scenes, branded storytelling, product integration, sound design, and campaign-ready video.' },
+      { num: '04', en: 'WEB DESIGN & DEVELOPMENT', ar: 'تصميم وتطوير المواقع', shortEn: 'Modern digital experiences designed to represent your brand and turn visitors into customers.', shortAr: 'تجارب رقمية ومواقع حديثة تعكس هوية علامتك وتحوّل الزوار إلى عملاء.', detailEn: 'Responsive websites, landing pages, portfolio sites, UX/UI systems, and performance-optimized digital platforms.' },
+      { num: '05', en: 'BRANDING & VISUAL IDENTITY', ar: 'الهوية البصرية والشعارات', shortEn: 'We build distinctive brand identities designed to be recognized, remembered, and trusted.', shortAr: 'بناء هويات بصرية وشعارات مميزة تترسخ في أذهان الجمهور وتمنحك الثقة.', detailEn: 'Brand strategy, logo design, typography, color systems, visual guidelines, stationery, and brand applications.' },
+      { num: '06', en: 'CGI & 3D ADVERTISING', ar: 'إعلانات CGI والتصميم 3D', shortEn: 'High-impact CGI advertising, 3D product animation, FOOH concepts, and cinematic visual experiences.', shortAr: 'إعلانات CGI عالية التأثير ونمذجة منتجات ثلاثية الأبعاد وإخراج سينمائي واقعي.', detailEn: '3D product visualization, modeling, texturing, lighting, animation, FOOH concepts, and rendering.' },
+      { num: '07', en: 'MOTION DESIGN', ar: 'تصميم الموشن جرافيك', shortEn: 'Dynamic animation that brings brands, campaigns, and ideas to life.', shortAr: 'تحريك احترافي يمنح العلامات التجارية والحملات الإعلانية حياة وجاذبية.', detailEn: 'Logo animation, kinetic typography, social media motion, promotional animations, and branded transitions.' },
+      { num: '08', en: 'VIDEO PRODUCTION & EDITING', ar: 'المونتاج وإنتاج الفيديو', shortEn: 'Professional video storytelling crafted for advertising, social media, and digital campaigns.', shortAr: 'مونتاج وإخراج فيديو احترافي للإعلانات التجارية وحملات السوشيال ميديا.', detailEn: 'Editing, storytelling, pacing, color correction, sound design, and final delivery across digital platforms.' },
+      { num: '09', en: 'PRINT & PACKAGING DESIGN', ar: 'التغليف والمطبوعات', shortEn: 'Creative physical brand experiences built to stand out beyond the screen.', shortAr: 'تصميم عبوات وتغليف ومطبوعات احترافية جاهزة للطباعة وفصل الألوان.', detailEn: 'Packaging, brochures, posters, menus, flyers, outdoor billboards, stationery, and print-ready artwork.' }
+    ];
+
+    function renderServices() {
+      const grid = document.getElementById('services-grid');
+      if (!grid) return;
+      grid.innerHTML = servicesData.map(s => `
+        <div class="service-card p-6 flex flex-col justify-between min-h-[340px]">
+          <div class="space-y-6">
+            <div class="flex items-center justify-between font-mono text-[11px] text-[#C59367]">
+              <span>${s.num}</span>
+              <span class="text-base">✦</span>
+            </div>
+            <div class="space-y-3 pt-4">
+              <h3 class="font-display font-bold text-xl sm:text-2xl leading-[1.05] text-[#F2EADF] uppercase">
+                ${currentLang === 'ar' ? s.ar : s.en}
+              </h3>
+              <p class="text-xs text-[#C9BFB2] leading-relaxed">
+                ${currentLang === 'ar' ? s.shortAr : s.shortEn}
+              </p>
+            </div>
+          </div>
+          <div class="pt-6 mt-6 border-t border-[#C59367]/15 space-y-4">
+            <p class="font-mono text-[10px] text-[#9A9186] leading-relaxed">${s.detailEn}</p>
+            <button onclick="openContactModal('${s.en}')" class="font-mono text-[10px] font-bold uppercase tracking-wider text-[#C59367] hover:text-[#F2EADF] transition-colors">
+              ${currentLang === 'ar' ? 'اطلب هذه الخدمة ↗' : 'REQUEST THIS SERVICE ↗'}
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    const i18nStrings = {
+      en: {
+        availableBadge: 'AVAILABLE FOR SELECTED PROJECTS',
+        navWork: 'WORK',
+        navServices: 'SERVICES',
+        navCinema: 'MOTION',
+        navExperience: 'EXPERIENCE',
+        navCta: 'START A PROJECT',
+        heroEyebrow: 'FULL-SERVICE CREATIVE DIRECTION',
+        heroTitle1: 'DESIGNED TO',
+        heroTitle2: 'BE',
+        heroTitle3: 'REMEMBERED',
+        heroSubtitle: 'A visual designer turning brand intent into identity, campaign, motion, and crafted 3D imagery with a stronger point of view.',
+        heroBtnWork: 'EXPLORE THE WORK',
+        heroBtnCv: 'DOWNLOAD CV',
+        practiceTag: 'THE PRACTICE',
+        practiceSide: 'DESIGN WITH INTELLIGENCE',
+        practiceTitle1: 'EVERY DETAIL',
+        practiceTitle2: 'HAS A',
+        practiceTitle3: 'REASON TO EXIST.',
+        practiceDesc: 'Kerlos blends creative instinct with disciplined visual thinking—bringing clarity, craft, and momentum to every brand touchpoint.',
+        servicesTag: 'CAPABILITIES & SERVICES',
+        workEyebrow: '03 — REAL PROJECTS / REAL OUTPUT',
+        workTitle1: 'CRAFTED FOR',
+        workTitle2: 'REAL ATTENTION.',
+        filterLabel: 'FILTER BY CATEGORY',
+        filterAll: '00 · ALL WORK',
+        filterBranding: '01 · BRANDING & LOGO',
+        filter3d: '02 · 3D VISUALIZATION',
+        filterSocial: '03 · SOCIAL & ADS',
+        ytTitle1: 'WATCH THE WORK',
+        ytTitle2: 'IN MOTION.',
+        ytIntro: 'A selected window into campaign motion, 3D visuals, creative experiments, and design tutorials from the official Kerlos Hany YouTube channel.',
+        ytSubscribe: 'VISIT THE CHANNEL',
+        moveTitle1: 'MAKE THE',
+        moveTitle2: 'BRAND',
+        moveTitle3: 'MOVE.',
+        moveDesc: 'Motion design turns a static visual into a living moment—building rhythm, recognition, and a more memorable story frame by frame.',
+        moveBtn: 'BUILD A MOVING IDENTITY',
+        expEyebrow: 'EXPERIENCE LOG',
+        expTitle1: 'BUILT THROUGH PRACTICE,',
+        expTitle2: 'PRESSURE, AND DETAIL.',
+        expIntro: 'Six years across brand systems, print production, campaign design, social media, motion, and technical 3D work.',
+        aboutEyebrow: 'THE APPROACH',
+        aboutTitle1: 'STRATEGY BEFORE',
+        aboutTitle2: 'DESIGN.',
+        aboutTitle3: 'MAKE IT COUNT.',
+        aboutDesc: 'Every project begins with a simple question: what should people feel, know, or do next? From there, the work becomes a precise visual system built to deliver it.',
+        statYears: 'YEARS EXP',
+        statProjects: 'PROJECTS',
+        statClients: 'BRANDS',
+        ctaEyebrow: 'START A CONVERSATION',
+        ctaTitle1: 'READY TO BUILD SOMETHING',
+        ctaTitle2: 'UNFORGETTABLE?',
+        ctaBtn: 'START A PROJECT',
+        contactModalTitle: 'START A PROJECT'
+      },
+      ar: {
+        availableBadge: 'متاح للمشاريع المختارة',
+        navWork: 'الأعمال',
+        navServices: 'الخدمات',
+        navCinema: 'الموشن',
+        navExperience: 'الخبرات',
+        navCta: 'ابدأ مشروعك',
+        heroEyebrow: 'إخراج إبداعي متكامل',
+        heroTitle1: 'مُصمَّم ليبقى',
+        heroTitle2: 'راسخاً',
+        heroTitle3: 'في الذاكرة',
+        heroSubtitle: 'مصمم بصري يحوّل رؤية العلامات التجارية إلى هويات بصرية وحملات وموشن جرافيك وتجارب 3D متقنة.',
+        heroBtnWork: 'استكشف الأعمال',
+        heroBtnCv: 'تحميل السيرة الذاتية',
+        practiceTag: 'الفلسفة التصميمية',
+        practiceSide: 'التصميم بذكاء ورؤية',
+        practiceTitle1: 'كل تفصيلة',
+        practiceTitle2: 'لها سبب',
+        practiceTitle3: 'لوجودها.',
+        practiceDesc: 'يمزج كيرلس بين الحس الإبداعي والتفكير البصري المنظم ليمنح علامتك التجارية وضوحاً وحضوراً مؤثراً.',
+        servicesTag: 'القدرات والخدمات',
+        workEyebrow: '03 — مشاريع حقيقية / نتائج حقيقية',
+        workTitle1: 'مُصمَّمة لجذب',
+        workTitle2: 'الانتباه الحقيقي.',
+        filterLabel: 'تصفية حسب التصنيف',
+        filterAll: '00 · كل الأعمال',
+        filterBranding: '01 · الهويات والشعارات',
+        filter3d: '02 · التصميم 3D',
+        filterSocial: '03 · السوشيال والإعلانات',
+        ytTitle1: 'شاهد الأعمال',
+        ytTitle2: 'في حركة.',
+        ytIntro: 'نافذة مختارة على أعمال الموشن جرافيك وإعلانات 3D والتجارب الإبداعية من قناة كيرلس هاني الرسمية على يوتيوب.',
+        ytSubscribe: 'زيارة القناة',
+        moveTitle1: 'اجعل',
+        moveTitle2: 'العلامة',
+        moveTitle3: 'تتحرك.',
+        moveDesc: 'الموشن جرافيك يحوّل التصميم الثابت إلى لحظة حية تصنع إيقاعاً وهوية راسخة في ذهن المشاهد.',
+        moveBtn: 'اصنع هوية متحركة',
+        expEyebrow: 'سجل الخبرات',
+        expTitle1: 'خبرة بُنيت بالممارسة',
+        expTitle2: 'والدقة والتفاصيل.',
+        expIntro: 'أكثر من 6 سنوات في بناء الهويات البصرية وإنتاج الطباعة وحملات السوشيال ميديا والموشن والـ 3D.',
+        aboutEyebrow: 'المنهجية',
+        aboutTitle1: 'الاستراتيجية قبل',
+        aboutTitle2: 'التصميم.',
+        aboutTitle3: 'اجعل لها أثراً.',
+        aboutDesc: 'كل مشروع يبدأ بسؤال بسيط: ما الذي يجب أن يشعر به الجمهور أو يعرفه أو يفعله؟ ومن هنا يُبنى النظام البصري بدقة.',
+        statYears: 'سنوات خبرة',
+        statProjects: 'مشروع',
+        statClients: 'علامة تجارية',
+        ctaEyebrow: 'لنبدأ الحديث',
+        ctaTitle1: 'جاهز لبناء شيء',
+        ctaTitle2: 'لا يُنسى؟',
+        ctaBtn: 'ابدأ مشروعك',
+        contactModalTitle: 'ابدأ مشروعك الآن'
+      }
+    };
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18nStrings[currentLang][key]) el.textContent = i18nStrings[currentLang][key];
+      });
+      renderServices();
+      // Subtle Scroll-Reveal Animation Observer
+      const revealEls = document.querySelectorAll('.reveal-up, section h2, .service-card, .exp-row');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        revealEls.forEach(el => {
+          el.classList.add('reveal-up');
+          io.observe(el);
+        });
+      } else {
+        revealEls.forEach(el => el.classList.add('is-visible'));
+      }
+      renderProjects();
+      renderYouTubePlaylist();
+      FlashMediaDeck.updateUI();
+    }
+
+    function setPortraitMode(mode) {
+      const img = document.getElementById('portraitImg');
+      if (!img) return;
+      img.classList.toggle('portrait-bw', mode === 'bw');
+      img.classList.toggle('portrait-color', mode !== 'bw');
+    }
+
+    /* ------------------------------------------------------------------------
+       HERO / MOTION 3D REVEAL CONTROLS
+       ------------------------------------------------------------------------ */
+    let heroRevealPowered = true;
+    const heroRevealSources = [
+      './Cinematic_logo_reveal_animation_202606051512-cleaned.mp4',
+      './Cinematic_logo_reveal_animation_202606051517.mp4'
+    ];
+    let heroRevealSourceIdx = 0;
+
+    function switchHeroRevealClip() {
+      const vid = document.getElementById('heroRevealVideo');
+      if (!vid) return;
+      heroRevealSourceIdx = (heroRevealSourceIdx + 1) % heroRevealSources.length;
+      vid.src = heroRevealSources[heroRevealSourceIdx];
+      if (heroRevealPowered) vid.play().catch(() => {});
+      document.getElementById('hero-clip-btn').textContent = `0${heroRevealSourceIdx + 1} / 0${heroRevealSources.length}`;
+    }
+
+    function toggleHeroRevealPower() {
+      const vid = document.getElementById('heroRevealVideo');
+      const standby = document.getElementById('heroRevealStandby');
+      heroRevealPowered = !heroRevealPowered;
+      if (heroRevealPowered) {
+        standby.classList.add('hidden');
+        vid.play().catch(() => {});
+      } else {
+        vid.pause();
+        standby.classList.remove('hidden');
+      }
+      document.getElementById('hero-power-btn').textContent = heroRevealPowered ? 'Turn Off' : 'Turn On';
+    }
+
+    function toggleHeroRevealPlay() {
+      const vid = document.getElementById('heroRevealVideo');
+      if (!vid) return;
+      if (vid.paused) vid.play().catch(() => {});
+      else vid.pause();
+      document.getElementById('hero-play-btn').textContent = vid.paused ? 'Play' : 'Pause';
+    }
+
+    function toggleHeroRevealMute() {
+      const vid = document.getElementById('heroRevealVideo');
+      if (!vid) return;
+      vid.muted = !vid.muted;
+      document.getElementById('hero-mute-btn').textContent = vid.muted ? 'Unmute' : 'Mute';
+    }
+
+    function replayHeroReveal() {
+      const vid = document.getElementById('heroRevealVideo');
+      if (!vid) return;
+      vid.currentTime = 0;
+      vid.play().catch(() => {});
+    }
+
+    function updateHeroRevealButtons() {}
+
+    /* ------------------------------------------------------------------------
+       YOUTUBE MOTION STUDIO DECK
+       ------------------------------------------------------------------------ */
+    let ytPlaylist = [
+      { id: 'aBTr3Fs45v0', titleEn: 'Nestle Nesquik ADS', titleAr: 'إعلان نستله نسكويك', duration: '0:19' },
+      { id: 'MuSya0C2UNs', titleEn: 'Zain Motion Graphic', titleAr: 'موشن جرافيك زين', duration: '0:40' },
+      { id: 'nctUeJHmiCs', titleEn: 'Video MOTION JUST CUP', titleAr: 'موشن جرافيك Just Cup', duration: '0:42' },
+      { id: 'oWSVw-Y7s7A', titleEn: 'Logo Design Step-by-Step', titleAr: 'تصميم شعار احترافي خطوة بخطوة', duration: '13:15' }
+    ];
+
+    const FlashMediaDeck = {
+      isPoweredOn: true,
+      isPlaying: false,
+      isMuted: false,
+      currentIndex: 0,
+      init() {
+        renderYouTubePlaylist();
+        this.loadCurrentFrame(false);
+        this.updateUI();
+      },
+      loadCurrentFrame(auto = true) {
+        const iframe = document.getElementById('yt-player-iframe');
+        const standby = document.getElementById('yt-standby-overlay');
+        const v = ytPlaylist[this.currentIndex];
+        if (!iframe || !v) return;
+        if (!this.isPoweredOn) {
+          iframe.src = 'about:blank';
+          standby.classList.remove('hidden');
+          return;
+        }
+        standby.classList.add('hidden');
+        iframe.src = `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=${auto ? 1 : 0}&mute=${this.isMuted ? 1 : 0}&rel=0&playsinline=1`;
+        this.isPlaying = auto;
+      },
+      playAt(idx) {
+        if (!ytPlaylist[idx]) return;
+        this.currentIndex = idx;
+        this.isPoweredOn = true;
+        this.loadCurrentFrame(true);
+        renderYouTubePlaylist();
+        this.updateUI();
+      },
+      togglePower() {
+        this.isPoweredOn = !this.isPoweredOn;
+        this.loadCurrentFrame(this.isPoweredOn);
+        this.updateUI();
+      },
+      togglePlay() {
+        if (!this.isPoweredOn) return this.togglePower();
+        this.isPlaying = !this.isPlaying;
+        this.loadCurrentFrame(this.isPlaying);
+        this.updateUI();
+      },
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        if (this.isPoweredOn) this.loadCurrentFrame(this.isPlaying);
+        this.updateUI();
+      },
+      updateUI() {
+        const v = ytPlaylist[this.currentIndex];
+        const titleEl = document.getElementById('yt-now-playing-title');
+        const directLink = document.getElementById('deck-direct-yt-link');
+        if (titleEl && v) titleEl.textContent = currentLang === 'ar' ? v.titleAr : v.titleEn;
+        if (directLink && v) directLink.href = `https://www.youtube.com/watch?v=${v.id}`;
+        document.getElementById('deck-power-btn').textContent = this.isPoweredOn ? 'Turn Off' : 'Turn On';
+        document.getElementById('deck-play-btn').textContent = this.isPlaying ? 'Pause' : 'Play';
+        document.getElementById('deck-mute-btn').textContent = this.isMuted ? 'Unmute' : 'Mute';
+      }
+    };
+
+    function renderYouTubePlaylist() {
+      const box = document.getElementById('yt-playlist-container');
+      if (!box) return;
+      box.innerHTML = ytPlaylist.slice(0, 8).map((v, idx) => {
+        const active = idx === FlashMediaDeck.currentIndex;
+        const title = currentLang === 'ar' ? v.titleAr : v.titleEn;
+        return `
+          <button onclick="FlashMediaDeck.playAt(${idx})" class="text-start rounded-2xl border ${active ? 'border-[#C59367] shadow-lg shadow-[#A06620]/20' : 'border-[#C59367]/25'} bg-[#0A1312]/90 hover:border-[#C59367] hover:-translate-y-1 transition-all overflow-hidden group">
+            <div class="relative aspect-video bg-black overflow-hidden">
+              <img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+              <div class="absolute inset-0 flex items-center justify-center bg-black/25 group-hover:bg-black/10 transition-colors">
+                <span class="w-10 h-10 rounded-full bg-[#0A0908]/85 border border-[#C59367] flex items-center justify-center text-[#F2EADF] text-xs">▶</span>
+              </div>
+              <span class="absolute bottom-2 end-2 px-1.5 py-0.5 bg-[#0A0908]/85 font-mono text-[10px] text-[#F2EADF]">${v.duration}</span>
+            </div>
+            <div class="p-4 space-y-2">
+              <div class="font-mono text-[9px] uppercase tracking-[0.18em] text-[#C59367]">${active ? '● NOW PLAYING' : 'LATEST RELEASE'}</div>
+              <div class="font-display font-bold text-sm text-[#F2EADF] truncate">${title}</div>
+              <div class="font-mono text-[10px] text-[#9A9186] group-hover:text-[#C59367]">PLAY FILM ↗</div>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    /* ------------------------------------------------------------------------
+       LIVE BEHANCE PROJECTS + CONTENT TYPE + IN-SITE VIDEO PLAYER
+       ------------------------------------------------------------------------ */
+    const BEHANCE_CACHE_KEY = 'kh_behance_projects_v7';
+    let projectsData = [];
+    let activeFilter = 'all';
+    let currentModalProjectId = null;
+
+    try {
+      const cached = JSON.parse(localStorage.getItem(BEHANCE_CACHE_KEY) || '[]');
+      if (Array.isArray(cached) && cached.length > 0) projectsData = cached;
+    } catch (e) {}
+
+    function upgradeBehanceImageCandidates(rawUrl) {
+      if (!rawUrl || typeof rawUrl !== 'string') return [];
+      const u = rawUrl.trim();
+      const list = [];
+      if (/mir-s3-cdn-cf\.behance\.net\/projects\//i.test(u)) {
+        const hd = u.replace(/\/projects\/(?:202|404|808)\//i, '/projects/max_808/');
+        if (hd !== u) list.push(hd);
+      }
+      if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
+        const hdMod = u.replace(/\/project_modules\/(?:disp|max_1200|2800_opt_1)\//i, '/project_modules/1400/');
+        if (hdMod !== u) list.push(hdMod);
+      }
+      list.push(u);
+      return list;
+    }
+
+    function getProjectBehanceLink(rawUrl) {
+      if (!rawUrl || typeof rawUrl !== 'string') return '';
+      const u = rawUrl.trim();
+      if (!/behance\.net/i.test(u)) return '';
+      if (/^https?:\/\/(www\.)?behance\.net\/kerloshany11\/?(\?.*)?$/i.test(u)) return '';
+      return u;
+    }
+
+    function classifyProjectVideoUrl(rawUrl) {
+      if (!rawUrl || typeof rawUrl !== 'string') return null;
+      const url = rawUrl.trim();
+      if (!url) return null;
+      if (url.startsWith('data:video/') || /\.(mp4|webm|mov|m4v)(\?|$)/i.test(url)) return { url, kind: 'mp4' };
+      const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+      if (yt) return { url: `https://www.youtube-nocookie.com/embed/${yt[1]}?rel=0&playsinline=1`, kind: 'iframe' };
+      const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+      if (vm) return { url: `https://player.vimeo.com/video/${vm[1]}`, kind: 'iframe' };
+      if (/www-ccv\.adobe\.io\/v1\/player\/ccv\/|behance\.net\/embed\//i.test(url)) return { url, kind: 'iframe' };
+      return null;
+    }
+
+    function getProjectContentMeta(p) {
+      const vidCount = Array.isArray(p.videos) ? p.videos.length : 0;
+      const imgCount = Array.isArray(p.mediaGallery) ? p.mediaGallery.filter(m => m && m.src && !classifyProjectVideoUrl(m.src)).length : 1;
+      const hasVid = Boolean(p.hasVideo || vidCount > 0 || p.contentType === 'video' || p.contentType === 'mixed');
+      let type = (p.contentType && p.contentType !== 'auto') ? p.contentType : (hasVid ? (imgCount > 1 ? 'mixed' : 'video') : 'images');
+      let label = currentLang === 'ar' ? '🖼️ صور' : '🖼️ IMAGES';
+      if (type === 'video') label = currentLang === 'ar' ? '▶ يوجد فيديو' : '▶ HAS VIDEO';
+      else if (type === 'mixed') label = currentLang === 'ar' ? '🎬 فيديو + صور' : '🎬 VIDEO + IMAGES';
+      return { hasVid, vidCount, imgCount, type, label };
+    }
+
+    function renderProjects() {
+      const grid = document.getElementById('projects-grid');
+      if (!grid) return;
+
+      const filtered = activeFilter === 'all'
+        ? projectsData
+        : activeFilter === 'video'
+          ? projectsData.filter(p => getProjectContentMeta(p).hasVid)
+          : projectsData.filter(p => p.category === activeFilter);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full border border-[#C59367]/30 bg-[#110F0D] p-10 text-center space-y-3">
+            <div class="font-mono text-xs text-[#C59367] animate-pulse">
+              ${currentLang === 'ar' ? 'جاري تحميل المشاريع مباشرة من Behance...' : 'LOADING PROJECTS DIRECTLY FROM BEHANCE...'}
+            </div>
+            <button onclick="syncBehanceProjects()" class="px-5 py-2 bg-[#C59367] text-[#0A0908] font-mono text-xs font-bold uppercase">
+              ${currentLang === 'ar' ? '↻ تحديث الآن' : '↻ REFRESH NOW'}
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((p, idx) => {
+        const num = String(idx + 1).padStart(2, '0');
+        const title = currentLang === 'ar' ? (p.titleAr || p.titleEn) : (p.titleEn || p.titleAr);
+        const role = currentLang === 'ar' ? (p.roleAr || p.roleEn || 'مشروع Behance') : (p.roleEn || p.roleAr || 'Behance Project');
+        const imgSrc = (p.imageCandidates && p.imageCandidates[0]) || p.image || '';
+        const meta = getProjectContentMeta(p);
+        const behanceUrl = getProjectBehanceLink(p.url);
+
+        return `
+          <article onclick="openProjectModal('${p.id}', ${meta.hasVid ? 'true' : 'false'})" class="project-card cursor-pointer group flex flex-col justify-between">
+            <div>
+              <div class="relative aspect-[16/11] bg-[#0A0908] overflow-hidden">
+                <img data-project-thumb="${p.id}" src="${imgSrc}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                <span class="absolute top-3 start-3 w-8 h-8 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[11px] font-bold flex items-center justify-center shadow-md z-10">${num}</span>
+                <span class="kh-video-badge absolute top-3 end-3 px-3 py-1 rounded-full ${meta.hasVid ? 'bg-[#C59367] text-[#0A0908]' : 'bg-[#0A0908]/85 text-[#C59367] border border-[#C59367]/35'} font-mono text-[10px] font-bold uppercase z-10">
+                  ${meta.label}
+                </span>
+                ${meta.hasVid ? `<div class="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25"><span class="w-12 h-12 rounded-full bg-[#C59367]/90 text-[#0A0908] flex items-center justify-center text-lg shadow-xl">▶</span></div>` : ''}
+              </div>
+              <div class="p-5 space-y-2">
+                <div class="font-mono text-[10px] uppercase tracking-wider text-[#9A9186]">${role}</div>
+                <h3 class="font-display font-bold uppercase text-lg text-[#F2EADF] group-hover:text-[#C59367] transition-colors line-clamp-1">${title}</h3>
+              </div>
+            </div>
+
+            <div class="kh-behance-action-bar px-5 pb-5 pt-3 border-t border-[#C59367]/15 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase">
+              ${behanceUrl
+                ? `<a href="${behanceUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="px-3.5 py-1.5 rounded-full border border-[#C59367]/50 bg-[#0E3E3F]/45 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#0A0908] font-bold transition-all">${currentLang === 'ar' ? 'صفحة Behance ↗' : 'BEHANCE PAGE ↗'}</a>`
+                : '<span></span>'}
+              ${meta.hasVid
+                ? `<button type="button" onclick="event.stopPropagation(); openProjectModal('${p.id}', true)" class="px-3.5 py-1.5 rounded-full bg-[#C59367] hover:bg-[#D4A478] text-[#0A0908] font-bold transition-all">${currentLang === 'ar' ? '▶ مشاهدة الفيديو' : '▶ WATCH VIDEO'}</button>`
+                : `<span class="text-[#C59367] font-bold">${currentLang === 'ar' ? 'عرض التفاصيل ←' : 'OPEN FULL CASE STUDY →'}</span>`}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    async function syncBehanceProjects() {
+      const statusEl = document.getElementById('behance-sync-status');
+      const iconEl = document.getElementById('behance-sync-icon');
+      if (iconEl) iconEl.classList.add('animate-spin');
+      if (statusEl) statusEl.textContent = 'SYNCING BEHANCE...';
+
+      const rssUrl = 'https://www.behance.net/feeds/user?username=kerloshany11';
+      try {
+        const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.items) && data.items.length > 0) {
+            const liveItems = data.items.slice(0, 12).map((item, idx) => {
+              const rawHtml = item.content || item.description || '';
+              const imgMatch = rawHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
+              const thumb = item.thumbnail || (imgMatch ? imgMatch[1] : '');
+              const hdCands = upgradeBehanceImageCandidates(thumb);
+              const cleanDesc = rawHtml.replace(/<[^>]*>/g, '').trim().slice(0, 220) || 'Published portfolio project on Behance by Kerlos Hany Nassif.';
+              return {
+                id: `behance-${idx}-${(item.guid || item.link || idx).toString().slice(-8)}`,
+                category: 'branding',
+                source: 'behance',
+                pubDate: item.pubDate || '',
+                roleEn: 'Behance Published Project',
+                roleAr: 'مشروع منشور على Behance',
+                titleEn: item.title,
+                titleAr: item.title,
+                descEn: cleanDesc,
+                descAr: cleanDesc,
+                image: hdCands[0] || thumb,
+                imageCandidates: hdCands,
+                videos: [],
+                hasVideo: false,
+                mediaGallery: [{ src: hdCands[0] || thumb, srcCandidates: hdCands, captionEn: item.title, captionAr: item.title }],
+                tags: ['Behance', 'Case Study'],
+                url: item.link || 'https://www.behance.net/kerloshany11'
+              };
+            });
+            const nonBehance = projectsData.filter(p => p.source !== 'behance');
+            projectsData = [...liveItems, ...nonBehance];
+            try { localStorage.setItem(BEHANCE_CACHE_KEY, JSON.stringify(liveItems)); } catch (e) {}
+            renderProjects();
+          }
+        }
+        if (statusEl) statusEl.textContent = 'BEHANCE LIVE CONNECTED';
+      } catch (e) {
+        if (statusEl) statusEl.textContent = 'BEHANCE READY';
+      } finally {
+        if (iconEl) setTimeout(() => iconEl.classList.remove('animate-spin'), 400);
+      }
+    }
+
+    function renderProjectMediaStream(p) {
+      const streamEl = document.getElementById('pm-media-stream');
+      const countEl = document.getElementById('pm-media-count');
+      if (!streamEl) return;
+
+      const vids = [];
+      const seen = new Set();
+      const pushV = (u) => {
+        const c = classifyProjectVideoUrl(u);
+        if (!c) return;
+        const k = c.url.split('?')[0];
+        if (!seen.has(k)) { seen.add(k); vids.push(c); }
+      };
+      if (Array.isArray(p.videos)) p.videos.forEach(v => pushV(typeof v === 'string' ? v : v.url));
+      if (Array.isArray(p.extraBoards)) p.extraBoards.forEach(b => pushV(b));
+      if (Array.isArray(p.mediaGallery)) p.mediaGallery.forEach(m => pushV(m.src));
+
+      const imgs = (Array.isArray(p.mediaGallery) ? p.mediaGallery : [{ src: p.image }]).filter(m => m && m.src && !classifyProjectVideoUrl(m.src));
+
+      const vidsHtml = vids.map((v, i) => `
+        <figure class="border border-[#C59367]/40 bg-black">
+          ${v.kind === 'iframe'
+            ? `<div class="aspect-video"><iframe src="${v.url}" class="w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`
+            : `<video src="${v.url}" controls playsinline class="w-full max-h-[75vh] mx-auto bg-black"></video>`}
+          <figcaption class="px-4 py-2.5 bg-[#0A0908] font-mono text-[11px] text-[#C59367]">🎬 VIDEO 0${i + 1}</figcaption>
+        </figure>
+      `).join('');
+
+      const imgsHtml = imgs.map((m, i) => `
+        <figure class="border border-[#C59367]/25 bg-[#0A0908]">
+          <img src="${(m.srcCandidates && m.srcCandidates[0]) || m.src}" alt="Board ${i + 1}" class="w-full h-auto max-h-[78vh] object-contain mx-auto" />
+        </figure>
+      `).join('');
+
+      streamEl.innerHTML = vidsHtml + imgsHtml;
+      if (countEl) countEl.textContent = vids.length > 0 ? `${vids.length} Video(s) · ${imgs.length} Board(s)` : `${imgs.length} High-Res Board(s)`;
+    }
+
+    function openProjectModal(id, focusVideo = false) {
+      const p = projectsData.find(x => x.id === id);
+      if (!p) return;
+      currentModalProjectId = id;
+      const meta = getProjectContentMeta(p);
+      document.getElementById('pm-badge').textContent = p.source === 'behance' ? 'BEHANCE CASE STUDY' : (p.category || 'PROJECT').toUpperCase();
+      document.getElementById('pm-content-type').textContent = meta.label;
+      document.getElementById('pm-title').textContent = currentLang === 'ar' ? (p.titleAr || p.titleEn) : (p.titleEn || p.titleAr);
+      document.getElementById('pm-desc').textContent = currentLang === 'ar' ? (p.descAr || p.descEn) : (p.descEn || p.descAr);
+      document.getElementById('pm-role').textContent = currentLang === 'ar' ? (p.roleAr || p.roleEn) : (p.roleEn || p.roleAr);
+
+      const bhLink = document.getElementById('pm-behance-link');
+      const specificUrl = getProjectBehanceLink(p.url);
+      if (bhLink) {
+        if (specificUrl) { bhLink.href = specificUrl; bhLink.style.display = ''; }
+        else { bhLink.style.display = 'none'; }
+      }
+
+      document.getElementById('pm-tags').innerHTML = (p.tags || []).map(t => `<span class="px-2.5 py-1 border border-[#C59367]/30 font-mono text-[10px] text-[#C9BFB2]">${t}</span>`).join('');
+      renderProjectMediaStream(p);
+
+      const modal = document.getElementById('project-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      if (focusVideo) {
+        setTimeout(() => document.getElementById('pm-media-stream')?.scrollIntoView({ behavior: 'smooth' }), 100);
+      }
+    }
+
+    function navigateProjectModal(dir) {
+      if (!currentModalProjectId || projectsData.length === 0) return;
+      const idx = projectsData.findIndex(x => x.id === currentModalProjectId);
+      if (idx === -1) return;
+      openProjectModal(projectsData[(idx + dir + projectsData.length) % projectsData.length].id);
+    }
+
+    function closeProjectModal() {
+      const modal = document.getElementById('project-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.querySelectorAll('#pm-media-stream video').forEach(v => v.pause());
+      document.querySelectorAll('#pm-media-stream iframe').forEach(f => { f.src = 'about:blank'; });
+    }
+
+    /* ------------------------------------------------------------------------
+       CONTACT MODAL
+       ------------------------------------------------------------------------ */
+    function openContactModal(presetService) {
+      const modal = document.getElementById('contact-modal');
+      if (presetService) {
+        const sel = document.getElementById('inq-service');
+        if (sel) {
+          Array.from(sel.options).forEach(opt => {
+            if (opt.value.toLowerCase().includes(presetService.toLowerCase().slice(0, 8))) sel.value = opt.value;
+          });
+        }
+      }
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeContactModal() {
+      const modal = document.getElementById('contact-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function submitInquiryForm(e) {
+      e.preventDefault();
+      const name = document.getElementById('inq-name').value.trim();
+      const service = document.getElementById('inq-service').value;
+      const msg = document.getElementById('inq-msg').value.trim();
+      window.open(`https://wa.me/201011410996?text=${encodeURIComponent(`Hello Kerlos, I'm ${name}.\nService: ${service}\nBrief: ${msg}`)}`, '_blank', 'noopener,noreferrer');
+      closeContactModal();
+    }
+
+    function sendViaEmail() {
+      const name = document.getElementById('inq-name').value.trim() || 'Client';
+      const service = document.getElementById('inq-service').value;
+      const msg = document.getElementById('inq-msg').value.trim();
+      window.location.href = `mailto:hkerlos@gmail.com?subject=${encodeURIComponent(`Project Inquiry (${service}) — ${name}`)}&body=${encodeURIComponent(msg)}`;
+      closeContactModal();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderServices();
+      renderProjects();
+      FlashMediaDeck.init();
+      syncBehanceProjects();
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeFilter = btn.getAttribute('data-filter') || 'all';
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderProjects();
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeProjectModal();
+          closeContactModal();
+        }
+      });
+    });
+  </script>
+  <script src="./control-room-bridge.js"></script>
+</body>
+</html>
