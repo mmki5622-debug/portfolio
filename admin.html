@@ -3,2031 +3,606 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Control Room | Kerlos Hany Portfolio</title>
+  <title>غرفة التحكم | Kerlos Hany Control Room & SEO</title>
+  <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <style id="admin-custom-fonts-style"></style>
+  <script src="./control-room-bridge.js"></script>
   <style>
     body {
-      background-color: #021411;
-      color: #F5F4F0;
-      font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif;
+      background-color: #060D0C;
+      background-image:
+        radial-gradient(circle at 12% 15%, rgba(14, 62, 63, 0.35) 0%, transparent 45%),
+        radial-gradient(circle at 88% 80%, rgba(160, 102, 32, 0.16) 0%, transparent 45%);
+      color: #F2EADF;
+      font-family: 'Cairo', sans-serif;
     }
-    .glass-panel {
-      background: linear-gradient(145deg, rgba(14, 62, 63, 0.36) 0%, rgba(2, 20, 17, 0.92) 100%);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(106, 86, 57, 0.45);
+    .panel-card {
+      background: linear-gradient(155deg, rgba(14, 62, 63, 0.30) 0%, rgba(10, 13, 12, 0.94) 100%);
+      border: 1px solid rgba(197, 147, 103, 0.25);
+      border-radius: 1.5rem;
     }
-    .input-field {
+    .inp {
       width: 100%;
-      background: #021411;
-      border: 1px solid rgba(106, 86, 57, 0.55);
-      border-radius: 0.75rem;
-      padding: 0.6rem 0.85rem;
-      font-size: 0.8rem;
-      color: #F5F4F0;
+      background: #070E0D;
+      border: 1px solid rgba(197, 147, 103, 0.32);
+      border-radius: 0.85rem;
+      padding: 0.65rem 0.9rem;
+      color: #F2EADF;
+      font-size: 0.85rem;
+      outline: none;
       transition: border-color 0.2s;
     }
-    .input-field:focus {
-      outline: none;
-      border-color: #A06620;
+    .inp:focus { border-color: #C59367; }
+    .tab-btn {
+      border: 1px solid rgba(197, 147, 103, 0.22);
+      background: rgba(14, 62, 63, 0.22);
+      color: #C9BFB2;
+      transition: all 0.2s ease;
     }
+    .tab-btn:hover { border-color: #C59367; color: #F2EADF; }
     .tab-btn.active {
-      background: #A06620;
-      color: #F5F4F0;
-      border-color: #A06620;
-    }
-    .upload-device-btn {
-      background: linear-gradient(135deg, #0E3E3F 0%, #145456 100%);
-      border: 1px solid rgba(160, 102, 32, 0.65);
-      color: #F5F4F0;
-      border-radius: 0.75rem;
-      padding: 0.55rem 0.85rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      white-space: nowrap;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-    .upload-device-btn:hover {
-      background: #A06620;
-      border-color: #B97B2E;
-    }
-    input[type="color"] {
-      -webkit-appearance: none;
-      border: 1px solid rgba(160, 102, 32, 0.65);
-      border-radius: 0.65rem;
-      width: 44px;
-      height: 38px;
-      padding: 2px;
-      background: #021411;
-      cursor: pointer;
-    }
-    input[type="color"]::-webkit-color-swatch-wrapper {
-      padding: 0;
-    }
-    input[type="color"]::-webkit-color-swatch {
-      border: none;
-      border-radius: 0.45rem;
+      background: linear-gradient(90deg, #C59367, #A06620);
+      color: #060D0C;
+      border-color: #C59367;
+      font-weight: 800;
     }
   </style>
 </head>
-<body class="min-h-screen antialiased selection:bg-[#A06620] selection:text-[#F5F4F0]">
+<body class="min-h-screen">
 
   <!-- LOGIN GATE -->
-  <div id="loginScreen" class="fixed inset-0 z-50 bg-[#021411] flex items-center justify-center p-4">
-    <div class="w-full max-w-md rounded-3xl glass-panel p-8 space-y-6 shadow-2xl border-[#A06620]/60 text-center">
-      <div class="w-16 h-16 mx-auto rounded-2xl bg-[#0E3E3F] border border-[#A06620] flex items-center justify-center text-2xl font-extrabold text-[#B97B2E]">
-        KH
+  <div id="login-gate" class="fixed inset-0 z-50 bg-[#060D0C]/98 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="panel-card w-full max-w-md p-8 space-y-6 text-center shadow-2xl">
+      <div class="w-14 h-14 mx-auto rounded-2xl bg-[#050505] border border-[#C59367]/50 overflow-hidden">
+        <img src="./MYLOGO.webp" alt="Logo" class="w-full h-full object-cover" />
       </div>
       <div>
-        <h1 class="text-xl font-extrabold text-[#F5F4F0]">غرفة التحكم — Control Room</h1>
-        <p class="text-xs text-[#C2CCC8] mt-1">تحكم كامل في الواجهة والمشاريع والخطوط الخارجية والألوان</p>
+        <h1 class="text-xl font-extrabold text-[#F2EADF]">غرفة التحكم — Kerlos Hany</h1>
+        <p class="text-xs text-[#9A9186] mt-1">أدخل كلمة المرور لإدارة الموقع والسيو (SEO)</p>
       </div>
-      <form onsubmit="handleLogin(event)" class="space-y-4 text-start">
-        <div>
-          <label class="block text-xs font-bold text-[#B97B2E] mb-1.5">كلمة مرور الإدارة (Admin Password)</label>
-          <input id="loginPasswordInput" type="password" required placeholder="أدخل كلمة المرور" class="input-field" />
-        </div>
-        <p id="loginErrorMsg" class="hidden text-xs text-red-400 font-bold">كلمة المرور غير صحيحة، حاول مرة أخرى.</p>
-        <button type="submit" class="w-full py-3 rounded-full bg-[#A06620] hover:bg-[#B97B2E] text-sm font-bold text-[#F5F4F0] shadow-lg transition-all">
-          دخول إلى غرفة التحكم ↗
+      <form onsubmit="unlockAdmin(event)" class="space-y-4">
+        <input id="login-pass" type="password" required placeholder="كلمة المرور..." class="inp text-center" />
+        <p id="login-err" class="hidden text-xs text-red-400 font-bold">كلمة المرور غير صحيحة</p>
+        <button type="submit" class="w-full py-3 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#060D0C] font-extrabold text-sm">
+          دخول لغرفة التحكم 🔓
         </button>
       </form>
     </div>
   </div>
 
-  <!-- MAIN CONTROL ROOM -->
-  <div id="dashboardApp" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-    <!-- Top Bar -->
-    <header class="rounded-3xl glass-panel p-5 flex flex-wrap items-center justify-between gap-4 border-[#A06620]/50">
+  <!-- MAIN ADMIN APP -->
+  <div id="admin-app" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <!-- Top Header -->
+    <header class="panel-card px-5 py-4 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-xl bg-[#A06620] flex items-center justify-center font-extrabold text-sm text-[#F5F4F0]">CR</div>
+        <div class="w-10 h-10 rounded-xl bg-[#050505] border border-[#C59367]/50 overflow-hidden">
+          <img src="./MYLOGO.webp" alt="Logo" class="w-full h-full object-cover" />
+        </div>
         <div>
-          <h1 class="text-base sm:text-lg font-extrabold text-[#F5F4F0]">Control Room · لوحة تحكم البورتفوليو</h1>
-          <p id="syncStatusText" class="text-[11px] text-[#B97B2E]">متصل بـ Firebase السحابي — تحكم شامل في المحتوى والميديا والخطوط الخارجية</p>
+          <div class="font-extrabold text-base text-[#F2EADF]">غرفة التحكم المتكاملة — Control Room</div>
+          <div id="sync-status-text" class="text-[11px] text-[#C59367]">متصل بقاعدة بيانات Firebase</div>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-2.5">
-        <a href="./index.html" target="_blank" class="px-4 py-2 rounded-full bg-[#0E3E3F] hover:bg-[#A06620] border border-[#6A5639] text-xs font-bold text-[#F5F4F0] transition-colors">
+        <a href="./index.html" target="_blank" class="px-4 py-2 rounded-full border border-[#C59367]/40 text-xs font-bold text-[#F2EADF] hover:border-[#C59367]">
           معاينة الموقع ↗
         </a>
-        <button onclick="exportSiteDataJson()" class="px-4 py-2 rounded-full bg-[#021411] hover:bg-[#0E3E3F] border border-[#6A5639] text-xs font-bold text-[#F5F4F0] transition-colors">
-          تحميل نسخة احتياطية JSON ↓
-        </button>
-        <button onclick="publishLiveConfig()" id="publishBtn" class="px-5 py-2.5 rounded-full bg-[#A06620] hover:bg-[#B97B2E] text-xs font-extrabold text-[#F5F4F0] shadow-lg shadow-[#A06620]/30 transition-all">
-          حفظ ونشر التعديلات الآن ✓
+        <button onclick="saveAndPublish()" id="save-btn" class="px-5 py-2 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#060D0C] text-xs font-extrabold shadow-lg hover:brightness-110">
+          💾 حفظ ونشر مباشر (Firebase)
         </button>
       </div>
     </header>
 
+    <!-- Toast -->
+    <div id="toast" class="hidden fixed bottom-5 left-5 z-50 px-5 py-3 rounded-2xl bg-[#0E3E3F] border border-[#C59367] text-xs font-bold text-[#F2EADF] shadow-2xl"></div>
+
     <!-- Navigation Tabs -->
     <nav class="flex flex-wrap gap-2">
-      <button onclick="switchTab('general')" id="tab-general" class="tab-btn active px-4 py-2 rounded-full border border-[#6A5639]/50 text-xs font-bold transition-all">1. الهوية والصور والتواصل</button>
-      <button onclick="switchTab('hero')" id="tab-hero" class="tab-btn px-4 py-2 rounded-full border border-[#6A5639]/50 text-xs font-bold transition-all">2. الواجهة والبطاقات المائلة</button>
-      <button onclick="switchTab('projects')" id="tab-projects" class="tab-btn px-4 py-2 rounded-full border border-[#6A5639]/50 text-xs font-bold transition-all">3. إدارة المشاريع (Portfolio)</button>
-      <button onclick="switchTab('youtube')" id="tab-youtube" class="tab-btn px-4 py-2 rounded-full border border-[#6A5639]/50 text-xs font-bold transition-all">4. استوديو يوتيوب</button>
-      <button onclick="switchTab('skills')" id="tab-skills" class="tab-btn px-4 py-2 rounded-full border border-[#6A5639]/50 text-xs font-bold transition-all">5. المهارات والخبرات</button>
-      <button onclick="switchTab('typography')" id="tab-typography" class="tab-btn px-4 py-2 rounded-full border border-[#6A5639]/50 text-xs font-bold transition-all">6. الخطوط والألوان والمسافات</button>
-      <button onclick="switchTab('cloud')" id="tab-cloud" class="tab-btn px-4 py-2 rounded-full border border-[#6A5639]/50 text-xs font-bold transition-all">7. الأقسام والربط السحابي</button>
+      <button onclick="switchTab('seo')" data-tab="seo" class="tab-btn active px-4 py-2 rounded-full text-xs">🔍 السيو ومحركات البحث (SEO)</button>
+      <button onclick="switchTab('brand')" data-tab="brand" class="tab-btn px-4 py-2 rounded-full text-xs">🎨 الهوية والتواصل</button>
+      <button onclick="switchTab('hero')" data-tab="hero" class="tab-btn px-4 py-2 rounded-full text-xs">✨ الواجهة والـ 3D</button>
+      <button onclick="switchTab('experience')" data-tab="experience" class="tab-btn px-4 py-2 rounded-full text-xs">💼 الخبرات</button>
+      <button onclick="switchTab('youtube')" data-tab="youtube" class="tab-btn px-4 py-2 rounded-full text-xs">🎬 فيديوهات يوتيوب</button>
+      <button onclick="switchTab('settings')" data-tab="settings" class="tab-btn px-4 py-2 rounded-full text-xs">⚙️ الأقسام والإعدادات</button>
     </nav>
 
-    <!-- TAB 1: GENERAL & BRANDING -->
-    <section id="panel-general" class="tab-panel rounded-3xl glass-panel p-6 space-y-6">
-      <h2 class="text-base font-extrabold text-[#B97B2E] border-b border-[#6A5639]/35 pb-3">الإعدادات العامة، الشعار، الصورة الشخصية، والسيرة الذاتية</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">اسم العلامة (Header Brand)</label>
-          <input id="cfg-brandName" type="text" class="input-field" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">الوصف المختصر تحت الاسم</label>
-          <input id="cfg-brandTagline" type="text" class="input-field" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">فلتر الصورة الشخصية الافتراضي</label>
-          <select id="cfg-portraitMode" class="input-field">
-            <option value="bw">Editorial B&W Splash (أبيض وأسود)</option>
-            <option value="color">Studio Color (ألوان طبيعية)</option>
-          </select>
-        </div>
-
-        <!-- Logo Media Box -->
-        <div class="p-3.5 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-bold text-[#B97B2E]">الشعار الرئيسي (Logo)</label>
-            <img id="prev-logoUrl" src="./MYLOGO.webp" alt="Logo Preview" class="w-10 h-10 rounded-lg object-contain bg-[#0E3E3F]/40 border border-[#6A5639]/50 p-1" />
-          </div>
-          <input id="cfg-logoUrl" type="text" placeholder="الصق رابط https:// أو ارفع من الجهاز" oninput="updatePreview('prev-logoUrl', this.value)" class="input-field" />
-          <button type="button" onclick="pickDeviceMedia('image', 'cfg-logoUrl', 'prev-logoUrl')" class="upload-device-btn w-full">
-            📁 رفع شعار جديد من الجهاز
-          </button>
-        </div>
-
-        <!-- Portrait Media Box -->
-        <div class="p-3.5 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-bold text-[#B97B2E]">الصورة الشخصية (Portrait)</label>
-            <img id="prev-portraitUrl" src="./Professional_beauty_retouch,_202603252250.png" alt="Portrait Preview" class="w-10 h-10 rounded-full object-cover border border-[#A06620]" />
-          </div>
-          <input id="cfg-portraitUrl" type="text" placeholder="الصق رابط https:// أو ارفع من الجهاز" oninput="updatePreview('prev-portraitUrl', this.value)" class="input-field" />
-          <button type="button" onclick="pickDeviceMedia('image', 'cfg-portraitUrl', 'prev-portraitUrl')" class="upload-device-btn w-full">
-            📁 رفع صورة شخصية من الجهاز
-          </button>
-        </div>
-
-        <!-- CV PDF Box -->
-        <div class="p-3.5 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-bold text-[#B97B2E]">ملف السيرة الذاتية (CV PDF)</label>
-            <span class="px-2.5 py-1 rounded-lg bg-[#0E3E3F] text-[10px] font-bold text-[#F5F4F0]">PDF</span>
-          </div>
-          <input id="cfg-cvUrl" type="text" placeholder="رابط PDF من Google Drive أو ارفع ملف" class="input-field" />
-          <button type="button" onclick="pickDeviceMedia('file', 'cfg-cvUrl', null)" class="upload-device-btn w-full">
-            📁 رفع ملف CV PDF من الجهاز
-          </button>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">رقم واتساب (بدون + مثل 201011410996)</label>
-          <input id="cfg-whatsapp" type="text" class="input-field" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">البريد الإلكتروني</label>
-          <input id="cfg-email" type="email" class="input-field" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">الموقع الجغرافي (Footer)</label>
-          <input id="cfg-location" type="text" class="input-field" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">رابط حساب Behance</label>
-          <input id="cfg-behanceUrl" type="url" class="input-field" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">رابط قناة YouTube</label>
-          <input id="cfg-youtubeUrl" type="url" class="input-field" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">رابط حساب LinkedIn</label>
-          <input id="cfg-linkedinUrl" type="url" class="input-field" />
-        </div>
-      </div>
-
-      <h3 class="text-sm font-extrabold text-[#B97B2E] pt-3 border-t border-[#6A5639]/35">إحصائيات قسم "من أنا" (About Stats)</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="p-3 rounded-2xl bg-[#021411]/70 border border-[#6A5639]/40 space-y-2">
-          <label class="text-[11px] font-bold text-[#B97B2E]">الرقم 1 (سنوات الخبرة)</label>
-          <input id="cfg-stat1Num" type="text" class="input-field" placeholder="06" />
-          <input id="cfg-stat1En" type="text" class="input-field" placeholder="Years Experience" />
-          <input id="cfg-stat1Ar" type="text" class="input-field" placeholder="سنوات الخبرة" />
-        </div>
-        <div class="p-3 rounded-2xl bg-[#021411]/70 border border-[#6A5639]/40 space-y-2">
-          <label class="text-[11px] font-bold text-[#B97B2E]">الرقم 2 (المشاريع)</label>
-          <input id="cfg-stat2Num" type="text" class="input-field" placeholder="60" />
-          <input id="cfg-stat2En" type="text" class="input-field" placeholder="Projects Delivered" />
-          <input id="cfg-stat2Ar" type="text" class="input-field" placeholder="مشروع مكتمل" />
-        </div>
-        <div class="p-3 rounded-2xl bg-[#021411]/70 border border-[#6A5639]/40 space-y-2">
-          <label class="text-[11px] font-bold text-[#B97B2E]">الرقم 3 (العملاء)</label>
-          <input id="cfg-stat3Num" type="text" class="input-field" placeholder="25" />
-          <input id="cfg-stat3En" type="text" class="input-field" placeholder="Happy Brands" />
-          <input id="cfg-stat3Ar" type="text" class="input-field" placeholder="علامة تجارية" />
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 2: HERO, FLOATING TILTED CARDS & TOP SHOWCASE -->
-    <section id="panel-hero" class="tab-panel hidden rounded-3xl glass-panel p-6 space-y-8">
-      <!-- PART A: HERO FLOATING TILTED CARDS -->
-      <div class="space-y-4">
-        <div class="border-b border-[#6A5639]/35 pb-3">
-          <h2 class="text-base font-extrabold text-[#B97B2E]">بطاقتا العرض المائلتان في الواجهة الرئيسية (Hero Floating Cards)</h2>
-          <p class="text-[11px] text-[#C2CCC8] mt-0.5">تحكم كامل في الصورتين المائلتين بجانب العنوان الرئيسي، عناوينهما، والمشروع الذي يفتح عند الضغط على كل بطاقة.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <!-- Floating Card 1 -->
-          <div class="rounded-2xl bg-[#021411]/85 border border-[#A06620]/50 p-4 space-y-3">
+    <!-- ======================================================================
+         TAB 1: SEO & SEARCH ENGINE OPTIMIZATION
+         ====================================================================== -->
+    <section id="tab-seo" class="tab-panel space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- SEO Health Score + Live Google Preview -->
+        <div class="lg:col-span-5 space-y-5">
+          <div class="panel-card p-6 space-y-4">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-extrabold text-[#B97B2E]">البطاقة المائلة الأولى (اليسار)</span>
-              <img id="prev-heroCard1" src="./media/storage/prostarica-logo-identity_99befe7a.jpg" alt="Card 1" class="w-12 h-14 rounded-xl object-cover border border-[#A06620]/60" />
+              <h2 class="font-extrabold text-base text-[#F2EADF]">📊 تقييم جودة السيو (SEO Score)</h2>
+              <span id="seo-score-badge" class="px-3.5 py-1 rounded-full bg-[#C59367] text-[#060D0C] font-extrabold text-sm">100%</span>
             </div>
+            <div class="w-full h-2.5 rounded-full bg-[#060D0C] overflow-hidden border border-[#C59367]/30">
+              <div id="seo-score-bar" class="h-full bg-gradient-to-r from-[#0E3E3F] via-[#C59367] to-emerald-400 transition-all duration-500" style="width: 100%"></div>
+            </div>
+            <ul id="seo-checklist" class="space-y-2 text-xs text-[#C9BFB2]"></ul>
+          </div>
+
+          <!-- Live Google Snippet Preview -->
+          <div class="panel-card p-6 space-y-3">
+            <div class="text-xs font-bold text-[#C59367]">🔎 معاينة ظهور موقعك في نتائج بحث جوجل</div>
+            <div dir="ltr" class="rounded-2xl bg-white p-4 text-left space-y-1 shadow-inner">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full bg-[#050505] overflow-hidden shrink-0">
+                  <img src="./MYLOGO.webp" alt="" class="w-full h-full object-cover" />
+                </div>
+                <div class="leading-tight">
+                  <div class="text-[12px] font-semibold text-[#202124]">Kerlos Hany</div>
+                  <div id="preview-url" class="text-[11px] text-[#4d5156]">https://keloshany.online/</div>
+                </div>
+              </div>
+              <div id="preview-title" class="text-[17px] font-medium text-[#1a0dab] leading-snug pt-1 truncate">
+                Kerlos Hany | Graphic, Brand Identity &amp; 3D Designer
+              </div>
+              <div id="preview-desc" class="text-[12px] text-[#4d5156] leading-relaxed line-clamp-2">
+                Kerlos Hany Nassif — Graphic, Brand Identity, Motion &amp; 3D Designer...
+              </div>
+            </div>
+          </div>
+
+          <!-- Sitemap & Robots.txt Generator -->
+          <div class="panel-card p-6 space-y-3">
+            <h3 class="font-extrabold text-sm text-[#F2EADF]">🤖 ملفات الأرشفة لمحركات البحث</h3>
+            <p class="text-xs text-[#9A9186] leading-relaxed">
+              حمّل هذه الملفات وارفعها في المجلد الرئيسي على GitHub لتسريع أرشفة موقعك في Google Search Console.
+            </p>
+            <div class="flex flex-wrap gap-2 pt-1">
+              <button type="button" onclick="downloadSitemapXml()" class="px-4 py-2 rounded-full bg-[#0E3E3F] hover:bg-[#C59367] hover:text-[#060D0C] border border-[#C59367]/45 text-xs font-bold transition-all">
+                ⬇ تحميل sitemap.xml
+              </button>
+              <button type="button" onclick="downloadRobotsTxt()" class="px-4 py-2 rounded-full bg-[#0E3E3F] hover:bg-[#C59367] hover:text-[#060D0C] border border-[#C59367]/45 text-xs font-bold transition-all">
+                ⬇ تحميل robots.txt
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEO Form Controls -->
+        <div class="lg:col-span-7 panel-card p-6 space-y-4">
+          <h2 class="font-extrabold text-base text-[#C59367]">⚙️ إعدادات السيو والميتا تاج (Meta &amp; Open Graph)</h2>
+
+          <div class="grid grid-cols-1 gap-4">
             <div>
-              <label class="text-[10px] text-[#C2CCC8]">صورة البطاقة (رابط أو رفع من الجهاز)</label>
-              <div class="flex gap-2 mt-1">
-                <input id="cfg-heroCard1Img" type="text" oninput="updatePreview('prev-heroCard1', this.value)" class="input-field" />
-                <button type="button" onclick="pickDeviceMedia('image', 'cfg-heroCard1Img', 'prev-heroCard1')" class="upload-device-btn">📁 رفع صورة</button>
+              <div class="flex justify-between text-xs mb-1">
+                <label class="font-bold text-[#F2EADF]">عنوان الموقع في جوجل (Meta Title)</label>
+                <span id="title-len-counter" class="text-[#C59367] font-mono">0 / 60</span>
               </div>
+              <input id="seo-title" oninput="updateSeoLivePreview()" class="inp" placeholder="Kerlos Hany | Graphic, Brand Identity & 3D Designer" />
             </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="text-[10px] text-[#C2CCC8]">العنوان (EN)</label>
-                <input id="cfg-heroCard1TitleEn" type="text" class="input-field" />
-              </div>
-              <div>
-                <label class="text-[10px] text-[#C2CCC8]">العنوان (AR)</label>
-                <input id="cfg-heroCard1TitleAr" type="text" class="input-field" />
-              </div>
-              <div>
-                <label class="text-[10px] text-[#C2CCC8]">الوصف الفرعي (EN)</label>
-                <input id="cfg-heroCard1SubEn" type="text" class="input-field" />
-              </div>
-              <div>
-                <label class="text-[10px] text-[#C2CCC8]">الوصف الفرعي (AR)</label>
-                <input id="cfg-heroCard1SubAr" type="text" class="input-field" />
-              </div>
-            </div>
+
             <div>
-              <label class="text-[10px] font-bold text-[#B97B2E]">المشروع الذي يُفتح عند الضغط على البطاقة</label>
-              <select id="cfg-heroCard1ProjectId" class="input-field mt-1"></select>
+              <div class="flex justify-between text-xs mb-1">
+                <label class="font-bold text-[#F2EADF]">وصف الموقع لمحركات البحث (Meta Description)</label>
+                <span id="desc-len-counter" class="text-[#C59367] font-mono">0 / 160</span>
+              </div>
+              <textarea id="seo-desc" rows="3" oninput="updateSeoLivePreview()" class="inp" placeholder="وصف مختصر وجذاب يظهر تحت اسم موقعك في نتائج بحث جوجل..."></textarea>
             </div>
-          </div>
 
-          <!-- Floating Card 2 -->
-          <div class="rounded-2xl bg-[#021411]/85 border border-[#A06620]/50 p-4 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-extrabold text-[#B97B2E]">البطاقة المائلة الثانية (اليمين)</span>
-              <img id="prev-heroCard2" src="./media/storage/kinza-3d-ads_9ae90cc2.png" alt="Card 2" class="w-12 h-14 rounded-xl object-cover border border-[#A06620]/60" />
-            </div>
             <div>
-              <label class="text-[10px] text-[#C2CCC8]">صورة البطاقة (رابط أو رفع من الجهاز)</label>
-              <div class="flex gap-2 mt-1">
-                <input id="cfg-heroCard2Img" type="text" oninput="updatePreview('prev-heroCard2', this.value)" class="input-field" />
-                <button type="button" onclick="pickDeviceMedia('image', 'cfg-heroCard2Img', 'prev-heroCard2')" class="upload-device-btn">📁 رفع صورة</button>
+              <label class="block text-xs font-bold text-[#F2EADF] mb-1">الكلمات المفتاحية (Keywords — مفصولة بفاصلة)</label>
+              <textarea id="seo-keywords" rows="2" oninput="updateSeoLivePreview()" class="inp" placeholder="Kerlos Hany, مصمم جرافيك, هوية بصرية, 3D Designer..."></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-[#F2EADF] mb-1">الرابط الأساسي (Canonical URL)</label>
+                <input id="seo-canonical" oninput="updateSeoLivePreview()" dir="ltr" class="inp" placeholder="https://keloshany.online/" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-[#F2EADF] mb-1">سماحية الأرشفة (Robots)</label>
+                <select id="seo-robots" onchange="updateSeoLivePreview()" dir="ltr" class="inp">
+                  <option value="index, follow, max-image-preview:large">index, follow (مُفعّل للأرشفة — مُوصى به)</option>
+                  <option value="noindex, nofollow">noindex, nofollow (إخفاء من جوجل)</option>
+                </select>
               </div>
             </div>
-            <div class="grid grid-cols-2 gap-2">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="text-[10px] text-[#C2CCC8]">العنوان (EN)</label>
-                <input id="cfg-heroCard2TitleEn" type="text" class="input-field" />
+                <label class="block text-xs font-bold text-[#F2EADF] mb-1">عنوان المشاركة على السوشيال (OG Title)</label>
+                <input id="seo-og-title" class="inp" placeholder="Kerlos Hany | Portfolio" />
               </div>
               <div>
-                <label class="text-[10px] text-[#C2CCC8]">العنوان (AR)</label>
-                <input id="cfg-heroCard2TitleAr" type="text" class="input-field" />
-              </div>
-              <div>
-                <label class="text-[10px] text-[#C2CCC8]">الوصف الفرعي (EN)</label>
-                <input id="cfg-heroCard2SubEn" type="text" class="input-field" />
-              </div>
-              <div>
-                <label class="text-[10px] text-[#C2CCC8]">الوصف الفرعي (AR)</label>
-                <input id="cfg-heroCard2SubAr" type="text" class="input-field" />
+                <label class="block text-xs font-bold text-[#F2EADF] mb-1">المسمى الوظيفي في Schema.org (JSON-LD)</label>
+                <input id="seo-schema-job" class="inp" placeholder="Graphic, Brand Identity & 3D Designer" />
               </div>
             </div>
+
             <div>
-              <label class="text-[10px] font-bold text-[#B97B2E]">المشروع الذي يُفتح عند الضغط على البطاقة</label>
-              <select id="cfg-heroCard2ProjectId" class="input-field mt-1"></select>
+              <label class="block text-xs font-bold text-[#F2EADF] mb-1">وصف المشاركة على السوشيال (OG Description)</label>
+              <input id="seo-og-desc" class="inp" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-[#F2EADF] mb-1">رابط صورة المشاركة (OG Share Image URL)</label>
+              <input id="seo-og-image" oninput="updateSeoLivePreview()" dir="ltr" class="inp" placeholder="https://keloshany.online/Professional_beauty_retouch,_202603252250.png" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-[#F2EADF] mb-1">كود إثبات ملكية Google Search Console (اختياري)</label>
+              <input id="seo-gsc" dir="ltr" class="inp" placeholder="ضع قيمة content فقط من وسم google-site-verification" />
             </div>
           </div>
         </div>
       </div>
-
-      <!-- PART B: HERO TEXTS & BUTTONS -->
-      <div class="space-y-4 pt-4 border-t border-[#6A5639]/35">
-        <h3 class="text-base font-extrabold text-[#B97B2E]">نصوص الواجهة الرئيسية والأزرار وقسم "من أنا"</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">الشارة العلوية فوق العنوان (Eyebrow EN)</label>
-            <input id="cfg-heroEyebrowEn" type="text" class="input-field" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">الشارة العلوية فوق العنوان (Eyebrow AR)</label>
-            <input id="cfg-heroEyebrowAr" type="text" class="input-field" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">العنوان الرئيسي — السطر الأول (EN)</label>
-            <input id="cfg-heroTitle1En" type="text" class="input-field" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">العنوان الرئيسي — السطر الأول (AR)</label>
-            <input id="cfg-heroTitle1Ar" type="text" class="input-field" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">العنوان الذهبي المميز (EN)</label>
-            <input id="cfg-heroTitle2En" type="text" class="input-field" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">العنوان الذهبي المميز (AR)</label>
-            <input id="cfg-heroTitle2Ar" type="text" class="input-field" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">تكملة العنوان (EN)</label>
-            <input id="cfg-heroTitle3En" type="text" class="input-field" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">تكملة العنوان (AR)</label>
-            <input id="cfg-heroTitle3Ar" type="text" class="input-field" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">الوصف التعريفي أسفل العنوان (EN)</label>
-            <textarea id="cfg-heroSubEn" rows="3" class="input-field"></textarea>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">الوصف التعريفي أسفل العنوان (AR)</label>
-            <textarea id="cfg-heroSubAr" rows="3" class="input-field"></textarea>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">نص زر استعراض الأعمال (EN / AR)</label>
-            <div class="grid grid-cols-2 gap-2">
-              <input id="cfg-heroBtnWorkEn" type="text" placeholder="View My Work" class="input-field" />
-              <input id="cfg-heroBtnWorkAr" type="text" placeholder="استكشف أعمالي" class="input-field" />
-            </div>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">نص زر السيرة الذاتية (EN / AR)</label>
-            <div class="grid grid-cols-2 gap-2">
-              <input id="cfg-heroBtnCvEn" type="text" placeholder="Download CV (PDF)" class="input-field" />
-              <input id="cfg-heroBtnCvAr" type="text" placeholder="تحميل السيرة الذاتية" class="input-field" />
-            </div>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">شارة التفرغ للعمل (English)</label>
-            <input id="cfg-availEn" type="text" class="input-field" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">شارة التفرغ للعمل (عربي)</label>
-            <input id="cfg-availAr" type="text" class="input-field" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">نبذة قسم "من أنا" (About Description EN)</label>
-            <textarea id="cfg-aboutDescEn" rows="3" class="input-field"></textarea>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">نبذة قسم "من أنا" (About Description AR)</label>
-            <textarea id="cfg-aboutDescAr" rows="3" class="input-field"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- PART C: TOP SHOWCASE SLIDER -->
-      <div class="space-y-4 pt-4 border-t border-[#6A5639]/35">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 class="text-base font-extrabold text-[#B97B2E]">شريط العرض العلوي في الواجهة (مفتوح العدد — إضافة أو حذف فيديوهات وصور)</h3>
-            <p class="text-[11px] text-[#C2CCC8] mt-0.5">أضف أي عدد من الفيديوهات والصور، أو احذف أي عنصر بالضغط على زر ✕ حذف.</p>
-          </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <button type="button" onclick="addHeroShowcaseItem('video')" class="px-4 py-2 rounded-full bg-[#A06620] hover:bg-[#B97B2E] text-xs font-bold text-[#F5F4F0] shadow-lg">
-              + إضافة فيديو للشريط
-            </button>
-            <button type="button" onclick="addHeroShowcaseItem('image')" class="px-4 py-2 rounded-full bg-[#0E3E3F] hover:bg-[#A06620] border border-[#A06620]/60 text-xs font-bold text-[#F5F4F0] shadow-lg transition-colors">
-              + إضافة صورة للشريط
-            </button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#021411]/60 p-4 rounded-2xl border border-[#6A5639]/35">
-          <div>
-            <label class="block text-xs font-bold text-[#C2CCC8] mb-1">مدة عرض كل صورة قبل الانتقال تلقائياً (بالثواني)</label>
-            <input id="cfg-heroSlideSeconds" type="number" min="2" max="60" value="5" class="input-field" />
-          </div>
-          <div class="flex items-center pt-5">
-            <span class="text-xs text-[#B97B2E]">إجمالي العناصر في الشريط العلوي حالياً: <strong id="heroShowcaseCountBadge">0</strong> عنصر</span>
-          </div>
-        </div>
-
-        <div id="heroShowcaseAdminList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      </div>
     </section>
 
-    <!-- TAB 3: PROJECTS MANAGER -->
-    <section id="panel-projects" class="tab-panel hidden rounded-3xl glass-panel p-6 space-y-6">
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#6A5639]/35 pb-3">
-        <div>
-          <h2 class="text-base font-extrabold text-[#B97B2E]">إدارة المشاريع ومعرض الأعمال (Portfolio & Case Studies)</h2>
-          <p class="text-[11px] text-[#C2CCC8]">اترك خانة "رابط المشروع على Behance" فارغة لأي مشروع مرفوع مباشرة للموقع ولن يظهر زر Behance عليه إطلاقاً.</p>
-        </div>
-        <button onclick="addNewProject()" class="px-4 py-2.5 rounded-full bg-[#A06620] hover:bg-[#B97B2E] text-xs font-bold text-[#F5F4F0] shadow-lg">
-          + إضافة مشروع جديد
-        </button>
-      </div>
-      <!-- Behance Live Import & Manual Override Box -->
-      <div class="rounded-2xl bg-[#021411]/85 border border-[#A06620]/55 p-4 sm:p-5 space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <h3 class="text-xs sm:text-sm font-extrabold text-[#B97B2E]">استيراد وتخصيص مشاريع Behance (إضافة صور/فيديوهات يدوية وتحديد نوع المحتوى)</h3>
-            <p class="text-[11px] text-[#C2CCC8] mt-0.5">يتم جلب الصور والفيديوهات تلقائياً من Behance، ويمكنك هنا إضافة صور أو فيديوهات إضافية يدوياً لأي مشروع Behance أو تحديد نوع محتواه.</p>
-          </div>
-          <button type="button" onclick="importBehanceToAdmin()" class="px-4 py-2 rounded-full bg-[#0E3E3F] hover:bg-[#A06620] border border-[#A06620]/60 text-xs font-bold text-[#F5F4F0] transition-colors">
-            ↻ جلب مشاريع Behance الآن
-          </button>
-        </div>
-        <div id="behanceOverridesList" class="space-y-2.5"></div>
-      </div>
-
-      <div id="projectsAdminList" class="space-y-5"></div>
-    </section>
-
-    <!-- TAB 4: YOUTUBE STUDIO -->
-    <section id="panel-youtube" class="tab-panel hidden rounded-3xl glass-panel p-6 space-y-6">
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#6A5639]/35 pb-3">
-        <h2 class="text-base font-extrabold text-[#B97B2E]">قائمة تشغيل استوديو يوتيوب (@kerloshany-m8e)</h2>
-        <button onclick="addNewYoutubeVideo()" class="px-4 py-2 rounded-full bg-[#A06620] hover:bg-[#B97B2E] text-xs font-bold text-[#F5F4F0]">
-          + إضافة فيديو يوتيوب
-        </button>
-      </div>
-      <p class="text-xs text-[#C2CCC8]">الصق رابط الفيديو الكامل من يوتيوب أو الـ Video ID فقط وسيتم استخراج المعرّف تلقائياً.</p>
-      <div id="youtubeAdminList" class="space-y-3"></div>
-    </section>
-
-    <!-- TAB 5: SKILLS & EXPERIENCE -->
-    <section id="panel-skills" class="tab-panel hidden rounded-3xl glass-panel p-6 space-y-8">
-      <div class="space-y-4">
-        <div class="flex items-center justify-between border-b border-[#6A5639]/35 pb-3">
-          <h2 class="text-base font-extrabold text-[#B97B2E]">بطاقات المهارات والبرامج (Skills Grid)</h2>
-          <button onclick="addNewSkill()" class="px-4 py-2 rounded-full bg-[#A06620] hover:bg-[#B97B2E] text-xs font-bold text-[#F5F4F0]">
-            + إضافة مهارة
-          </button>
-        </div>
-        <div id="skillsAdminList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      </div>
-
-      <div class="space-y-4 pt-4 border-t border-[#6A5639]/35">
-        <div class="flex items-center justify-between border-b border-[#6A5639]/35 pb-3">
-          <h2 class="text-base font-extrabold text-[#B97B2E]">المسيرة المهنية والخبرات (Experience Timeline)</h2>
-          <button onclick="addNewExperience()" class="px-4 py-2 rounded-full bg-[#A06620] hover:bg-[#B97B2E] text-xs font-bold text-[#F5F4F0]">
-            + إضافة خبرة
-          </button>
-        </div>
-        <div id="experienceAdminList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      </div>
-    </section>
-
-    <!-- TAB 6: TYPOGRAPHY, EXTERNAL FONT UPLOADER, FONT SIZES, LINE HEIGHT & COLORS -->
-    <section id="panel-typography" class="tab-panel hidden rounded-3xl glass-panel p-6 space-y-6">
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#6A5639]/35 pb-3">
-        <div>
-          <h2 class="text-base font-extrabold text-[#B97B2E]">التحكم في نوع الخطوط، تحميل خطوط خارجية، الأحجام، الألوان، والمسافة بين الأسطر</h2>
-          <p class="text-[11px] text-[#C2CCC8] mt-0.5">ارفع ملفات الخطوط من جهازك (.ttf / .otf / .woff2) أو أضف رابط خط من الإنترنت وطبّقه فوراً على موقعك بالكامل.</p>
-        </div>
-        <button type="button" onclick="resetTypographyDefaults()" class="px-4 py-2 rounded-full bg-[#0E3E3F] hover:bg-[#A06620] border border-[#A06620]/60 text-xs font-bold text-[#F5F4F0] transition-colors">
-          ↺ استعادة الخطوط والألوان الأصلية
-        </button>
-      </div>
-
-      <!-- 0. EXTERNAL FONT UPLOADER (DEVICE FILE + EXTERNAL URL) -->
-      <div class="rounded-2xl bg-[#021411]/85 border border-[#A06620]/55 p-5 space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <h3 class="text-sm font-extrabold text-[#B97B2E]">+ تحميل أو إضافة خط خارجي (من جهازك أو عبر رابط الإنترنت)</h3>
-            <p class="text-[11px] text-[#C2CCC8]">يدعم صيغ الخطوط الاحترافية: <span class="text-[#F5F4F0] font-bold">.ttf / .otf / .woff / .woff2</span> أو روابط <span class="text-[#F5F4F0] font-bold">Google Fonts</span>.</p>
-          </div>
-          <button type="button" onclick="uploadCustomFontFromDevice()" class="upload-device-btn">
-            📁 رفع ملف خط من الجهاز (.ttf / .otf / .woff2)
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
-          <div class="md:col-span-4">
-            <label class="block text-[11px] font-bold text-[#C2CCC8] mb-1">اسم الخط (Font Family Name)</label>
-            <input id="newCustomFontName" type="text" placeholder="مثال: GE SS Two أو My Brand Font" class="input-field" />
-          </div>
-          <div class="md:col-span-6">
-            <label class="block text-[11px] font-bold text-[#C2CCC8] mb-1">رابط الخط الخارجي (Google Fonts CSS أو رابط ملف .woff2/.ttf)</label>
-            <input id="newCustomFontUrl" type="text" dir="ltr" placeholder="https://fonts.googleapis.com/css2?family=... أو https://.../font.woff2" class="input-field text-left" />
-          </div>
-          <div class="md:col-span-2">
-            <button type="button" onclick="addCustomFontByUrl()" class="w-full py-2.5 px-3 rounded-xl bg-[#A06620] hover:bg-[#B97B2E] text-xs font-extrabold text-[#F5F4F0] transition-colors">
-              + إضافة بالرابط
-            </button>
-          </div>
-        </div>
-
-        <!-- Installed External Fonts List -->
-        <div id="customFontsAdminList" class="space-y-2 pt-1"></div>
-      </div>
-
-      <!-- 1. Font Families Selectors -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="p-4 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2">
-          <label class="block text-xs font-bold text-[#B97B2E]">نوع الخط العربي الأساسي (Arabic Font)</label>
-          <select id="typ-fontAr" onchange="updateTypographyPreview()" class="input-field">
-            <optgroup id="optg-custom-ar" label="الخطوط الخارجية المضافة (Custom Fonts)"></optgroup>
-            <optgroup label="خطوط Google الجاهزة">
-              <option value="Cairo">Cairo (كايرو — عصري وهندسي)</option>
-              <option value="Tajawal">Tajawal (تجوال — ناعم وواضح)</option>
-              <option value="IBM Plex Sans Arabic">IBM Plex Sans Arabic (احترافي تقني)</option>
-              <option value="Almarai">Almarai (المراعي — مكثف وأنيق)</option>
-              <option value="Readex Pro">Readex Pro (ريديكس برو — حديث)</option>
-              <option value="Changa">Changa (تشانجا — جريء وعريض)</option>
-              <option value="Noto Kufi Arabic">Noto Kufi Arabic (كوفي حديث)</option>
-            </optgroup>
-          </select>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2">
-          <label class="block text-xs font-bold text-[#B97B2E]">نوع الخط الإنجليزي الأساسي (English Sans)</label>
-          <select id="typ-fontEn" onchange="updateTypographyPreview()" class="input-field">
-            <optgroup id="optg-custom-en" label="الخطوط الخارجية المضافة (Custom Fonts)"></optgroup>
-            <optgroup label="خطوط Google الجاهزة">
-              <option value="Plus Jakarta Sans">Plus Jakarta Sans (الافتراضي)</option>
-              <option value="Poppins">Poppins (هندسي عصري)</option>
-              <option value="Inter">Inter (نظيف ومقروء)</option>
-              <option value="Montserrat">Montserrat (مونتسيرات — قوي)</option>
-              <option value="Outfit">Outfit (أنيق وحديث)</option>
-              <option value="Space Grotesk">Space Grotesk (تقني إبداعي)</option>
-            </optgroup>
-          </select>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2">
-          <label class="block text-xs font-bold text-[#B97B2E]">خط العناوين المائلة المميزة (Editorial Accent)</label>
-          <select id="typ-fontAccent" onchange="updateTypographyPreview()" class="input-field">
-            <optgroup id="optg-custom-accent" label="الخطوط الخارجية المضافة (Custom Fonts)"></optgroup>
-            <optgroup label="خطوط Google الجاهزة">
-              <option value="Playfair Display">Playfair Display (كلاسيكي فاخر)</option>
-              <option value="Cormorant Garamond">Cormorant Garamond (تحريري راقٍ)</option>
-              <option value="Lora">Lora (متوازن وأنيق)</option>
-              <option value="Amiri">Amiri (أميري — عربي كلاسيكي)</option>
-              <option value="Cairo">Cairo (مطابق للخط العربي)</option>
-            </optgroup>
-          </select>
-        </div>
-      </div>
-
-      <!-- 2. Font Sizes & Line Heights -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="p-4 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-bold text-[#C2CCC8]">حجم الخط الأساسي (Base Size)</label>
-            <span id="val-baseFontSize" class="text-xs font-extrabold text-[#B97B2E]">16px</span>
-          </div>
-          <input id="typ-baseFontSize" type="range" min="13" max="21" step="1" value="16" oninput="document.getElementById('val-baseFontSize').textContent = this.value + 'px'; updateTypographyPreview();" class="w-full accent-[#A06620]" />
-          <div class="flex justify-between text-[10px] text-[#C2CCC8]/70"><span>صغير 13px</span><span>افتراضي 16px</span><span>كبير 21px</span></div>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-bold text-[#C2CCC8]">حجم العناوين (Heading Scale)</label>
-            <span id="val-headingScale" class="text-xs font-extrabold text-[#B97B2E]">100%</span>
-          </div>
-          <input id="typ-headingScale" type="range" min="80" max="135" step="5" value="100" oninput="document.getElementById('val-headingScale').textContent = this.value + '%'; updateTypographyPreview();" class="w-full accent-[#A06620]" />
-          <div class="flex justify-between text-[10px] text-[#C2CCC8]/70"><span>80%</span><span>افتراضي 100%</span><span>135%</span></div>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-bold text-[#C2CCC8]">المسافة بين أسطر الفقرات</label>
-            <span id="val-bodyLineHeight" class="text-xs font-extrabold text-[#B97B2E]">1.65</span>
-          </div>
-          <input id="typ-bodyLineHeight" type="range" min="1.2" max="2.3" step="0.05" value="1.65" oninput="document.getElementById('val-bodyLineHeight').textContent = Number(this.value).toFixed(2); updateTypographyPreview();" class="w-full accent-[#A06620]" />
-          <div class="flex justify-between text-[10px] text-[#C2CCC8]/70"><span>متقارب 1.2</span><span>افتراضي 1.65</span><span>واسع 2.3</span></div>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-bold text-[#C2CCC8]">المسافة بين أسطر العناوين</label>
-            <span id="val-headingLineHeight" class="text-xs font-extrabold text-[#B97B2E]">1.15</span>
-          </div>
-          <input id="typ-headingLineHeight" type="range" min="1.0" max="1.65" step="0.05" value="1.15" oninput="document.getElementById('val-headingLineHeight').textContent = Number(this.value).toFixed(2); updateTypographyPreview();" class="w-full accent-[#A06620]" />
-          <div class="flex justify-between text-[10px] text-[#C2CCC8]/70"><span>1.00</span><span>افتراضي 1.15</span><span>1.65</span></div>
-        </div>
-      </div>
-
-      <!-- 3. Text Colors -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="p-4 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2">
-          <label class="block text-xs font-bold text-[#C2CCC8]">لون النصوص الأساسية (Dark Sections)</label>
-          <div class="flex items-center gap-2">
-            <input id="typ-primaryTextColor" type="color" value="#F5F4F0" oninput="document.getElementById('typ-primaryTextHex').value = this.value; updateTypographyPreview();" />
-            <input id="typ-primaryTextHex" type="text" value="#F5F4F0" oninput="document.getElementById('typ-primaryTextColor').value = this.value; updateTypographyPreview();" class="input-field font-mono text-left" dir="ltr" />
-          </div>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2">
-          <label class="block text-xs font-bold text-[#C2CCC8]">لون الوصف والنصوص الفرعية</label>
-          <div class="flex items-center gap-2">
-            <input id="typ-secondaryTextColor" type="color" value="#C2CCC8" oninput="document.getElementById('typ-secondaryTextHex').value = this.value; updateTypographyPreview();" />
-            <input id="typ-secondaryTextHex" type="text" value="#C2CCC8" oninput="document.getElementById('typ-secondaryTextColor').value = this.value; updateTypographyPreview();" class="input-field font-mono text-left" dir="ltr" />
-          </div>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2">
-          <label class="block text-xs font-bold text-[#C2CCC8]">لون العناوين الذهبية المميزة</label>
-          <div class="flex items-center gap-2">
-            <input id="typ-accentTextColor" type="color" value="#B97B2E" oninput="document.getElementById('typ-accentTextHex').value = this.value; updateTypographyPreview();" />
-            <input id="typ-accentTextHex" type="text" value="#B97B2E" oninput="document.getElementById('typ-accentTextColor').value = this.value; updateTypographyPreview();" class="input-field font-mono text-left" dir="ltr" />
-          </div>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/45 space-y-2">
-          <label class="block text-xs font-bold text-[#C2CCC8]">لون النصوص في الأقسام الفاتحة</label>
-          <div class="flex items-center gap-2">
-            <input id="typ-lightSectionTextColor" type="color" value="#021411" oninput="document.getElementById('typ-lightSectionTextHex').value = this.value; updateTypographyPreview();" />
-            <input id="typ-lightSectionTextHex" type="text" value="#021411" oninput="document.getElementById('typ-lightSectionTextColor').value = this.value; updateTypographyPreview();" class="input-field font-mono text-left" dir="ltr" />
-          </div>
-        </div>
-      </div>
-
-      <!-- 4. Live Typography Preview Box -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-2">
-        <div id="typPreviewDarkBox" class="rounded-2xl bg-[#021411] border border-[#A06620]/55 p-6 space-y-3">
-          <div class="text-[10px] font-bold uppercase tracking-widest opacity-75">معاينة حية — القسم الداكن (Dark Section)</div>
-          <h3 id="typPrevTitleAr" class="text-2xl font-extrabold">أصنع هويات بصرية <span id="typPrevAccentAr">استثنائية</span> وتجارب 3D</h3>
-          <p id="typPrevBodyAr" class="text-sm">هذا نص تجريبي لمعاينة نوع الخط العربي وحجمه ولونه والمسافة بين الأسطر في موقعك الرسمي.</p>
-        </div>
-
-        <div id="typPreviewLightBox" class="rounded-2xl bg-[#F5F4F0] border border-[#6A5639]/45 p-6 space-y-3" dir="ltr">
-          <div class="text-[10px] font-bold uppercase tracking-widest text-[#A06620]">LIVE PREVIEW — LIGHT SECTION &amp; ENGLISH</div>
-          <h3 id="typPrevTitleEn" class="text-2xl font-extrabold">Crafting Iconic <span id="typPrevAccentEn" class="italic">Visual Identities</span></h3>
-          <p id="typPrevBodyEn" class="text-sm opacity-85">Live preview of your selected English font family, size scaling, colors, and paragraph line spacing.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 7: SECTION TOGGLES & CLOUD SYNC -->
-    <section id="panel-cloud" class="tab-panel hidden rounded-3xl glass-panel p-6 space-y-6">
-      <h2 class="text-base font-extrabold text-[#B97B2E] border-b border-[#6A5639]/35 pb-3">التحكم في إظهار وإخفاء أقسام الموقع (Section Toggles)</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <label class="p-3.5 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/40 flex items-center justify-between cursor-pointer">
-          <span class="text-xs font-bold">شريط العرض العلوي (Hero Stage)</span>
-          <input id="tog-heroReveal" type="checkbox" class="accent-[#A06620] w-4 h-4" />
-        </label>
-        <label class="p-3.5 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/40 flex items-center justify-between cursor-pointer">
-          <span class="text-xs font-bold">قسم من أنا (About)</span>
-          <input id="tog-about" type="checkbox" class="accent-[#A06620] w-4 h-4" />
-        </label>
-        <label class="p-3.5 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/40 flex items-center justify-between cursor-pointer">
-          <span class="text-xs font-bold">قسم المهارات (Skills)</span>
-          <input id="tog-skills" type="checkbox" class="accent-[#A06620] w-4 h-4" />
-        </label>
-        <label class="p-3.5 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/40 flex items-center justify-between cursor-pointer">
-          <span class="text-xs font-bold">قسم المشاريع (Work)</span>
-          <input id="tog-work" type="checkbox" class="accent-[#A06620] w-4 h-4" />
-        </label>
-        <label class="p-3.5 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/40 flex items-center justify-between cursor-pointer">
-          <span class="text-xs font-bold">مزامنة Behance التلقائية</span>
-          <input id="tog-behanceSync" type="checkbox" class="accent-[#A06620] w-4 h-4" />
-        </label>
-        <label class="p-3.5 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/40 flex items-center justify-between cursor-pointer">
-          <span class="text-xs font-bold">استوديو يوتيوب (Cinema)</span>
-          <input id="tog-cinema" type="checkbox" class="accent-[#A06620] w-4 h-4" />
-        </label>
-        <label class="p-3.5 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/40 flex items-center justify-between cursor-pointer">
-          <span class="text-xs font-bold">الخبرات (Experience)</span>
-          <input id="tog-experience" type="checkbox" class="accent-[#A06620] w-4 h-4" />
-        </label>
-        <label class="p-3.5 rounded-2xl bg-[#021411]/80 border border-[#6A5639]/40 flex items-center justify-between cursor-pointer">
-          <span class="text-xs font-bold">بانر بدء مشروع (CTA)</span>
-          <input id="tog-cta" type="checkbox" class="accent-[#A06620] w-4 h-4" />
-        </label>
-      </div>
-
-      <h2 class="text-base font-extrabold text-[#B97B2E] pt-4 border-t border-[#6A5639]/35">الربط السحابي الفوري (Firebase Live Sync) والأمان</h2>
+    <!-- ======================================================================
+         TAB 2: BRAND & CONTACT
+         ====================================================================== -->
+    <section id="tab-brand" class="tab-panel hidden panel-card p-6 space-y-5">
+      <h2 class="font-extrabold text-base text-[#C59367]">🎨 بيانات العلامة التجارية ووسائل التواصل</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">رابط قاعدة بيانات Firebase Realtime Database URL</label>
-          <input id="cfg-firebaseUrl" type="url" placeholder="https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app" class="input-field" />
+          <label class="block text-xs font-bold mb-1">اسم البراند (Brand Name)</label>
+          <input id="cfg-brandName" class="inp" />
         </div>
         <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">كلمة مرور لوحة التحكم (Admin Password)</label>
-          <input id="cfg-adminPassword" type="text" class="input-field" />
+          <label class="block text-xs font-bold mb-1">الوصف المختصر تحت الاسم (Tagline)</label>
+          <input id="cfg-brandTagline" class="inp" />
         </div>
         <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">Cloudinary Cloud Name (اختياري لرفع الفيديوهات الضخمة)</label>
-          <input id="cfg-cloudinaryCloud" type="text" placeholder="مثال: dxyz123ab" class="input-field" />
+          <label class="block text-xs font-bold mb-1">رابط الشعار (Logo URL)</label>
+          <input id="cfg-logoUrl" dir="ltr" class="inp" />
         </div>
         <div>
-          <label class="block text-xs font-bold text-[#C2CCC8] mb-1">Cloudinary Unsigned Upload Preset (اختياري)</label>
-          <input id="cfg-cloudinaryPreset" type="text" placeholder="مثال: portfolio_unsigned" class="input-field" />
+          <label class="block text-xs font-bold mb-1">رابط الصورة الشخصية (Portrait URL)</label>
+          <input id="cfg-portraitUrl" dir="ltr" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">رقم الواتساب (بدون +)</label>
+          <input id="cfg-whatsapp" dir="ltr" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">البريد الإلكتروني</label>
+          <input id="cfg-email" dir="ltr" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">رابط Behance</label>
+          <input id="cfg-behanceUrl" dir="ltr" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">رابط YouTube</label>
+          <input id="cfg-youtubeUrl" dir="ltr" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">رابط LinkedIn</label>
+          <input id="cfg-linkedinUrl" dir="ltr" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">رابط السيرة الذاتية (CV PDF)</label>
+          <input id="cfg-cvUrl" dir="ltr" class="inp" />
         </div>
       </div>
+    </section>
 
-      <div class="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#6A5639]/35">
-        <button onclick="resetToFactoryDefaults()" class="px-4 py-2 rounded-full bg-red-950/60 hover:bg-red-800 border border-red-500/40 text-xs font-bold text-red-200">
-          استعادة الإعدادات الافتراضية للموقع
-        </button>
-        <button onclick="publishLiveConfig()" class="px-6 py-3 rounded-full bg-[#A06620] hover:bg-[#B97B2E] text-xs font-extrabold text-[#F5F4F0] shadow-lg">
-          حفظ ونشر كل الإعدادات الآن ✓
-        </button>
+    <!-- ======================================================================
+         TAB 3: HERO & 3D SHOWCASE
+         ====================================================================== -->
+    <section id="tab-hero" class="tab-panel hidden panel-card p-6 space-y-5">
+      <h2 class="font-extrabold text-base text-[#C59367]">✨ نصوص الواجهة الرئيسية وفيديوهات الـ 3D</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold mb-1">العنوان السطر 1 (EN)</label>
+          <input id="cfg-heroTitle1En" dir="ltr" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">العنوان السطر 1 (AR)</label>
+          <input id="cfg-heroTitle1Ar" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">العنوان السطر 2 (EN)</label>
+          <input id="cfg-heroTitle2En" dir="ltr" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">العنوان السطر 2 (AR)</label>
+          <input id="cfg-heroTitle2Ar" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">العنوان السطر 3 (EN)</label>
+          <input id="cfg-heroTitle3En" dir="ltr" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">العنوان السطر 3 (AR)</label>
+          <input id="cfg-heroTitle3Ar" class="inp" />
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-bold mb-1">النبذة التعريفية (EN)</label>
+          <textarea id="cfg-heroSubEn" dir="ltr" rows="2" class="inp"></textarea>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-bold mb-1">النبذة التعريفية (AR)</label>
+          <textarea id="cfg-heroSubAr" rows="2" class="inp"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 4: EXPERIENCE LOG
+         ====================================================================== -->
+    <section id="tab-experience" class="tab-panel hidden panel-card p-6 space-y-5">
+      <div class="flex items-center justify-between">
+        <h2 class="font-extrabold text-base text-[#C59367]">💼 سجل الخبرات العملية (Experience Log)</h2>
+        <button type="button" onclick="addExperienceItem()" class="px-4 py-1.5 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة خبرة</button>
+      </div>
+      <div id="exp-editor-list" class="space-y-4"></div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 5: YOUTUBE VIDEOS
+         ====================================================================== -->
+    <section id="tab-youtube" class="tab-panel hidden panel-card p-6 space-y-5">
+      <div class="flex items-center justify-between">
+        <h2 class="font-extrabold text-base text-[#C59367]">🎬 قائمة فيديوهات يوتيوب</h2>
+        <button type="button" onclick="addYouTubeItem()" class="px-4 py-1.5 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة فيديو</button>
+      </div>
+      <div id="yt-editor-list" class="space-y-3"></div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 6: SECTIONS & SYSTEM SETTINGS
+         ====================================================================== -->
+    <section id="tab-settings" class="tab-panel hidden panel-card p-6 space-y-5">
+      <h2 class="font-extrabold text-base text-[#C59367]">⚙️ إظهار وإخفاء الأقسام وإعدادات النظام</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+        <label class="flex items-center gap-2 p-3 rounded-xl bg-[#070E0D] border border-[#C59367]/25 cursor-pointer">
+          <input type="checkbox" id="sec-work" class="accent-[#C59367]" /> قسم الأعمال (Behance)
+        </label>
+        <label class="flex items-center gap-2 p-3 rounded-xl bg-[#070E0D] border border-[#C59367]/25 cursor-pointer">
+          <input type="checkbox" id="sec-cinema" class="accent-[#C59367]" /> استوديو يوتيوب
+        </label>
+        <label class="flex items-center gap-2 p-3 rounded-xl bg-[#070E0D] border border-[#C59367]/25 cursor-pointer">
+          <input type="checkbox" id="sec-experience" class="accent-[#C59367]" /> سجل الخبرات
+        </label>
+        <label class="flex items-center gap-2 p-3 rounded-xl bg-[#070E0D] border border-[#C59367]/25 cursor-pointer">
+          <input type="checkbox" id="sec-about" class="accent-[#C59367]" /> قسم عني والبورتريه
+        </label>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-[#C59367]/20">
+        <div>
+          <label class="block text-xs font-bold mb-1">رابط قاعدة بيانات Firebase</label>
+          <input id="cfg-firebaseUrl" dir="ltr" class="inp" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">كلمة مرور غرفة التحكم</label>
+          <input id="cfg-adminPassword" dir="ltr" class="inp" />
+        </div>
       </div>
     </section>
   </div>
 
-  <script src="./control-room-bridge.js"></script>
   <script>
-    let state = null;
+    let cfg = null;
 
-    function handleLogin(e) {
-      e.preventDefault();
-      const entered = document.getElementById('loginPasswordInput').value.trim();
-      const savedPass = (state && state.adminPassword) || 'keloshany2026';
-      if (entered === savedPass || entered === 'keloshany2026') {
-        sessionStorage.setItem('kh_cr_auth', '1');
-        document.getElementById('loginScreen').classList.add('hidden');
-        document.getElementById('dashboardApp').classList.remove('hidden');
-        populateFormFromState();
-      } else {
-        document.getElementById('loginErrorMsg').classList.remove('hidden');
-      }
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 3200);
     }
 
-    function switchTab(tabName) {
+    function switchTab(name) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      const panel = document.getElementById('panel-' + tabName);
-      const btn = document.getElementById('tab-' + tabName);
-      if (panel) panel.classList.remove('hidden');
-      if (btn) btn.classList.add('active');
+      document.getElementById('tab-' + name)?.classList.remove('hidden');
+      document.querySelector(`.tab-btn[data-tab="${name}"]`)?.classList.add('active');
     }
 
-    function updatePreview(imgId, val) {
-      const el = document.getElementById(imgId);
-      if (el && val) el.src = val.trim();
+    async function initAdmin() {
+      cfg = await window.KHControlRoom.loadConfig();
+      if (!cfg.seo) cfg.seo = window.KHControlRoom.getDefaultConfig().seo;
+      populateForms();
     }
 
-    function updateVideoPreview(vidId, val) {
-      const el = document.getElementById(vidId);
-      if (el && val) {
-        el.src = val.trim();
-        if (el.tagName === 'VIDEO') el.load();
+    function unlockAdmin(e) {
+      e.preventDefault();
+      const input = document.getElementById('login-pass').value.trim();
+      const expected = (cfg && cfg.adminPassword) || 'keloshany2026';
+      if (input === expected) {
+        document.getElementById('login-gate').classList.add('hidden');
+        document.getElementById('admin-app').classList.remove('hidden');
+      } else {
+        document.getElementById('login-err').classList.remove('hidden');
       }
     }
 
-    /* ------------------------------------------------------------------------
-       EXTERNAL FONT LOADER (UPLOAD FROM DEVICE + EXTERNAL URL) & TYPOGRAPHY
-       ------------------------------------------------------------------------ */
-    function detectFontFormat(urlOrName) {
-      const s = (urlOrName || '').toLowerCase();
-      if (s.includes('woff2')) return 'woff2';
-      if (s.includes('woff')) return 'woff';
-      if (s.includes('otf') || s.includes('opentype')) return 'opentype';
-      return 'truetype';
-    }
+    function populateForms() {
+      const s = cfg.seo || {};
+      document.getElementById('seo-title').value = s.siteTitle || '';
+      document.getElementById('seo-desc').value = s.metaDescription || '';
+      document.getElementById('seo-keywords').value = s.keywords || '';
+      document.getElementById('seo-canonical').value = s.canonicalUrl || 'https://keloshany.online/';
+      document.getElementById('seo-robots').value = s.robots || 'index, follow, max-image-preview:large';
+      document.getElementById('seo-og-title').value = s.ogTitle || '';
+      document.getElementById('seo-og-desc').value = s.ogDescription || '';
+      document.getElementById('seo-og-image').value = s.ogImage || '';
+      document.getElementById('seo-gsc').value = s.googleVerification || '';
+      document.getElementById('seo-schema-job').value = s.schemaJobTitle || '';
+      updateSeoLivePreview();
 
-    function registerCustomFontsInAdmin(customFonts) {
-      const styleTag = document.getElementById('admin-custom-fonts-style');
-      if (!styleTag) return;
-      const list = Array.isArray(customFonts) ? customFonts : [];
-      const cssRules = [];
-
-      list.forEach((cf, idx) => {
-        if (!cf || !cf.name || !cf.url) return;
-        const safeName = cf.name.replace(/['"\\]/g, '');
-        const u = cf.url.trim();
-        if (/fonts\.googleapis\.com\/css/i.test(u) || /\.css(\?|$)/i.test(u)) {
-          const linkId = 'kh-admin-ext-css-' + idx;
-          let link = document.getElementById(linkId);
-          if (!link) {
-            link = document.createElement('link');
-            link.id = linkId;
-            link.rel = 'stylesheet';
-            document.head.appendChild(link);
-          }
-          link.href = u;
-        } else {
-          const fmt = cf.format || detectFontFormat(u);
-          cssRules.push(`
-            @font-face {
-              font-family: '${safeName}';
-              src: url('${u}') format('${fmt}');
-              font-weight: 100 900;
-              font-style: normal;
-              font-display: swap;
-            }
-          `);
-        }
+      ['brandName','brandTagline','logoUrl','portraitUrl','whatsapp','email','behanceUrl','youtubeUrl','linkedinUrl','cvUrl','heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar','heroSubEn','heroSubAr','firebaseUrl','adminPassword'].forEach(k => {
+        const el = document.getElementById('cfg-' + k);
+        if (el) el.value = cfg[k] || '';
       });
 
-      styleTag.textContent = cssRules.join('\n');
+      const sec = cfg.sections || {};
+      document.getElementById('sec-work').checked = sec.work !== false;
+      document.getElementById('sec-cinema').checked = sec.cinema !== false;
+      document.getElementById('sec-experience').checked = sec.experience !== false;
+      document.getElementById('sec-about').checked = sec.about !== false;
+
+      renderExpEditor();
+      renderYtEditor();
     }
 
-    function refreshCustomFontDropdowns(customFonts) {
-      const list = Array.isArray(customFonts) ? customFonts : [];
-      const optHtml = list
-        .map(cf => `<option value="${escapeHtml(cf.name)}">✦ ${escapeHtml(cf.name)} (خط خارجي)</option>`)
-        .join('');
-
-      ['optg-custom-ar', 'optg-custom-en', 'optg-custom-accent'].forEach(id => {
-        const grp = document.getElementById(id);
-        if (grp) grp.innerHTML = optHtml;
-      });
-    }
-
-    function renderCustomFontsAdminList() {
-      if (!state.typography) state.typography = { ...window.KHControlRoom.getDefaultConfig().typography };
-      if (!Array.isArray(state.typography.customFonts)) state.typography.customFonts = [];
-      const list = state.typography.customFonts;
-
-      registerCustomFontsInAdmin(list);
-      refreshCustomFontDropdowns(list);
-
-      const container = document.getElementById('customFontsAdminList');
-      if (!container) return;
-
-      if (list.length === 0) {
-        container.innerHTML = `<div class="text-[11px] text-[#C2CCC8]/75 py-1">لا توجد خطوط خارجية مضافة بعد. ارفع ملف خط من جهازك أو أضف رابطاً بالأعلى.</div>`;
-        return;
-      }
-
-      container.innerHTML = list.map((cf, idx) => `
-        <div class="rounded-xl bg-[#021411] border border-[#6A5639]/50 p-3 flex flex-wrap items-center justify-between gap-3">
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded bg-[#A06620]/25 border border-[#A06620]/60 text-[10px] font-bold text-[#B97B2E]">${escapeHtml(cf.sourceLabel || 'External')}</span>
-              <strong class="text-xs text-[#F5F4F0]">${escapeHtml(cf.name)}</strong>
-            </div>
-            <div style="font-family: '${escapeHtml(cf.name)}', sans-serif;" class="text-sm text-[#C2CCC8] mt-1 truncate">
-              معاينة الخط: أصنع هويات بصرية استثنائية · Crafting Iconic Visual Identities
-            </div>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-1.5">
-            <button type="button" onclick="assignCustomFontToRole('${escapeHtml(cf.name)}', 'ar')" class="px-2.5 py-1.5 rounded-lg bg-[#0E3E3F] hover:bg-[#A06620] text-[10px] font-bold text-[#F5F4F0] transition-colors">
-              تعيين كعربي
-            </button>
-            <button type="button" onclick="assignCustomFontToRole('${escapeHtml(cf.name)}', 'en')" class="px-2.5 py-1.5 rounded-lg bg-[#0E3E3F] hover:bg-[#A06620] text-[10px] font-bold text-[#F5F4F0] transition-colors">
-              تعيين كإنجليزي
-            </button>
-            <button type="button" onclick="assignCustomFontToRole('${escapeHtml(cf.name)}', 'accent')" class="px-2.5 py-1.5 rounded-lg bg-[#0E3E3F] hover:bg-[#A06620] text-[10px] font-bold text-[#F5F4F0] transition-colors">
-              تعيين للعناوين
-            </button>
-            <button type="button" onclick="deleteCustomFont(${idx})" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-800 text-red-200 text-[10px] font-bold">
-              ✕ حذف
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function assignCustomFontToRole(fontName, role) {
-      if (role === 'ar') document.getElementById('typ-fontAr').value = fontName;
-      else if (role === 'en') document.getElementById('typ-fontEn').value = fontName;
-      else if (role === 'accent') document.getElementById('typ-fontAccent').value = fontName;
-      updateTypographyPreview();
-      document.getElementById('syncStatusText').textContent = `✓ تم تعيين (${fontName}) — اضغط (حفظ ونشر التعديلات الآن) لاعتماده في الموقع.`;
-    }
-
-    function deleteCustomFont(idx) {
-      state.typography.customFonts.splice(idx, 1);
-      renderCustomFontsAdminList();
-      updateTypographyPreview();
-    }
-
-    function uploadCustomFontFromDevice() {
-      const picker = document.createElement('input');
-      picker.type = 'file';
-      picker.accept = '.ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2,application/font-woff,application/x-font-ttf,application/x-font-opentype';
-      picker.onchange = async () => {
-        const file = picker.files && picker.files[0];
-        if (!file) return;
-
-        if (file.size > 3 * 1024 * 1024) {
-          alert('حجم ملف الخط كبير جداً (أكثر من 3 ميجابايت). يفضل تحويل الخط إلى صيغة WOFF2 لتقليل حجمه وسرعة تحميل الموقع.');
-          return;
-        }
-
-        const statusEl = document.getElementById('syncStatusText');
-        statusEl.textContent = `جاري تحميل الخط (${file.name})...`;
-
-        try {
-          const dataUrl = await fileToDataUrl(file);
-          const manualName = document.getElementById('newCustomFontName').value.trim();
-          const autoName = file.name
-            .replace(/\.[^.]+$/, '')
-            .replace(/[_-]+/g, ' ')
-            .replace(/\s+/g, ' ')
-            .trim();
-          const finalName = manualName || autoName || 'Custom Brand Font';
-          const fmt = detectFontFormat(file.name);
-
-          if (!state.typography) state.typography = { ...window.KHControlRoom.getDefaultConfig().typography };
-          if (!Array.isArray(state.typography.customFonts)) state.typography.customFonts = [];
-
-          state.typography.customFonts.push({
-            id: 'cf-' + Date.now(),
-            name: finalName,
-            url: dataUrl,
-            format: fmt,
-            sourceLabel: file.name
-          });
-
-          document.getElementById('newCustomFontName').value = '';
-          renderCustomFontsAdminList();
-
-          // Auto-select in Arabic or English dropdown based on name/script, or keep ready
-          if (/[\u0600-\u06FF]/.test(finalName) || /arabic|cairo|kufi|naskh|ruqaa|ge\s*ss|hacen|droid/i.test(finalName)) {
-            document.getElementById('typ-fontAr').value = finalName;
-          } else {
-            document.getElementById('typ-fontEn').value = finalName;
-          }
-
-          updateTypographyPreview();
-          statusEl.textContent = `✓ تم تحميل الخط (${finalName}) بنجاح! اضغط (حفظ ونشر التعديلات الآن) لتطبيقه على الموقع.`;
-        } catch (err) {
-          alert('تعذر قراءة ملف الخط من الجهاز.');
-        }
-      };
-      picker.click();
-    }
-
-    function addCustomFontByUrl() {
-      const urlInp = document.getElementById('newCustomFontUrl');
-      const nameInp = document.getElementById('newCustomFontName');
-      const rawUrl = urlInp.value.trim();
-      if (!rawUrl) {
-        alert('أدخل رابط الخط الخارجي أولاً.');
-        return;
-      }
-
-      let fontName = nameInp.value.trim();
-      if (!fontName) {
-        const gfMatch = rawUrl.match(/family=([^:&]+)/i);
-        if (gfMatch) {
-          fontName = decodeURIComponent(gfMatch[1]).replace(/\+/g, ' ').trim();
-        } else {
-          const filePart = rawUrl.split('/').pop().split('?')[0];
-          fontName = filePart.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').trim() || 'External Font';
-        }
-      }
-
-      if (!state.typography) state.typography = { ...window.KHControlRoom.getDefaultConfig().typography };
-      if (!Array.isArray(state.typography.customFonts)) state.typography.customFonts = [];
-
-      state.typography.customFonts.push({
-        id: 'cf-' + Date.now(),
-        name: fontName,
-        url: rawUrl,
-        format: detectFontFormat(rawUrl),
-        sourceLabel: 'External URL'
-      });
-
-      urlInp.value = '';
-      nameInp.value = '';
-      renderCustomFontsAdminList();
-      updateTypographyPreview();
-      document.getElementById('syncStatusText').textContent = `✓ تمت إضافة الخط (${fontName})! اختره من القائمة واضغط (حفظ ونشر).`;
-    }
-
-    function loadPreviewGoogleFont(fontName) {
-      if (!fontName) return;
-      const isCustom = Array.isArray(state?.typography?.customFonts) && state.typography.customFonts.some(c => c.name === fontName);
-      if (isCustom) return;
-      const slug = fontName.replace(/\s+/g, '+');
-      const linkId = 'kh-admin-gf-' + slug;
-      if (document.getElementById(linkId)) return;
-      const link = document.createElement('link');
-      link.id = linkId;
-      link.rel = 'stylesheet';
-      link.href = `https://fonts.googleapis.com/css2?family=${slug}:ital,wght@0,400;0,600;0,700;0,800;1,600;1,700&display=swap`;
-      document.head.appendChild(link);
-    }
-
-    function updateTypographyPreview() {
-      const fontAr = document.getElementById('typ-fontAr').value;
-      const fontEn = document.getElementById('typ-fontEn').value;
-      const fontAccent = document.getElementById('typ-fontAccent').value;
-      const baseSize = Number(document.getElementById('typ-baseFontSize').value) || 16;
-      const headingScale = Number(document.getElementById('typ-headingScale').value) || 100;
-      const bodyLH = Number(document.getElementById('typ-bodyLineHeight').value) || 1.65;
-      const headingLH = Number(document.getElementById('typ-headingLineHeight').value) || 1.15;
-      const primaryColor = document.getElementById('typ-primaryTextHex').value || '#F5F4F0';
-      const secondaryColor = document.getElementById('typ-secondaryTextHex').value || '#C2CCC8';
-      const accentColor = document.getElementById('typ-accentTextHex').value || '#B97B2E';
-      const lightColor = document.getElementById('typ-lightSectionTextHex').value || '#021411';
-
-      loadPreviewGoogleFont(fontAr);
-      loadPreviewGoogleFont(fontEn);
-      loadPreviewGoogleFont(fontAccent);
-
-      const darkBox = document.getElementById('typPreviewDarkBox');
-      const titleAr = document.getElementById('typPrevTitleAr');
-      const accentAr = document.getElementById('typPrevAccentAr');
-      const bodyAr = document.getElementById('typPrevBodyAr');
-
-      const lightBox = document.getElementById('typPreviewLightBox');
-      const titleEn = document.getElementById('typPrevTitleEn');
-      const accentEn = document.getElementById('typPrevAccentEn');
-      const bodyEn = document.getElementById('typPrevBodyEn');
-
-      if (darkBox) darkBox.style.fontFamily = `'${fontAr}', sans-serif`;
-      if (titleAr) {
-        titleAr.style.color = primaryColor;
-        titleAr.style.fontSize = `${Math.round(24 * (headingScale / 100))}px`;
-        titleAr.style.lineHeight = headingLH;
-      }
-      if (accentAr) accentAr.style.color = accentColor;
-      if (bodyAr) {
-        bodyAr.style.color = secondaryColor;
-        bodyAr.style.fontSize = `${baseSize}px`;
-        bodyAr.style.lineHeight = bodyLH;
-      }
-
-      if (lightBox) lightBox.style.fontFamily = `'${fontEn}', sans-serif`;
-      if (titleEn) {
-        titleEn.style.color = lightColor;
-        titleEn.style.fontSize = `${Math.round(24 * (headingScale / 100))}px`;
-        titleEn.style.lineHeight = headingLH;
-      }
-      if (accentEn) {
-        accentEn.style.color = accentColor;
-        accentEn.style.fontFamily = `'${fontAccent}', serif`;
-      }
-      if (bodyEn) {
-        bodyEn.style.color = lightColor;
-        bodyEn.style.fontSize = `${baseSize}px`;
-        bodyEn.style.lineHeight = bodyLH;
-      }
-    }
-
-    function resetTypographyDefaults() {
-      const def = window.KHControlRoom.getDefaultConfig().typography;
-      state.typography = { ...def, customFonts: [] };
-      populateTypographyFields(state.typography);
-      updateTypographyPreview();
-    }
-
-    function populateTypographyFields(typ) {
-      const t = { ...window.KHControlRoom.getDefaultConfig().typography, ...(typ || {}) };
-      if (!Array.isArray(t.customFonts)) t.customFonts = [];
-      state.typography = t;
-
-      renderCustomFontsAdminList();
-
-      document.getElementById('typ-fontAr').value = t.fontAr;
-      document.getElementById('typ-fontEn').value = t.fontEn;
-      document.getElementById('typ-fontAccent').value = t.fontAccent;
-      document.getElementById('typ-baseFontSize').value = t.baseFontSize;
-      document.getElementById('val-baseFontSize').textContent = t.baseFontSize + 'px';
-      document.getElementById('typ-headingScale').value = t.headingScale;
-      document.getElementById('val-headingScale').textContent = t.headingScale + '%';
-      document.getElementById('typ-bodyLineHeight').value = t.bodyLineHeight;
-      document.getElementById('val-bodyLineHeight').textContent = Number(t.bodyLineHeight).toFixed(2);
-      document.getElementById('typ-headingLineHeight').value = t.headingLineHeight;
-      document.getElementById('val-headingLineHeight').textContent = Number(t.headingLineHeight).toFixed(2);
-
-      document.getElementById('typ-primaryTextColor').value = t.primaryTextColor;
-      document.getElementById('typ-primaryTextHex').value = t.primaryTextColor;
-      document.getElementById('typ-secondaryTextColor').value = t.secondaryTextColor;
-      document.getElementById('typ-secondaryTextHex').value = t.secondaryTextColor;
-      document.getElementById('typ-accentTextColor').value = t.accentTextColor;
-      document.getElementById('typ-accentTextHex').value = t.accentTextColor;
-      document.getElementById('typ-lightSectionTextColor').value = t.lightSectionTextColor;
-      document.getElementById('typ-lightSectionTextHex').value = t.lightSectionTextColor;
-
-      updateTypographyPreview();
-    }
-
-    /* ------------------------------------------------------------------------
-       ULTRA-CRISP 2K HD MEDIA UPLOADER (2560px @ 95% Quality)
-       ------------------------------------------------------------------------ */
-    function compressImageToDataUrl(file, maxDim = 2560, quality = 0.95) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const img = new Image();
-          img.onload = () => {
-            let w = img.width;
-            let h = img.height;
-            if (w > maxDim || h > maxDim) {
-              if (w > h) {
-                h = Math.round((h * maxDim) / w);
-                w = maxDim;
-              } else {
-                w = Math.round((w * maxDim) / h);
-                h = maxDim;
-              }
-            }
-            const canvas = document.createElement('canvas');
-            canvas.width = w;
-            canvas.height = h;
-            const ctx = canvas.getContext('2d');
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(img, 0, 0, w, h);
-            const isPng = file.type === 'image/png';
-            const mime = isPng ? 'image/png' : 'image/webp';
-            resolve(canvas.toDataURL(mime, quality));
-          };
-          img.onerror = reject;
-          img.src = reader.result;
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function fileToDataUrl(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function pickDeviceMedia(kind, targetInputId, previewElId, onDone) {
-      const picker = document.createElement('input');
-      picker.type = 'file';
-      if (kind === 'image') picker.accept = 'image/*';
-      else if (kind === 'video') picker.accept = 'video/*';
-      else if (kind === 'any') picker.accept = 'image/*,video/*';
-      else picker.accept = 'image/*,video/*,.pdf';
-
-      picker.onchange = async () => {
-        const file = picker.files && picker.files[0];
-        if (!file) return;
-
-        const statusEl = document.getElementById('syncStatusText');
-        const cloudName = document.getElementById('cfg-cloudinaryCloud')?.value.trim() || state.cloudinaryCloud;
-        const uploadPreset = document.getElementById('cfg-cloudinaryPreset')?.value.trim() || state.cloudinaryPreset;
-
-        if (cloudName && uploadPreset) {
-          statusEl.textContent = `جاري رفع (${file.name}) إلى السحابة بأعلى دقة...`;
-          try {
-            const fd = new FormData();
-            fd.append('file', file);
-            fd.append('upload_preset', uploadPreset);
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
-              method: 'POST',
-              body: fd
-            });
-            const data = await res.json();
-            if (data.secure_url) {
-              applyPickedUrl(data.secure_url, file.type, targetInputId, previewElId, onDone);
-              statusEl.textContent = `✓ تم رفع (${file.name}) بنجاح! اضغط (حفظ ونشر التعديلات الآن) لاعتماده.`;
-              return;
-            }
-          } catch (err) {
-            console.error(err);
-          }
-        }
-
-        try {
-          if (file.type.startsWith('image/')) {
-            statusEl.textContent = `جاري تجهيز الصورة بأعلى دقة HD (${file.name})...`;
-            const dataUrl = await compressImageToDataUrl(file, 2560, 0.95);
-            applyPickedUrl(dataUrl, file.type, targetInputId, previewElId, onDone);
-            statusEl.textContent = `✓ تم تحميل الصورة بجودة عالية (${file.name})! اضغط (حفظ ونشر التعديلات الآن).`;
-          } else if (file.size <= 4 * 1024 * 1024) {
-            statusEl.textContent = `جاري تجهيز الملف (${file.name})...`;
-            const dataUrl = await fileToDataUrl(file);
-            applyPickedUrl(dataUrl, file.type, targetInputId, previewElId, onDone);
-            statusEl.textContent = `✓ تم تحميل الملف (${file.name}) بنجاح! اضغط (حفظ ونشر التعديلات الآن).`;
-          } else {
-            const localPath = `./${file.name}`;
-            applyPickedUrl(localPath, file.type, targetInputId, previewElId, onDone);
-            if (previewElId) {
-              const pEl = document.getElementById(previewElId);
-              if (pEl) pEl.src = URL.createObjectURL(file);
-            }
-            alert(
-              `حجم الفيديو (${(file.size / (1024 * 1024)).toFixed(1)} MB) كبير على قاعدة البيانات النصية.\n\n` +
-              `تم ضبط المسار تلقائياً إلى: ${localPath}\n` +
-              `• ضع هذا الفيديو داخل مجلد F:\\site وارفعه إلى Netlify،\n` +
-              `• أو ضع رابط الفيديو من الإنترنت في خانة الرابط.`
-            );
-            statusEl.textContent = `تم ضبط مسار الفيديو (${localPath}) — اضغط (حفظ ونشر).`;
-          }
-        } catch (err) {
-          alert('حدث خطأ أثناء قراءة الملف من الجهاز.');
-        }
-      };
-      picker.click();
-    }
-
-    function applyPickedUrl(finalUrl, mimeType, targetInputId, previewElId, onDone) {
-      if (targetInputId) {
-        const inp = document.getElementById(targetInputId);
-        if (inp) inp.value = finalUrl;
-      }
-      if (previewElId) {
-        const prev = document.getElementById(previewElId);
-        if (prev) {
-          prev.src = finalUrl;
-          if (prev.tagName === 'VIDEO') prev.load();
-        }
-      }
-      if (typeof onDone === 'function') {
-        onDone(finalUrl);
-      }
-    }
-
-    /* ------------------------------------------------------------------------
-       HERO TOP SHOWCASE UNLIMITED LIST
-       ------------------------------------------------------------------------ */
-    function ensureHeroShowcaseArray() {
-      if (state.heroShowcaseEmpty === true) {
-        if (!Array.isArray(state.heroShowcaseItems)) state.heroShowcaseItems = [];
-        return;
-      }
-      if (!Array.isArray(state.heroShowcaseItems)) {
-        state.heroShowcaseItems = [
-          {
-            type: 'video',
-            url: state.revealVideo1 || './Cinematic_logo_reveal_animation_202606051512-cleaned.mp4',
-            titleEn: '3D Brand Identity Reveal 01',
-            titleAr: 'تحريك الهوية البصرية 3D — 01'
-          },
-          {
-            type: 'video',
-            url: state.revealVideo2 || './Cinematic_logo_reveal_animation_202606051517.mp4',
-            titleEn: '3D Brand Identity Reveal 02',
-            titleAr: 'تحريك الهوية البصرية 3D — 02'
-          }
-        ];
-      }
-    }
-
-    function renderHeroShowcaseAdmin() {
-      ensureHeroShowcaseArray();
-      const container = document.getElementById('heroShowcaseAdminList');
-      const countBadge = document.getElementById('heroShowcaseCountBadge');
-      if (countBadge) countBadge.textContent = state.heroShowcaseItems.length;
-      if (!container) return;
-
-      if (state.heroShowcaseItems.length === 0) {
-        container.innerHTML = `
-          <div class="md:col-span-2 rounded-2xl bg-[#021411]/70 border border-dashed border-[#A06620]/50 p-6 text-center space-y-2">
-            <div class="text-sm font-bold text-[#B97B2E]">تم حذف جميع عناصر الشريط العلوي (0 عنصر)</div>
-            <p class="text-xs text-[#C2CCC8]">سيختفي الشريط العلوي تلقائياً من واجهة الموقع عند الحفظ، ويمكنك إضافة فيديو أو صورة جديدة في أي وقت.</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = state.heroShowcaseItems.map((item, idx) => {
-        const isImg = item.type === 'image';
-        return `
-          <div class="rounded-2xl bg-[#021411]/85 border border-[#6A5639]/55 p-4 space-y-3">
-            <div class="flex items-center justify-between gap-2 border-b border-[#6A5639]/30 pb-2.5">
-              <div class="flex items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded-full ${isImg ? 'bg-[#0E3E3F] text-[#F5F4F0]' : 'bg-[#A06620] text-[#F5F4F0]'} text-[10px] font-extrabold">
-                  #${idx + 1} · ${isImg ? '🖼️ صورة' : '🎬 فيديو'}
-                </span>
-              </div>
-              <div class="flex items-center gap-1">
-                <button type="button" onclick="moveHeroItem(${idx}, -1)" class="px-2 py-1 rounded-lg bg-[#0E3E3F] text-xs font-bold" title="تقديم">↑</button>
-                <button type="button" onclick="moveHeroItem(${idx}, 1)" class="px-2 py-1 rounded-lg bg-[#0E3E3F] text-xs font-bold" title="تأخير">↓</button>
-                <button type="button" onclick="deleteHeroItem(${idx})" class="px-2.5 py-1 rounded-lg bg-red-950/70 hover:bg-red-800 text-red-200 text-xs font-bold" title="حذف من العرض">✕ حذف</button>
-              </div>
-            </div>
-
-            <div class="w-full h-36 rounded-xl overflow-hidden bg-black border border-[#6A5639]/40 flex items-center justify-center">
-              ${
-                isImg
-                  ? `<img id="prev-hero-item-${idx}" src="${escapeHtml(item.url)}" alt="Preview" class="w-full h-full object-cover" />`
-                  : `<video id="prev-hero-item-${idx}" src="${escapeHtml(item.url)}" muted loop playsinline controls class="w-full h-full object-cover"></video>`
-              }
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <div>
-                <label class="text-[10px] text-[#C2CCC8]">النوع (فيديو / صورة)</label>
-                <select onchange="state.heroShowcaseItems[${idx}].type = this.value; renderHeroShowcaseAdmin();" class="input-field">
-                  <option value="video" ${!isImg ? 'selected' : ''}>🎬 فيديو (Video)</option>
-                  <option value="image" ${isImg ? 'selected' : ''}>🖼️ صورة (Image)</option>
-                </select>
-              </div>
-              <div>
-                <label class="text-[10px] text-[#C2CCC8]">عنوان العرض (EN)</label>
-                <input type="text" value="${escapeHtml(item.titleEn || '')}" oninput="state.heroShowcaseItems[${idx}].titleEn = this.value" class="input-field" />
-              </div>
-              <div>
-                <label class="text-[10px] text-[#C2CCC8]">عنوان العرض (AR)</label>
-                <input type="text" value="${escapeHtml(item.titleAr || '')}" oninput="state.heroShowcaseItems[${idx}].titleAr = this.value" class="input-field" />
-              </div>
-            </div>
-
-            <div>
-              <label class="text-[10px] font-bold text-[#B97B2E]">رابط ${isImg ? 'الصورة' : 'الفيديو'} من النت أو الرفع من الجهاز</label>
-              <div class="flex flex-col sm:flex-row gap-2 mt-1">
-                <input id="hero-item-url-${idx}" type="text" value="${escapeHtml(item.url)}" placeholder="https://... أو ./..." oninput="state.heroShowcaseItems[${idx}].url = this.value; ${isImg ? `updatePreview('prev-hero-item-${idx}', this.value)` : `updateVideoPreview('prev-hero-item-${idx}', this.value)`};" class="input-field" />
-                <button type="button" onclick="pickDeviceMedia('${isImg ? 'image' : 'video'}', 'hero-item-url-${idx}', 'prev-hero-item-${idx}', (u) => { state.heroShowcaseItems[${idx}].url = u; })" class="upload-device-btn">
-                  📁 رفع من الجهاز
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function addHeroShowcaseItem(kind) {
-      ensureHeroShowcaseArray();
-      state.heroShowcaseEmpty = false;
-      const idx = state.heroShowcaseItems.length + 1;
-      state.heroShowcaseItems.push({
-        type: kind,
-        url: kind === 'image'
-          ? './media/storage/prostarica-logo-identity_99befe7a.jpg'
-          : './Cinematic_logo_reveal_animation_202606051512-cleaned.mp4',
-        titleEn: kind === 'image' ? `Brand Showcase Board 0${idx}` : `3D Brand Reveal 0${idx}`,
-        titleAr: kind === 'image' ? `لوحة عرض الهوية البصرية 0${idx}` : `تحريك الهوية البصرية 3D — 0${idx}`
-      });
-      renderHeroShowcaseAdmin();
-    }
-
-    function moveHeroItem(idx, dir) {
-      const target = idx + dir;
-      if (target < 0 || target >= state.heroShowcaseItems.length) return;
-      [state.heroShowcaseItems[idx], state.heroShowcaseItems[target]] = [state.heroShowcaseItems[target], state.heroShowcaseItems[idx]];
-      renderHeroShowcaseAdmin();
-    }
-
-    function deleteHeroItem(idx) {
-      state.heroShowcaseItems.splice(idx, 1);
-      state.heroShowcaseEmpty = state.heroShowcaseItems.length === 0;
-      renderHeroShowcaseAdmin();
-    }
-
-    function populateHeroCardProjectDropdowns() {
-      const optionsHtml = [
-        `<option value="">— معاينة صورة البطاقة فقط —</option>`,
-        ...state.projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.titleEn)} (${escapeHtml(p.titleAr)})</option>`)
-      ].join('');
-
-      const s1 = document.getElementById('cfg-heroCard1ProjectId');
-      const s2 = document.getElementById('cfg-heroCard2ProjectId');
-      if (s1) {
-        s1.innerHTML = optionsHtml;
-        s1.value = state.heroCard1?.projectId || 'prostarica';
-      }
-      if (s2) {
-        s2.innerHTML = optionsHtml;
-        s2.value = state.heroCard2?.projectId || 'kinza';
-      }
-    }
-
-    function populateFormFromState() {
-      if (!state) return;
-      const c1 = state.heroCard1 || getDefaultConfig().heroCard1;
-      const c2 = state.heroCard2 || getDefaultConfig().heroCard2;
-
-      const map = {
-        'cfg-brandName': state.brandName,
-        'cfg-brandTagline': state.brandTagline,
-        'cfg-logoUrl': state.logoUrl,
-        'cfg-portraitUrl': state.portraitUrl,
-        'cfg-portraitMode': state.portraitMode,
-        'cfg-cvUrl': state.cvUrl,
-        'cfg-whatsapp': state.whatsapp,
-        'cfg-email': state.email,
-        'cfg-location': state.location,
-        'cfg-behanceUrl': state.behanceUrl,
-        'cfg-youtubeUrl': state.youtubeUrl,
-        'cfg-linkedinUrl': state.linkedinUrl,
-        'cfg-stat1Num': state.stats[0].num,
-        'cfg-stat1En': state.stats[0].en,
-        'cfg-stat1Ar': state.stats[0].ar,
-        'cfg-stat2Num': state.stats[1].num,
-        'cfg-stat2En': state.stats[1].en,
-        'cfg-stat2Ar': state.stats[1].ar,
-        'cfg-stat3Num': state.stats[2].num,
-        'cfg-stat3En': state.stats[2].en,
-        'cfg-stat3Ar': state.stats[2].ar,
-        'cfg-heroCard1Img': c1.image,
-        'cfg-heroCard1TitleEn': c1.titleEn,
-        'cfg-heroCard1TitleAr': c1.titleAr,
-        'cfg-heroCard1SubEn': c1.subEn,
-        'cfg-heroCard1SubAr': c1.subAr,
-        'cfg-heroCard2Img': c2.image,
-        'cfg-heroCard2TitleEn': c2.titleEn,
-        'cfg-heroCard2TitleAr': c2.titleAr,
-        'cfg-heroCard2SubEn': c2.subEn,
-        'cfg-heroCard2SubAr': c2.subAr,
-        'cfg-heroEyebrowEn': state.heroEyebrowEn || 'GRAPHIC, BRAND & 3D DESIGNER',
-        'cfg-heroEyebrowAr': state.heroEyebrowAr || 'مصمم جرافيك وهويات بصرية وتصميم 3D',
-        'cfg-heroBtnWorkEn': state.heroBtnWorkEn || 'View My Work',
-        'cfg-heroBtnWorkAr': state.heroBtnWorkAr || 'استكشف أعمالي',
-        'cfg-heroBtnCvEn': state.heroBtnCvEn || 'Download CV (PDF)',
-        'cfg-heroBtnCvAr': state.heroBtnCvAr || 'تحميل السيرة الذاتية (PDF)',
-        'cfg-heroSlideSeconds': state.heroSlideSeconds || 5,
-        'cfg-availEn': state.availEn,
-        'cfg-availAr': state.availAr,
-        'cfg-heroTitle1En': state.heroTitle1En,
-        'cfg-heroTitle1Ar': state.heroTitle1Ar,
-        'cfg-heroTitle2En': state.heroTitle2En,
-        'cfg-heroTitle2Ar': state.heroTitle2Ar,
-        'cfg-heroTitle3En': state.heroTitle3En,
-        'cfg-heroTitle3Ar': state.heroTitle3Ar,
-        'cfg-heroSubEn': state.heroSubEn,
-        'cfg-heroSubAr': state.heroSubAr,
-        'cfg-aboutDescEn': state.aboutDescEn,
-        'cfg-aboutDescAr': state.aboutDescAr,
-        'cfg-firebaseUrl': state.firebaseUrl || '',
-        'cfg-adminPassword': state.adminPassword || 'keloshany2026',
-        'cfg-cloudinaryCloud': state.cloudinaryCloud || '',
-        'cfg-cloudinaryPreset': state.cloudinaryPreset || ''
-      };
-
-      Object.entries(map).forEach(([id, val]) => {
-        const el = document.getElementById(id);
-        if (el) el.value = val ?? '';
-      });
-
-      updatePreview('prev-logoUrl', state.logoUrl);
-      updatePreview('prev-portraitUrl', state.portraitUrl);
-      updatePreview('prev-heroCard1', c1.image);
-      updatePreview('prev-heroCard2', c2.image);
-
-      const toggles = ['heroReveal', 'about', 'skills', 'work', 'behanceSync', 'cinema', 'experience', 'cta'];
-      toggles.forEach(key => {
-        const el = document.getElementById('tog-' + key);
-        if (el) el.checked = state.sections[key] !== false;
-      });
-
-      populateTypographyFields(state.typography);
-      populateHeroCardProjectDropdowns();
-      renderHeroShowcaseAdmin();
-      renderProjectsAdmin();
-      renderBehanceOverridesList();
-      renderYoutubeAdmin();
-      renderSkillsAdmin();
-      renderExperienceAdmin();
-    }
-
-    function collectFormToState() {
-      state.brandName = document.getElementById('cfg-brandName').value.trim();
-      state.brandTagline = document.getElementById('cfg-brandTagline').value.trim();
-      state.logoUrl = document.getElementById('cfg-logoUrl').value.trim();
-      state.portraitUrl = document.getElementById('cfg-portraitUrl').value.trim();
-      state.portraitMode = document.getElementById('cfg-portraitMode').value;
-      state.cvUrl = document.getElementById('cfg-cvUrl').value.trim();
-      state.whatsapp = document.getElementById('cfg-whatsapp').value.trim();
-      state.email = document.getElementById('cfg-email').value.trim();
-      state.location = document.getElementById('cfg-location').value.trim();
-      state.behanceUrl = document.getElementById('cfg-behanceUrl').value.trim();
-      state.youtubeUrl = document.getElementById('cfg-youtubeUrl').value.trim();
-      state.linkedinUrl = document.getElementById('cfg-linkedinUrl').value.trim();
-
-      state.stats = [
-        { num: document.getElementById('cfg-stat1Num').value.trim(), en: document.getElementById('cfg-stat1En').value.trim(), ar: document.getElementById('cfg-stat1Ar').value.trim() },
-        { num: document.getElementById('cfg-stat2Num').value.trim(), en: document.getElementById('cfg-stat2En').value.trim(), ar: document.getElementById('cfg-stat2Ar').value.trim() },
-        { num: document.getElementById('cfg-stat3Num').value.trim(), en: document.getElementById('cfg-stat3En').value.trim(), ar: document.getElementById('cfg-stat3Ar').value.trim() }
+    function updateSeoLivePreview() {
+      const title = document.getElementById('seo-title').value.trim();
+      const desc = document.getElementById('seo-desc').value.trim();
+      const kw = document.getElementById('seo-keywords').value.trim();
+      const canon = document.getElementById('seo-canonical').value.trim();
+      const ogImg = document.getElementById('seo-og-image').value.trim();
+      const robots = document.getElementById('seo-robots').value;
+
+      document.getElementById('title-len-counter').textContent = `${title.length} / 60`;
+      document.getElementById('desc-len-counter').textContent = `${desc.length} / 160`;
+      document.getElementById('preview-title').textContent = title || 'Kerlos Hany | Portfolio';
+      document.getElementById('preview-desc').textContent = desc || 'أضف وصفاً جذاباً لموقعك ليظهر في نتائج بحث جوجل...';
+      document.getElementById('preview-url').textContent = canon || 'https://keloshany.online/';
+
+      const checks = [
+        { ok: title.length >= 25 && title.length <= 65, msg: 'طول عنوان الصفحة مثالي لمحركات البحث (25–65 حرف)' },
+        { ok: desc.length >= 90 && desc.length <= 165, msg: 'طول الوصف (Meta Description) مثالي لجوجل (90–165 حرف)' },
+        { ok: kw.split(',').filter(x => x.trim()).length >= 4, msg: 'يحتوي على كلمات مفتاحية كافية بالعربية والإنجليزية' },
+        { ok: /^https?:\/\//i.test(canon), msg: 'الرابط الأساسي (Canonical URL) مضبوط بشكل صحيح' },
+        { ok: /^https?:\/\//i.test(ogImg), msg: 'صورة المشاركة الاجتماعية (Open Graph Image) مضافة' },
+        { ok: robots.includes('index') && !robots.includes('noindex'), msg: 'الأرشفة في جوجل (index, follow) مُفعّلة' }
       ];
 
-      state.heroCard1 = {
-        image: document.getElementById('cfg-heroCard1Img').value.trim(),
-        titleEn: document.getElementById('cfg-heroCard1TitleEn').value.trim(),
-        titleAr: document.getElementById('cfg-heroCard1TitleAr').value.trim(),
-        subEn: document.getElementById('cfg-heroCard1SubEn').value.trim(),
-        subAr: document.getElementById('cfg-heroCard1SubAr').value.trim(),
-        projectId: document.getElementById('cfg-heroCard1ProjectId').value
-      };
-
-      state.heroCard2 = {
-        image: document.getElementById('cfg-heroCard2Img').value.trim(),
-        titleEn: document.getElementById('cfg-heroCard2TitleEn').value.trim(),
-        titleAr: document.getElementById('cfg-heroCard2TitleAr').value.trim(),
-        subEn: document.getElementById('cfg-heroCard2SubEn').value.trim(),
-        subAr: document.getElementById('cfg-heroCard2SubAr').value.trim(),
-        projectId: document.getElementById('cfg-heroCard2ProjectId').value
-      };
-
-      state.heroEyebrowEn = document.getElementById('cfg-heroEyebrowEn').value.trim();
-      state.heroEyebrowAr = document.getElementById('cfg-heroEyebrowAr').value.trim();
-      state.heroBtnWorkEn = document.getElementById('cfg-heroBtnWorkEn').value.trim();
-      state.heroBtnWorkAr = document.getElementById('cfg-heroBtnWorkAr').value.trim();
-      state.heroBtnCvEn = document.getElementById('cfg-heroBtnCvEn').value.trim();
-      state.heroBtnCvAr = document.getElementById('cfg-heroBtnCvAr').value.trim();
-
-      state.heroSlideSeconds = Math.max(2, Number(document.getElementById('cfg-heroSlideSeconds').value) || 5);
-      state.heroShowcaseEmpty = !Array.isArray(state.heroShowcaseItems) || state.heroShowcaseItems.length === 0;
-      const firstVid = state.heroShowcaseItems.find(x => x.type === 'video');
-      const secondVid = state.heroShowcaseItems.filter(x => x.type === 'video')[1];
-      if (firstVid) state.revealVideo1 = firstVid.url;
-      if (secondVid) state.revealVideo2 = secondVid.url;
-
-      state.availEn = document.getElementById('cfg-availEn').value.trim();
-      state.availAr = document.getElementById('cfg-availAr').value.trim();
-      state.heroTitle1En = document.getElementById('cfg-heroTitle1En').value.trim();
-      state.heroTitle1Ar = document.getElementById('cfg-heroTitle1Ar').value.trim();
-      state.heroTitle2En = document.getElementById('cfg-heroTitle2En').value.trim();
-      state.heroTitle2Ar = document.getElementById('cfg-heroTitle2Ar').value.trim();
-      state.heroTitle3En = document.getElementById('cfg-heroTitle3En').value.trim();
-      state.heroTitle3Ar = document.getElementById('cfg-heroTitle3Ar').value.trim();
-      state.heroSubEn = document.getElementById('cfg-heroSubEn').value.trim();
-      state.heroSubAr = document.getElementById('cfg-heroSubAr').value.trim();
-      state.aboutDescEn = document.getElementById('cfg-aboutDescEn').value.trim();
-      state.aboutDescAr = document.getElementById('cfg-aboutDescAr').value.trim();
-
-      const existingCustomFonts = Array.isArray(state.typography?.customFonts) ? state.typography.customFonts : [];
-      state.typography = {
-        customFonts: existingCustomFonts,
-        fontAr: document.getElementById('typ-fontAr').value,
-        fontEn: document.getElementById('typ-fontEn').value,
-        fontAccent: document.getElementById('typ-fontAccent').value,
-        baseFontSize: Number(document.getElementById('typ-baseFontSize').value) || 16,
-        headingScale: Number(document.getElementById('typ-headingScale').value) || 100,
-        bodyLineHeight: Number(document.getElementById('typ-bodyLineHeight').value) || 1.65,
-        headingLineHeight: Number(document.getElementById('typ-headingLineHeight').value) || 1.15,
-        primaryTextColor: document.getElementById('typ-primaryTextHex').value.trim() || '#F5F4F0',
-        secondaryTextColor: document.getElementById('typ-secondaryTextHex').value.trim() || '#C2CCC8',
-        accentTextColor: document.getElementById('typ-accentTextHex').value.trim() || '#B97B2E',
-        lightSectionTextColor: document.getElementById('typ-lightSectionTextHex').value.trim() || '#021411'
-      };
-
-      state.firebaseUrl = document.getElementById('cfg-firebaseUrl').value.trim().replace(/\/+$/, '');
-      state.adminPassword = document.getElementById('cfg-adminPassword').value.trim() || 'keloshany2026';
-      state.cloudinaryCloud = document.getElementById('cfg-cloudinaryCloud').value.trim();
-      state.cloudinaryPreset = document.getElementById('cfg-cloudinaryPreset').value.trim();
-
-      ['heroReveal', 'about', 'skills', 'work', 'behanceSync', 'cinema', 'experience', 'cta'].forEach(key => {
-        state.sections[key] = document.getElementById('tog-' + key).checked;
-      });
+      const score = Math.round((checks.filter(c => c.ok).length / checks.length) * 100);
+      document.getElementById('seo-score-badge').textContent = `${score}%`;
+      document.getElementById('seo-score-bar').style.width = `${score}%`;
+      document.getElementById('seo-checklist').innerHTML = checks.map(c => `
+        <li class="flex items-center gap-2 ${c.ok ? 'text-emerald-300' : 'text-amber-300'}">
+          <span>${c.ok ? '✅' : '⚠️'}</span>
+          <span>${c.msg}</span>
+        </li>
+      `).join('');
     }
 
-    /* --- BEHANCE IMPORT & MANUAL OVERRIDES --- */
-    let fetchedBehanceAdminItems = [];
-
-    function renderBehanceOverridesList() {
-      const box = document.getElementById('behanceOverridesList');
-      if (!box || !state) return;
-      if (!state.behanceOverrides) state.behanceOverrides = {};
-
-      const listToRender = fetchedBehanceAdminItems.length > 0
-        ? fetchedBehanceAdminItems
-        : Object.keys(state.behanceOverrides).map(url => ({
-            title: state.behanceOverrides[url].title || url.split('/').pop() || 'Behance Project',
-            link: url
-          }));
-
-      if (listToRender.length === 0) {
-        box.innerHTML = '<div class="text-[11px] text-[#C2CCC8]/75">اضغط على زر (جلب مشاريع Behance الآن) لعرض مشاريعك وإضافة صور/فيديوهات يدوية أو تحديد نوع المحتوى لأي منها.</div>';
-        return;
-      }
-
-      box.innerHTML = listToRender.map((item, idx) => {
-        const url = item.link || '';
-        if (!state.behanceOverrides[url]) {
-          state.behanceOverrides[url] = { title: item.title, contentType: 'auto', extraMedia: [] };
-        }
-        const ov = state.behanceOverrides[url];
-        if (!Array.isArray(ov.extraMedia)) ov.extraMedia = [];
-        ov.title = item.title || ov.title;
-
-        const mediaChips = ov.extraMedia.map((mUrl, mIdx) => {
-          const isVid = /\.(mp4|webm|mov)(\?|$)/i.test(mUrl) || mUrl.startsWith('data:video/') || /vimeo\.com|youtube\.com|youtu\.be/i.test(mUrl);
-          const shortLabel = mUrl.startsWith('data:') ? (isVid ? 'فيديو مرفوع من الجهاز' : 'صورة مرفوعة من الجهاز') : mUrl.slice(0, 48);
-          return `
-            <div class="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-[#0E3E3F]/45 border border-[#6A5639]/40 text-[11px]">
-              <span class="truncate">${isVid ? '🎬' : '🖼️'} ${escapeHtml(shortLabel)}</span>
-              <button type="button" onclick="removeBehanceManualMedia('${escapeHtml(url)}', ${mIdx})" class="text-red-300 font-bold shrink-0">✕</button>
-            </div>
-          `;
-        }).join('');
-
-        return `
-          <div class="rounded-xl bg-[#021411] border border-[#6A5639]/50 p-3.5 space-y-2.5">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <div class="min-w-0">
-                <div class="text-xs font-extrabold text-[#F5F4F0] truncate">${escapeHtml(item.title)}</div>
-                <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-[10px] text-[#B97B2E] hover:underline truncate block">${escapeHtml(url)}</a>
-              </div>
-              <select onchange="state.behanceOverrides['${escapeHtml(url)}'].contentType = this.value" class="input-field !w-auto !py-1.5 text-xs">
-                <option value="auto" ${(!ov.contentType || ov.contentType === 'auto') ? 'selected' : ''}>نوع المحتوى: تلقائي</option>
-                <option value="video" ${ov.contentType === 'video' ? 'selected' : ''}>🎬 فيديو</option>
-                <option value="images" ${ov.contentType === 'images' ? 'selected' : ''}>🖼️ صور</option>
-                <option value="mixed" ${ov.contentType === 'mixed' ? 'selected' : ''}>🎬 فيديو + صور</option>
-              </select>
-            </div>
-            ${mediaChips ? `<div class="space-y-1.5">${mediaChips}</div>` : ''}
-            <div class="flex flex-col sm:flex-row gap-2">
-              <input id="bh-extra-${idx}" type="text" placeholder="أضف رابط فيديو (.mp4 / YouTube / Vimeo) أو صورة إضافية يدوياً..." class="input-field" />
-              <button type="button" onclick="addBehanceManualMedia('${escapeHtml(url)}', 'bh-extra-${idx}')" class="px-3.5 py-2 rounded-xl bg-[#A06620] hover:bg-[#B97B2E] text-xs font-bold text-[#F5F4F0] shrink-0">+ إضافة</button>
-              <button type="button" onclick="pickDeviceMedia('any', 'bh-extra-${idx}', null, (u) => { state.behanceOverrides['${escapeHtml(url)}'].extraMedia.push(u); renderBehanceOverridesList(); document.getElementById('syncStatusText').textContent = '✓ تمت إضافة الملف لمشروع Behance — اضغط (حفظ ونشر التعديلات الآن).'; })" class="upload-device-btn">📁 رفع من الجهاز</button>
-            </div>
+    function renderExpEditor() {
+      const box = document.getElementById('exp-editor-list');
+      const list = Array.isArray(cfg.experience) ? cfg.experience : [];
+      box.innerHTML = list.map((ex, i) => `
+        <div class="p-4 rounded-2xl bg-[#070E0D] border border-[#C59367]/25 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-[#C59367]">خبرة #${i + 1}</span>
+            <button type="button" onclick="removeExperienceItem(${i})" class="text-xs text-red-400 hover:underline">حذف</button>
           </div>
-        `;
-      }).join('');
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input value="${(ex.period || '').replace(/"/g, '&quot;')}" oninput="cfg.experience[${i}].period=this.value" class="inp" placeholder="الفترة (2023 — Present)" />
+            <input value="${(ex.company || '').replace(/"/g, '&quot;')}" oninput="cfg.experience[${i}].company=this.value" class="inp" placeholder="الشركة" />
+            <input value="${(ex.role || '').replace(/"/g, '&quot;')}" oninput="cfg.experience[${i}].role=this.value" class="inp" placeholder="المسمى الوظيفي" />
+          </div>
+          <textarea rows="2" oninput="cfg.experience[${i}].desc=this.value" class="inp" placeholder="وصف المهام...">${ex.desc || ''}</textarea>
+        </div>
+      `).join('');
     }
 
-    async function importBehanceToAdmin() {
-      const box = document.getElementById('behanceOverridesList');
-      if (!box) return;
-      box.innerHTML = '<div class="text-xs text-[#B97B2E] animate-pulse">جاري جلب مشاريعك من Behance...</div>';
+    function addExperienceItem() {
+      if (!Array.isArray(cfg.experience)) cfg.experience = [];
+      cfg.experience.unshift({ period: '2026 — Present', company: 'New Company', role: 'Senior Designer', desc: '' });
+      renderExpEditor();
+    }
+    function removeExperienceItem(i) { cfg.experience.splice(i, 1); renderExpEditor(); }
 
-      const rssUrl = 'https://www.behance.net/feeds/user?username=kerloshany11';
-      let items = [];
+    function renderYtEditor() {
+      const box = document.getElementById('yt-editor-list');
+      const list = Array.isArray(cfg.youtubeVideos) ? cfg.youtubeVideos : [];
+      box.innerHTML = list.map((v, i) => `
+        <div class="p-4 rounded-2xl bg-[#070E0D] border border-[#C59367]/25 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+          <input value="${v.id || ''}" oninput="cfg.youtubeVideos[${i}].id=this.value" dir="ltr" class="inp md:col-span-3" placeholder="YouTube ID" />
+          <input value="${(v.titleEn || '').replace(/"/g, '&quot;')}" oninput="cfg.youtubeVideos[${i}].titleEn=this.value" class="inp md:col-span-4" placeholder="Title EN" />
+          <input value="${(v.titleAr || '').replace(/"/g, '&quot;')}" oninput="cfg.youtubeVideos[${i}].titleAr=this.value" class="inp md:col-span-3" placeholder="العنوان بالعربي" />
+          <input value="${v.duration || ''}" oninput="cfg.youtubeVideos[${i}].duration=this.value" dir="ltr" class="inp md:col-span-1" placeholder="0:30" />
+          <button type="button" onclick="removeYouTubeItem(${i})" class="text-xs text-red-400 font-bold md:col-span-1">حذف</button>
+        </div>
+      `).join('');
+    }
+    function addYouTubeItem() {
+      if (!Array.isArray(cfg.youtubeVideos)) cfg.youtubeVideos = [];
+      cfg.youtubeVideos.unshift({ id: '', titleEn: 'New Video', titleAr: 'فيديو جديد', duration: '0:30' });
+      renderYtEditor();
+    }
+    function removeYouTubeItem(i) { cfg.youtubeVideos.splice(i, 1); renderYtEditor(); }
+
+    function collectFormIntoConfig() {
+      cfg.seo = {
+        siteTitle: document.getElementById('seo-title').value.trim(),
+        metaDescription: document.getElementById('seo-desc').value.trim(),
+        keywords: document.getElementById('seo-keywords').value.trim(),
+        canonicalUrl: document.getElementById('seo-canonical').value.trim() || 'https://keloshany.online/',
+        robots: document.getElementById('seo-robots').value,
+        ogTitle: document.getElementById('seo-og-title').value.trim(),
+        ogDescription: document.getElementById('seo-og-desc').value.trim(),
+        ogImage: document.getElementById('seo-og-image').value.trim(),
+        googleVerification: document.getElementById('seo-gsc').value.trim(),
+        schemaJobTitle: document.getElementById('seo-schema-job').value.trim()
+      };
+
+      ['brandName','brandTagline','logoUrl','portraitUrl','whatsapp','email','behanceUrl','youtubeUrl','linkedinUrl','cvUrl','heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar','heroSubEn','heroSubAr','firebaseUrl','adminPassword'].forEach(k => {
+        const el = document.getElementById('cfg-' + k);
+        if (el) cfg[k] = el.value.trim();
+      });
+
+      cfg.sections = {
+        ...(cfg.sections || {}),
+        work: document.getElementById('sec-work').checked,
+        cinema: document.getElementById('sec-cinema').checked,
+        experience: document.getElementById('sec-experience').checked,
+        about: document.getElementById('sec-about').checked
+      };
+    }
+
+    async function saveAndPublish() {
+      collectFormIntoConfig();
+      const btn = document.getElementById('save-btn');
+      btn.disabled = true;
+      btn.textContent = '⏳ جاري الحفظ...';
       try {
-        const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data && Array.isArray(data.items) && data.items.length > 0) {
-            items = data.items.slice(0, 12).map(it => ({ title: it.title, link: it.link }));
-          }
-        }
-      } catch (e) {}
-
-      if (items.length === 0) {
-        try {
-          const r2 = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`);
-          if (r2.ok) {
-            const payload = await r2.json();
-            const doc = new DOMParser().parseFromString(payload.contents || '', 'text/xml');
-            items = Array.from(doc.querySelectorAll('item')).slice(0, 12).map(el => ({
-              title: el.querySelector('title')?.textContent?.trim() || 'Behance Project',
-              link: el.querySelector('link')?.textContent?.trim() || ''
-            }));
-          }
-        } catch (e) {}
-      }
-
-      if (items.length === 0) {
-        box.innerHTML = '<div class="text-xs text-red-300">تعذر جلب المشاريع حالياً، حاول مرة أخرى بعد ثوانٍ.</div>';
-        return;
-      }
-
-      fetchedBehanceAdminItems = items;
-      renderBehanceOverridesList();
-    }
-
-    function addBehanceManualMedia(behanceUrl, inputId) {
-      const inp = document.getElementById(inputId);
-      const val = inp && inp.value.trim();
-      if (!val) return;
-      if (!state.behanceOverrides[behanceUrl]) {
-        state.behanceOverrides[behanceUrl] = { contentType: 'auto', extraMedia: [] };
-      }
-      state.behanceOverrides[behanceUrl].extraMedia.push(val);
-      inp.value = '';
-      renderBehanceOverridesList();
-      document.getElementById('syncStatusText').textContent = '✓ تمت إضافة الميديا اليدوية لمشروع Behance — اضغط (حفظ ونشر التعديلات الآن).';
-    }
-
-    function removeBehanceManualMedia(behanceUrl, mediaIdx) {
-      if (state.behanceOverrides && state.behanceOverrides[behanceUrl] && Array.isArray(state.behanceOverrides[behanceUrl].extraMedia)) {
-        state.behanceOverrides[behanceUrl].extraMedia.splice(mediaIdx, 1);
-        renderBehanceOverridesList();
-      }
-    }
-
-    /* --- PROJECTS CRUD --- */
-    function renderProjectsAdmin() {
-      const container = document.getElementById('projectsAdminList');
-      container.innerHTML = state.projects.map((p, idx) => {
-        const boards = Array.isArray(p.extraBoards) ? p.extraBoards : [];
-        return `
-        <div class="rounded-2xl bg-[#021411]/85 border border-[#6A5639]/55 p-5 space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#6A5639]/30 pb-3">
-            <div class="flex items-center gap-3">
-              <img id="prev-proj-${idx}" src="${escapeHtml(p.image)}" alt="Cover" class="w-12 h-12 rounded-xl object-cover border border-[#A06620]/60 bg-[#0E3E3F]/40" />
-              <div>
-                <span class="text-xs font-extrabold text-[#B97B2E] block">#${idx + 1} · ${escapeHtml(p.titleEn || 'مشروع جديد')}</span>
-                <span class="text-[10px] text-[#C2CCC8]">${escapeHtml(p.titleAr || '')}</span>
-              </div>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <button onclick="moveProject(${idx}, -1)" class="px-2.5 py-1 rounded-lg bg-[#0E3E3F] text-xs font-bold" title="تحريك لأعلى">↑</button>
-              <button onclick="moveProject(${idx}, 1)" class="px-2.5 py-1 rounded-lg bg-[#0E3E3F] text-xs font-bold" title="تحريك لأسفل">↓</button>
-              <button onclick="deleteProject(${idx})" class="px-3 py-1 rounded-lg bg-red-950/70 text-red-300 text-xs font-bold">حذف المشروع</button>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-            <div>
-              <label class="text-[11px] font-bold text-[#C2CCC8]">التصنيف</label>
-              <select onchange="state.projects[${idx}].category = this.value" class="input-field">
-                <option value="branding" ${p.category === 'branding' ? 'selected' : ''}>Branding & Logo</option>
-                <option value="3d" ${p.category === '3d' ? 'selected' : ''}>3D Visualization</option>
-                <option value="social" ${p.category === 'social' ? 'selected' : ''}>Social & Ads</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-[11px] font-bold text-[#B97B2E]">نوع المحتوى (Content Type)</label>
-              <select onchange="state.projects[${idx}].contentType = this.value" class="input-field">
-                <option value="auto" ${(!p.contentType || p.contentType === 'auto') ? 'selected' : ''}>تلقائي (Auto)</option>
-                <option value="images" ${p.contentType === 'images' ? 'selected' : ''}>🖼️ صور فقط (Images)</option>
-                <option value="video" ${p.contentType === 'video' ? 'selected' : ''}>🎬 فيديو (Video)</option>
-                <option value="mixed" ${p.contentType === 'mixed' ? 'selected' : ''}>🎬 فيديو + صور (Mixed)</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-[11px] font-bold text-[#C2CCC8]">عنوان المشروع (EN)</label>
-              <input type="text" value="${escapeHtml(p.titleEn)}" oninput="state.projects[${idx}].titleEn = this.value; populateHeroCardProjectDropdowns();" class="input-field" />
-            </div>
-            <div>
-              <label class="text-[11px] font-bold text-[#C2CCC8]">عنوان المشروع (AR)</label>
-              <input type="text" value="${escapeHtml(p.titleAr)}" oninput="state.projects[${idx}].titleAr = this.value; populateHeroCardProjectDropdowns();" class="input-field" />
-            </div>
-
-            <div class="md:col-span-2">
-              <label class="text-[11px] font-bold text-[#B97B2E]">صورة غلاف المشروع (رابط من النت أو رفع من الجهاز بجودة HD)</label>
-              <div class="flex flex-col sm:flex-row gap-2 mt-1">
-                <input id="proj-img-${idx}" type="text" value="${escapeHtml(p.image)}" placeholder="https://... أو ./..." oninput="state.projects[${idx}].image = this.value; updatePreview('prev-proj-${idx}', this.value);" class="input-field" />
-                <button type="button" onclick="pickDeviceMedia('image', 'proj-img-${idx}', 'prev-proj-${idx}', (u) => { state.projects[${idx}].image = u; })" class="upload-device-btn">
-                  📁 رفع صورة الغلاف
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <label class="text-[11px] font-bold text-[#C2CCC8]">رابط المشروع على Behance (اتركه فارغاً ليختفي الزر)</label>
-              <input type="text" value="${escapeHtml(p.url || '')}" placeholder="اتركه فارغاً للمشاريع المباشرة" oninput="state.projects[${idx}].url = this.value" class="input-field mt-1" />
-            </div>
-
-            <div>
-              <label class="text-[11px] font-bold text-[#C2CCC8]">التخصص (Discipline)</label>
-              <input type="text" value="${escapeHtml(p.roleEn)}" oninput="state.projects[${idx}].roleEn = this.value; state.projects[${idx}].roleAr = this.value;" class="input-field" />
-            </div>
-            <div class="md:col-span-2">
-              <label class="text-[11px] font-bold text-[#C2CCC8]">الوسوم (Tags مفصولة بفاصلة)</label>
-              <input type="text" value="${escapeHtml((p.tags || []).join(', '))}" oninput="state.projects[${idx}].tags = this.value.split(',').map(s => s.trim()).filter(Boolean)" class="input-field" />
-            </div>
-
-            <div>
-              <label class="text-[11px] font-bold text-[#C2CCC8]">وصف المشروع (EN)</label>
-              <textarea rows="2" oninput="state.projects[${idx}].descEn = this.value" class="input-field">${escapeHtml(p.descEn)}</textarea>
-            </div>
-            <div class="md:col-span-2">
-              <label class="text-[11px] font-bold text-[#C2CCC8]">وصف المشروع (AR)</label>
-              <textarea rows="2" oninput="state.projects[${idx}].descAr = this.value" class="input-field">${escapeHtml(p.descAr)}</textarea>
-            </div>
-          </div>
-
-          <div class="pt-3 border-t border-[#6A5639]/35 space-y-2.5">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="text-xs font-bold text-[#B97B2E]">فيديوهات وصور إضافية داخل المشروع (${boards.length})</span>
-              <button type="button" onclick="addProjectBoard(${idx})" class="px-3 py-1.5 rounded-full bg-[#0E3E3F] hover:bg-[#A06620] text-[11px] font-bold text-[#F5F4F0] transition-colors">
-                + إضافة فيديو أو لوحة عرض
-              </button>
-            </div>
-            <div class="space-y-2">
-              ${boards.map((bUrl, bIdx) => {
-                const isVid = /\.(mp4|webm|mov)(\?|$)/i.test(bUrl) || bUrl.startsWith('data:video/') || /vimeo\.com|youtube\.com|youtu\.be/i.test(bUrl);
-                return `
-                <div class="flex flex-col sm:flex-row items-center gap-2 p-2 rounded-xl bg-[#021411] border border-[#6A5639]/40">
-                  <span class="px-2 py-1 rounded bg-[#0E3E3F] text-[10px] font-bold text-[#B97B2E] shrink-0">${isVid ? '🎬 فيديو' : '🖼️ صورة'}</span>
-                  <input id="board-inp-${idx}-${bIdx}" type="text" value="${escapeHtml(bUrl)}" placeholder="رابط الفيديو (.mp4 / YouTube / Vimeo) أو الصورة..." oninput="state.projects[${idx}].extraBoards[${bIdx}] = this.value;" class="input-field" />
-                  <button type="button" onclick="pickDeviceMedia('any', 'board-inp-${idx}-${bIdx}', null, (u) => { state.projects[${idx}].extraBoards[${bIdx}] = u; renderProjectsAdmin(); })" class="upload-device-btn">
-                    📁 رفع من الجهاز
-                  </button>
-                  <button type="button" onclick="state.projects[${idx}].extraBoards.splice(${bIdx}, 1); renderProjectsAdmin();" class="px-2.5 py-2 rounded-lg bg-red-950/70 text-red-300 text-xs font-bold">✕</button>
-                </div>
-              `;
-              }).join('')}
-            </div>
-          </div>
-        </div>
-      `;
-      }).join('');
-    }
-
-    function addProjectBoard(projIdx) {
-      if (!Array.isArray(state.projects[projIdx].extraBoards)) {
-        state.projects[projIdx].extraBoards = [];
-      }
-      state.projects[projIdx].extraBoards.push('./media/storage/prostarica-logo-identity_99befe7a.jpg');
-      renderProjectsAdmin();
-    }
-
-    function addNewProject() {
-      state.projects.unshift({
-        id: 'proj-' + Date.now(),
-        category: 'branding',
-        roleEn: 'Brand Identity & 3D',
-        roleAr: 'هوية بصرية وتصميم 3D',
-        titleEn: 'New Brand Project',
-        titleAr: 'مشروع هوية بصرية جديد',
-        descEn: 'Complete visual identity, logo mark, and commercial presentation.',
-        descAr: 'تصميم شعار وهوية بصرية متكاملة وعرض إعلاني احترافي.',
-        image: './media/storage/prostarica-logo-identity_99befe7a.jpg',
-        extraBoards: [],
-        tags: ['Branding', '3D'],
-        url: ''
-      });
-      populateHeroCardProjectDropdowns();
-      renderProjectsAdmin();
-    }
-
-    function moveProject(idx, dir) {
-      const target = idx + dir;
-      if (target < 0 || target >= state.projects.length) return;
-      const temp = state.projects[idx];
-      state.projects[idx] = state.projects[target];
-      state.projects[target] = temp;
-      populateHeroCardProjectDropdowns();
-      renderProjectsAdmin();
-    }
-
-    function deleteProject(idx) {
-      if (!confirm('حذف هذا المشروع؟')) return;
-      state.projects.splice(idx, 1);
-      populateHeroCardProjectDropdowns();
-      renderProjectsAdmin();
-    }
-
-    /* --- YOUTUBE CRUD --- */
-    function extractYoutubeId(val) {
-      const s = (val || '').trim();
-      const m = s.match(/(?:v=|\/embed\/|youtu\.be\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
-      return m ? m[1] : s;
-    }
-
-    function renderYoutubeAdmin() {
-      const container = document.getElementById('youtubeAdminList');
-      container.innerHTML = state.youtubeVideos.map((v, idx) => `
-        <div class="rounded-2xl bg-[#021411]/85 border border-[#6A5639]/50 p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-          <div class="md:col-span-3">
-            <label class="text-[10px] text-[#B97B2E] font-bold">رابط يوتيوب أو Video ID</label>
-            <input type="text" value="${escapeHtml(v.id)}" onchange="state.youtubeVideos[${idx}].id = extractYoutubeId(this.value); renderYoutubeAdmin();" class="input-field" />
-          </div>
-          <div class="md:col-span-3">
-            <label class="text-[10px] text-[#C2CCC8]">العنوان (EN)</label>
-            <input type="text" value="${escapeHtml(v.titleEn)}" oninput="state.youtubeVideos[${idx}].titleEn = this.value" class="input-field" />
-          </div>
-          <div class="md:col-span-3">
-            <label class="text-[10px] text-[#C2CCC8]">العنوان (AR)</label>
-            <input type="text" value="${escapeHtml(v.titleAr)}" oninput="state.youtubeVideos[${idx}].titleAr = this.value" class="input-field" />
-          </div>
-          <div class="md:col-span-1">
-            <label class="text-[10px] text-[#C2CCC8]">المدة</label>
-            <input type="text" value="${escapeHtml(v.duration)}" oninput="state.youtubeVideos[${idx}].duration = this.value" class="input-field" />
-          </div>
-          <div class="md:col-span-2 flex items-center justify-end gap-1.5 pt-4">
-            <button onclick="moveYoutube(${idx}, -1)" class="px-2.5 py-1.5 rounded-lg bg-[#0E3E3F] text-xs font-bold">↑</button>
-            <button onclick="moveYoutube(${idx}, 1)" class="px-2.5 py-1.5 rounded-lg bg-[#0E3E3F] text-xs font-bold">↓</button>
-            <button onclick="state.youtubeVideos.splice(${idx}, 1); renderYoutubeAdmin();" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 text-red-300 text-xs font-bold">✕</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function addNewYoutubeVideo() {
-      state.youtubeVideos.unshift({
-        id: 'aBTr3Fs45v0',
-        titleEn: 'New Commercial Motion Reel',
-        titleAr: 'إعلان موشن جرافيك جديد',
-        duration: '0:30',
-        isNew: true
-      });
-      renderYoutubeAdmin();
-    }
-
-    function moveYoutube(idx, dir) {
-      const target = idx + dir;
-      if (target < 0 || target >= state.youtubeVideos.length) return;
-      [state.youtubeVideos[idx], state.youtubeVideos[target]] = [state.youtubeVideos[target], state.youtubeVideos[idx]];
-      renderYoutubeAdmin();
-    }
-
-    /* --- SKILLS & EXPERIENCE CRUD --- */
-    function renderSkillsAdmin() {
-      const container = document.getElementById('skillsAdminList');
-      container.innerHTML = state.skills.map((s, idx) => `
-        <div class="rounded-2xl bg-[#021411]/85 border border-[#6A5639]/50 p-4 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-[#B97B2E]">مهارة #${idx + 1}</span>
-            <button onclick="state.skills.splice(${idx}, 1); renderSkillsAdmin();" class="text-xs text-red-400 font-bold">حذف</button>
-          </div>
-          <div class="grid grid-cols-4 gap-2">
-            <input type="text" value="${escapeHtml(s.code)}" placeholder="Ps" oninput="state.skills[${idx}].code = this.value" class="input-field" />
-            <input type="text" value="${escapeHtml(s.name)}" placeholder="Photoshop" oninput="state.skills[${idx}].name = this.value" class="input-field col-span-2" />
-            <input type="number" min="10" max="100" value="${s.percent}" oninput="state.skills[${idx}].percent = Number(this.value)" class="input-field" />
-          </div>
-          <input type="text" value="${escapeHtml(s.subtitle)}" placeholder="Retouch & Key Art" oninput="state.skills[${idx}].subtitle = this.value" class="input-field" />
-        </div>
-      `).join('');
-    }
-
-    function addNewSkill() {
-      state.skills.push({ code: 'Bl', name: 'Blender 3D', subtitle: '3D Modeling & Render', percent: 90 });
-      renderSkillsAdmin();
-    }
-
-    function renderExperienceAdmin() {
-      const container = document.getElementById('experienceAdminList');
-      container.innerHTML = state.experience.map((ex, idx) => `
-        <div class="rounded-2xl bg-[#021411]/85 border border-[#6A5639]/50 p-4 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-[#B97B2E]">خبرة #${idx + 1}</span>
-            <button onclick="state.experience.splice(${idx}, 1); renderExperienceAdmin();" class="text-xs text-red-400 font-bold">حذف</button>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <input type="text" value="${escapeHtml(ex.period)}" placeholder="2023 — Present" oninput="state.experience[${idx}].period = this.value" class="input-field" />
-            <input type="text" value="${escapeHtml(ex.company)}" placeholder="Company Name" oninput="state.experience[${idx}].company = this.value" class="input-field" />
-          </div>
-          <input type="text" value="${escapeHtml(ex.role)}" placeholder="Job Title" oninput="state.experience[${idx}].role = this.value" class="input-field" />
-          <textarea rows="2" oninput="state.experience[${idx}].desc = this.value" class="input-field">${escapeHtml(ex.desc)}</textarea>
-        </div>
-      `).join('');
-    }
-
-    function addNewExperience() {
-      state.experience.unshift({
-        period: '2026 — Present',
-        role: 'Senior Brand & 3D Designer',
-        company: 'Creative Studio',
-        desc: 'Leading visual identity systems, 3D commercial renders, and motion campaigns.'
-      });
-      renderExperienceAdmin();
-    }
-
-    /* --- SAVE / PUBLISH / EXPORT --- */
-    async function publishLiveConfig() {
-      collectFormToState();
-      const btn = document.getElementById('publishBtn');
-      const statusEl = document.getElementById('syncStatusText');
-      btn.textContent = 'جاري الحفظ والنشر...';
-
-      try {
-        localStorage.setItem('kh_control_room_config_v1', JSON.stringify(state));
-      } catch (e) {}
-
-      if (state.firebaseUrl) {
-        try {
-          const endpoint = `${state.firebaseUrl}/portfolioConfig.json`;
-          const res = await fetch(endpoint, {
+        localStorage.setItem('kh_control_room_config_v1', JSON.stringify(cfg));
+        const fb = (cfg.firebaseUrl || '').replace(/\/+$/, '');
+        if (fb) {
+          const res = await fetch(`${fb}/portfolioConfig.json`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(state)
+            body: JSON.stringify(cfg)
           });
-          if (res.ok) {
-            statusEl.textContent = '✓ تم النشر السحابي المباشر بنجاح! التعديلات والخطوط ظاهرة الآن لجميع الزوار.';
-            btn.textContent = 'تم النشر بنجاح ✓';
-            setTimeout(() => { btn.textContent = 'حفظ ونشر التعديلات الآن ✓'; }, 2500);
-            return;
-          }
-        } catch (err) {
-          console.error(err);
+          if (!res.ok) throw new Error('Firebase PUT failed');
         }
+        showToast('✅ تم حفظ ونشر التعديلات وإعدادات السيو بنجاح!');
+      } catch (err) {
+        showToast('⚠️ تم الحفظ محلياً — تأكد من رابط وقواعد Firebase');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '💾 حفظ ونشر مباشر (Firebase)';
       }
-
-      statusEl.textContent = '✓ تم الحفظ محلياً (تأكد من وجود رابط Firebase في تبويب 7 للنشر السحابي).';
-      btn.textContent = 'تم الحفظ ✓';
-      setTimeout(() => { btn.textContent = 'حفظ ونشر التعديلات الآن ✓'; }, 2500);
     }
 
-    function exportSiteDataJson() {
-      collectFormToState();
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
+    function triggerDownload(filename, content, mime) {
+      const blob = new Blob([content], { type: mime });
       const a = document.createElement('a');
-      a.href = url;
-      a.download = 'site-data.json';
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
       a.click();
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(a.href);
     }
 
-    async function resetToFactoryDefaults() {
-      if (!confirm('هل تريد استعادة جميع النصوص والمشاريع والخطوط إلى وضعها الأصلي؟')) return;
-      localStorage.removeItem('kh_control_room_config_v1');
-      state = window.KHControlRoom.getDefaultConfig();
-      populateFormFromState();
-      await publishLiveConfig();
+    function downloadSitemapXml() {
+      const base = (document.getElementById('seo-canonical').value.trim() || 'https://keloshany.online/').replace(/\/+$/, '') + '/';
+      const today = new Date().toISOString().slice(0, 10);
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${base}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>\n</urlset>\n`;
+      triggerDownload('sitemap.xml', xml, 'application/xml');
+      showToast('تم تحميل sitemap.xml بنجاح');
     }
 
-    function escapeHtml(str) {
-      return String(str ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+    function downloadRobotsTxt() {
+      const base = (document.getElementById('seo-canonical').value.trim() || 'https://keloshany.online/').replace(/\/+$/, '');
+      const txt = `User-agent: *\nAllow: /\nDisallow: /admin.html\n\nSitemap: ${base}/sitemap.xml\n`;
+      triggerDownload('robots.txt', txt, 'text/plain');
+      showToast('تم تحميل robots.txt بنجاح');
     }
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      state = await window.KHControlRoom.loadConfig();
-      if (sessionStorage.getItem('kh_cr_auth') === '1') {
-        document.getElementById('loginScreen').classList.add('hidden');
-        document.getElementById('dashboardApp').classList.remove('hidden');
-        populateFormFromState();
-      }
-    });
+    initAdmin();
   </script>
 </body>
 </html>

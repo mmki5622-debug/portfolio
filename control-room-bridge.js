@@ -21,6 +21,18 @@
       behanceOverrides: {},
       youtubeUrl: 'https://www.youtube.com/@kerloshany-m8e',
       linkedinUrl: 'https://www.linkedin.com/in/kerlos-hany-391453187/',
+      seo: {
+        siteTitle: 'Kerlos Hany | Graphic, Brand Identity & 3D Designer',
+        metaDescription: 'Kerlos Hany Nassif — Graphic, Brand Identity, Motion & 3D Designer with 6+ years of experience creating memorable logos, CGI advertising, and commercial 3D visuals.',
+        keywords: 'Kerlos Hany, Kerlos Hany Nassif, كيرلس هاني, Graphic Designer Egypt, Brand Identity Designer, 3D Designer, Motion Graphics, CGI Advertising, Logo Design, Cinema 4D, Blender, مصمم جرافيك, هوية بصرية',
+        canonicalUrl: 'https://keloshany.online/',
+        ogTitle: 'Kerlos Hany | Graphic, Brand Identity & 3D Designer',
+        ogDescription: 'Independent Visual Designer turning brand intent into iconic identities, CGI & 3D advertising, and motion graphics.',
+        ogImage: 'https://keloshany.online/Professional_beauty_retouch,_202603252250.png',
+        robots: 'index, follow, max-image-preview:large',
+        googleVerification: '',
+        schemaJobTitle: 'Graphic, Brand Identity & 3D Designer'
+      },
       typography: {
         customFonts: [],
         fontAr: 'Cairo',
@@ -152,6 +164,77 @@
   /* --------------------------------------------------------------------------
      DYNAMIC TYPOGRAPHY, EXTERNAL @FONT-FACE LOADER, SIZES, LINE HEIGHT & COLORS
      -------------------------------------------------------------------------- */
+
+  /* --------------------------------------------------------------------------
+     DYNAMIC SEO ENGINE (META TAGS, OPEN GRAPH, TWITTER, CANONICAL & JSON-LD)
+     -------------------------------------------------------------------------- */
+  function upsertMetaTag(attrName, attrVal, content) {
+    if (!content) return;
+    let el = document.head.querySelector(`meta[${attrName}="${attrVal}"]`);
+    if (!el) {
+      el = document.createElement('meta');
+      el.setAttribute(attrName, attrVal);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  }
+
+  function applySeoSettings(seoCfg, cfg) {
+    const s = { ...getDefaultConfig().seo, ...(seoCfg || {}) };
+    if (s.siteTitle) document.title = s.siteTitle;
+    upsertMetaTag('name', 'description', s.metaDescription);
+    upsertMetaTag('name', 'keywords', s.keywords);
+    upsertMetaTag('name', 'robots', s.robots || 'index, follow');
+    if (s.googleVerification && s.googleVerification.trim()) {
+      upsertMetaTag('name', 'google-site-verification', s.googleVerification.trim());
+    }
+
+    if (s.canonicalUrl) {
+      let link = document.getElementById('seo-canonical') || document.head.querySelector('link[rel="canonical"]');
+      if (!link) {
+        link = document.createElement('link');
+        link.id = 'seo-canonical';
+        link.rel = 'canonical';
+        document.head.appendChild(link);
+      }
+      link.href = s.canonicalUrl;
+      upsertMetaTag('property', 'og:url', s.canonicalUrl);
+    }
+
+    upsertMetaTag('property', 'og:title', s.ogTitle || s.siteTitle);
+    upsertMetaTag('property', 'og:description', s.ogDescription || s.metaDescription);
+    upsertMetaTag('property', 'og:image', s.ogImage);
+    upsertMetaTag('name', 'twitter:title', s.ogTitle || s.siteTitle);
+    upsertMetaTag('name', 'twitter:description', s.ogDescription || s.metaDescription);
+    upsertMetaTag('name', 'twitter:image', s.ogImage);
+
+    // Update JSON-LD Structured Data
+    const schemaData = {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": (cfg && cfg.brandName) ? cfg.brandName : "Kerlos Hany Nassif",
+      "url": s.canonicalUrl || "https://keloshany.online/",
+      "image": s.ogImage || "https://keloshany.online/Professional_beauty_retouch,_202603252250.png",
+      "jobTitle": s.schemaJobTitle || "Graphic, Brand Identity & 3D Designer",
+      "description": s.metaDescription,
+      "email": cfg && cfg.email ? `mailto:${cfg.email}` : "mailto:hkerlos@gmail.com",
+      "telephone": cfg && cfg.whatsapp ? `+${cfg.whatsapp}` : "+201011410996",
+      "sameAs": [
+        cfg && cfg.behanceUrl ? cfg.behanceUrl : "https://www.behance.net/kerloshany11",
+        cfg && cfg.youtubeUrl ? cfg.youtubeUrl : "https://www.youtube.com/@kerloshany-m8e",
+        cfg && cfg.linkedinUrl ? cfg.linkedinUrl : "https://www.linkedin.com/in/kerlos-hany-391453187/"
+      ].filter(Boolean)
+    };
+    let schemaEl = document.getElementById('kh-seo-schema');
+    if (!schemaEl) {
+      schemaEl = document.createElement('script');
+      schemaEl.id = 'kh-seo-schema';
+      schemaEl.type = 'application/ld+json';
+      document.head.appendChild(schemaEl);
+    }
+    schemaEl.textContent = JSON.stringify(schemaData, null, 2);
+  }
+
   function detectFontFormatFromUrl(urlStr) {
     const s = (urlStr || '').toLowerCase();
     if (s.includes('woff2')) return 'woff2';
@@ -862,6 +945,7 @@
             return {
               ...base,
               ...remote,
+              seo: { ...base.seo, ...(remote.seo || {}) },
               typography: { ...base.typography, ...(remote.typography || {}) },
               behanceOverrides: { ...(base.behanceOverrides || {}), ...(remote.behanceOverrides || {}) },
               sections: { ...base.sections, ...(remote.sections || {}) }
@@ -880,6 +964,7 @@
           return {
             ...base,
             ...fileData,
+            seo: { ...base.seo, ...(fileData.seo || {}) },
             typography: { ...base.typography, ...(fileData.typography || {}) },
             behanceOverrides: { ...(base.behanceOverrides || {}), ...(fileData.behanceOverrides || {}) },
             sections: { ...base.sections, ...(fileData.sections || {}) }
@@ -893,6 +978,7 @@
       return {
         ...base,
         ...localSaved,
+        seo: { ...base.seo, ...(localSaved.seo || {}) },
         typography: { ...base.typography, ...(localSaved.typography || {}) },
         behanceOverrides: { ...(base.behanceOverrides || {}), ...(localSaved.behanceOverrides || {}) },
         sections: { ...base.sections, ...(localSaved.sections || {}) }
@@ -1315,6 +1401,7 @@
     installPortfolioEnhancements();
 
     // 0. Apply Custom Typography, External Fonts, Font Sizes, Colors & Line Heights
+    applySeoSettings(cfg.seo, cfg);
     applyTypographySettings(cfg.typography);
 
     i18nStrings.en.heroEyebrow = cfg.heroEyebrowEn || 'GRAPHIC, BRAND & 3D DESIGNER';
@@ -1463,16 +1550,23 @@
       `).join('');
     }
 
-    const expGrid = document.querySelector('#experience .grid.grid-cols-1');
-    if (expGrid && Array.isArray(cfg.experience)) {
-      expGrid.innerHTML = cfg.experience.map((ex, idx) => `
-        <div class="rounded-3xl bg-white border border-[#6A5639]/30 p-6 shadow-sm hover:border-[#A06620] transition-all space-y-3">
-          <div class="inline-flex items-center px-3 py-1 rounded-full ${idx === 0 ? 'bg-[#021411] text-[#B97B2E]' : 'bg-[#0E3E3F] text-[#F5F4F0]'} text-[11px] font-bold">${ex.period}</div>
-          <h3 class="text-base font-extrabold text-[#021411]">${ex.role}</h3>
-          <div class="text-xs font-bold text-[#A06620]">${ex.company}</div>
-          <p class="text-xs text-[#021411]/75 leading-relaxed">${ex.desc}</p>
+    const expList = document.getElementById('experience-list');
+    if (expList && Array.isArray(cfg.experience)) {
+      expList.innerHTML = cfg.experience.map((ex, idx) => `
+        <div class="exp-row py-5 px-4 sm:px-6 rounded-2xl grid grid-cols-12 gap-3 sm:gap-4 items-center">
+          <div class="col-span-2 sm:col-span-1 font-mono text-[11px] font-bold text-[#0E3E3F]">0${idx + 1}</div>
+          <div class="col-span-10 sm:col-span-2">
+            <span class="inline-flex px-3 py-1 rounded-full ${idx === 0 ? 'bg-[#021411] text-[#C59367]' : 'bg-[#0E3E3F] text-[#F2EADF]'} font-mono text-[10px] font-bold uppercase">${ex.period}</span>
+          </div>
+          <div class="col-span-12 sm:col-span-3 font-display font-bold text-sm sm:text-base uppercase text-[#12100E]">${ex.company}</div>
+          <div class="col-span-12 sm:col-span-5 space-y-1">
+            <div class="text-xs font-bold text-[#A06620]">${ex.role}</div>
+            <p class="text-xs text-[#12100E]/75 leading-relaxed">${ex.desc}</p>
+          </div>
+          <div class="hidden sm:block sm:col-span-1 text-end font-mono text-sm text-[#A06620]">↗</div>
         </div>
       `).join('');
+      if (typeof window.observeRevealElements === 'function') window.observeRevealElements();
     }
 
     const validManualProjects = (Array.isArray(cfg.projects) ? cfg.projects : []).filter(
