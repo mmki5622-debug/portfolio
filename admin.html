@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>غرفة التحكم المتكاملة | Kerlos Hany Control Room v4</title>
+  <title>غرفة التحكم المتكاملة | Kerlos Hany Control Room v7 (Media &amp; Video Manager)</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -130,11 +130,21 @@
 
     <!-- Toast -->
     <div id="toast" class="hidden fixed bottom-5 left-5 z-50 px-5 py-3 rounded-2xl bg-[#0E3E3F] border border-[#C59367] text-xs font-bold text-[#F2EADF] shadow-2xl"></div>
+    <div id="upload-progress-box" class="hidden fixed bottom-5 right-5 z-50 w-72 p-4 rounded-2xl bg-[#060D0C]/95 border border-[#C59367] shadow-2xl space-y-2">
+      <div class="flex justify-between text-xs font-bold">
+        <span id="upload-progress-label" class="text-[#F2EADF]">جاري الرفع...</span>
+        <span id="upload-progress-pct" class="text-[#C59367] font-mono">0%</span>
+      </div>
+      <div class="w-full h-2 rounded-full bg-[#0E3E3F]/50 overflow-hidden">
+        <div id="upload-progress-bar" class="h-full bg-gradient-to-r from-[#C59367] to-emerald-400 transition-all duration-150" style="width: 0%"></div>
+      </div>
+    </div>
 
     <!-- Navigation Tabs (ALL 10 SECTIONS) -->
     <nav class="flex flex-wrap gap-2">
       <button onclick="switchTab('seo')" data-tab="seo" class="tab-btn active px-4 py-2 rounded-full text-xs">🔍 السيو والكلمات المفتاحية</button>
       <button onclick="switchTab('brand')" data-tab="brand" class="tab-btn px-4 py-2 rounded-full text-xs">🎨 الهوية والتواصل</button>
+      <button onclick="switchTab('marquee')" data-tab="marquee" class="tab-btn px-4 py-2 rounded-full text-xs">🏷️ شريط لوجوهات البراندات</button>
       <button onclick="switchTab('hero')" data-tab="hero" class="tab-btn px-4 py-2 rounded-full text-xs">✨ الواجهة وعروض 3D</button>
       <button onclick="switchTab('projects')" data-tab="projects" class="tab-btn px-4 py-2 rounded-full text-xs">🖼️ المشاريع و Behance</button>
       <button onclick="switchTab('youtube')" data-tab="youtube" class="tab-btn px-4 py-2 rounded-full text-xs">🎬 فيديوهات يوتيوب</button>
@@ -287,8 +297,15 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-bold text-[#F2EADF] mb-1">رابط صورة المشاركة (OG Image URL)</label>
-                <input id="seo-og-image" oninput="updateSeoLivePreview()" dir="ltr" class="inp" />
+                <label class="block text-xs font-bold text-[#F2EADF] mb-1">صورة المشاركة (OG Image — رابط أو من جهازك)</label>
+                <div class="flex gap-2">
+                  <input id="seo-og-image" oninput="updateSeoLivePreview()" dir="ltr" class="inp" placeholder="https://... أو ارفع من جهازك" />
+                  <label class="px-3 py-2 rounded-xl bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-bold cursor-pointer shrink-0 flex items-center" title="رفع صورة من الجهاز">
+                    ⬆
+                    <input type="file" accept="image/*" onchange="uploadIntoField(event, 'seo-og-image', 'image', updateSeoLivePreview)" class="hidden" />
+                  </label>
+                  <button type="button" onclick="clearField('seo-og-image', updateSeoLivePreview)" class="px-3 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-600 hover:text-white text-xs font-bold shrink-0" title="حذف">🗑️</button>
+                </div>
               </div>
               <div>
                 <label class="block text-xs font-bold text-[#F2EADF] mb-1">كود Google Search Console (اختياري)</label>
@@ -314,13 +331,33 @@
           <label class="block text-xs font-bold mb-1">الوصف المختصر تحت الاسم (Tagline)</label>
           <input id="cfg-brandTagline" class="inp" />
         </div>
-        <div>
-          <label class="block text-xs font-bold mb-1">رابط الشعار (Logo URL)</label>
-          <input id="cfg-logoUrl" dir="ltr" class="inp" />
+        <div class="sub-card p-3.5 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-[#C59367]">شعار الموقع (Logo — رابط أو من جهازك)</label>
+            <img id="prev-logoUrl" src="./MYLOGO.webp" alt="" class="w-9 h-9 rounded-lg object-cover bg-black border border-[#C59367]/40" />
+          </div>
+          <div class="flex gap-2">
+            <input id="cfg-logoUrl" oninput="refreshSinglePreview('cfg-logoUrl','prev-logoUrl')" dir="ltr" class="inp" placeholder="رابط الشعار أو ارفع من جهازك" />
+            <label class="px-3 py-2 rounded-xl bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-bold cursor-pointer shrink-0 flex items-center">
+              ⬆ جهازي
+              <input type="file" accept="image/*" onchange="uploadIntoField(event, 'cfg-logoUrl', 'image', () => refreshSinglePreview('cfg-logoUrl','prev-logoUrl'))" class="hidden" />
+            </label>
+            <button type="button" onclick="clearField('cfg-logoUrl', () => refreshSinglePreview('cfg-logoUrl','prev-logoUrl'))" class="px-3 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-600 hover:text-white text-xs font-bold shrink-0">🗑️</button>
+          </div>
         </div>
-        <div>
-          <label class="block text-xs font-bold mb-1">رابط الصورة الشخصية (Portrait URL)</label>
-          <input id="cfg-portraitUrl" dir="ltr" class="inp" />
+        <div class="sub-card p-3.5 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-[#C59367]">الصورة الشخصية (Portrait — رابط أو من جهازك)</label>
+            <img id="prev-portraitUrl" src="./Professional_beauty_retouch,_202603252250.png" alt="" class="w-9 h-9 rounded-lg object-cover bg-black border border-[#C59367]/40" />
+          </div>
+          <div class="flex gap-2">
+            <input id="cfg-portraitUrl" oninput="refreshSinglePreview('cfg-portraitUrl','prev-portraitUrl')" dir="ltr" class="inp" placeholder="رابط الصورة أو ارفع من جهازك" />
+            <label class="px-3 py-2 rounded-xl bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-bold cursor-pointer shrink-0 flex items-center">
+              ⬆ جهازي
+              <input type="file" accept="image/*" onchange="uploadIntoField(event, 'cfg-portraitUrl', 'image', () => refreshSinglePreview('cfg-portraitUrl','prev-portraitUrl'))" class="hidden" />
+            </label>
+            <button type="button" onclick="clearField('cfg-portraitUrl', () => refreshSinglePreview('cfg-portraitUrl','prev-portraitUrl'))" class="px-3 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-600 hover:text-white text-xs font-bold shrink-0">🗑️</button>
+          </div>
         </div>
         <div>
           <label class="block text-xs font-bold mb-1">نمط الصورة الشخصية</label>
@@ -360,6 +397,31 @@
       </div>
     </section>
 
+
+    <!-- ======================================================================
+         TAB: CLIENT BRAND LOGOS MARQUEE
+         ====================================================================== -->
+    <section id="tab-marquee" class="tab-panel hidden panel-card p-6 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="font-extrabold text-base text-[#C59367]">🏷️ شريط لوجوهات البراندات المتحرك (Transparent Marquee)</h2>
+          <p class="text-xs text-[#9A9186] mt-0.5">ارفع لوجوهات البراندات (يفضل PNG/WebP بخلفية شفافة) من جهازك أو أضف روابط خارجية، ويمكنك إخفاء الاسم ليظهر اللوجو فقط.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <label class="text-xs flex items-center gap-2">
+            <span>سرعة الحركة (ثانية):</span>
+            <input id="cfg-marqueeSpeedSeconds" type="number" min="8" max="90" class="inp !w-20 text-center" />
+          </label>
+          <label class="px-4 py-2 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-extrabold cursor-pointer transition-all">
+            ⬆ رفع لوجوهات من جهازي
+            <input type="file" accept="image/*" multiple onchange="uploadNewClientLogos(event)" class="hidden" />
+          </label>
+          <button type="button" onclick="addClientLogoItem()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة براند</button>
+        </div>
+      </div>
+      <div id="marquee-editor-list" class="space-y-3"></div>
+    </section>
+
     <!-- ======================================================================
          TAB 3: HERO, TEXTS & 3D SHOWCASE STAGE
          ====================================================================== -->
@@ -393,12 +455,16 @@
             <h2 class="font-extrabold text-base text-[#C59367]">🎥 شرائح مسرح الـ 3D والصور (Hero Showcase)</h2>
             <p class="text-xs text-[#9A9186]">أضف فيديوهات MP4 أو روابط YouTube أو صور للتنقل بينها تلقائياً</p>
           </div>
-          <div class="flex items-center gap-3">
+          <div class="flex flex-wrap items-center gap-2.5">
             <label class="text-xs flex items-center gap-2">
               <span>مدة الصورة (ثواني):</span>
               <input id="cfg-heroSlideSeconds" type="number" min="2" max="30" class="inp !w-20 text-center" />
             </label>
-            <button type="button" onclick="addShowcaseItem()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة شريحة</button>
+            <label class="px-4 py-2 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-extrabold cursor-pointer transition-all">
+              ⬆ رفع فيديو / صورة من جهازي
+              <input type="file" accept="video/*,image/*" multiple onchange="uploadNewShowcaseFiles(event)" class="hidden" />
+            </label>
+            <button type="button" onclick="addShowcaseItem()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة رابط خارجي</button>
           </div>
         </div>
         <div id="showcase-editor-list" class="space-y-3"></div>
@@ -562,6 +628,7 @@
       <h2 class="font-extrabold text-base text-[#C59367]">🧩 التحكم في إظهار وإخفاء جميع أقسام الموقع</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
         <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-heroReveal" class="accent-[#C59367] w-4 h-4" /> مسرح الـ 3D Reveal</label>
+        <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-clientsMarquee" class="accent-[#C59367] w-4 h-4" /> شريط لوجوهات البراندات</label>
         <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-work" class="accent-[#C59367] w-4 h-4" /> قسم الأعمال والمشاريع</label>
         <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-behanceSync" class="accent-[#C59367] w-4 h-4" /> المزامنة المباشرة مع Behance</label>
         <label class="sub-card p-4 flex items-center gap-3 cursor-pointer"><input type="checkbox" id="sec-cinema" class="accent-[#C59367] w-4 h-4" /> استوديو فيديوهات يوتيوب</label>
@@ -646,6 +713,7 @@
       if (!Array.isArray(merged.youtubeVideos) || merged.youtubeVideos.length === 0) merged.youtubeVideos = def.youtubeVideos;
       if (!Array.isArray(merged.projects)) merged.projects = [];
       if (!Array.isArray(merged.heroShowcaseItems)) merged.heroShowcaseItems = def.heroShowcaseItems;
+      if (!Array.isArray(merged.clientLogos)) merged.clientLogos = def.clientLogos || [];
       if (!merged.behanceOverrides || typeof merged.behanceOverrides !== 'object') merged.behanceOverrides = {};
       return merged;
     }
@@ -773,7 +841,7 @@
         'brandName','brandTagline','logoUrl','portraitUrl','portraitMode','location','whatsapp','email',
         'behanceUrl','youtubeUrl','linkedinUrl','cvUrl','availEn','availAr','heroEyebrowEn','heroEyebrowAr',
         'heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar',
-        'heroBtnWorkEn','heroBtnWorkAr','heroBtnCvEn','heroBtnCvAr','heroSubEn','heroSubAr','heroSlideSeconds',
+        'heroBtnWorkEn','heroBtnWorkAr','heroBtnCvEn','heroBtnCvAr','heroSubEn','heroSubAr','heroSlideSeconds','marqueeSpeedSeconds',
         'aboutDescEn','aboutDescAr','firebaseUrl','adminPassword','cloudinaryCloud','cloudinaryPreset'
       ];
       simpleFields.forEach(k => {
@@ -788,12 +856,15 @@
       });
 
       const sec = cfg.sections || {};
-      ['heroReveal','work','behanceSync','cinema','experience','about','skills','cta'].forEach(k => {
+      ['heroReveal','clientsMarquee','work','behanceSync','cinema','experience','about','skills','cta'].forEach(k => {
         const el = document.getElementById('sec-' + k);
         if (el) el.checked = sec[k] !== false;
       });
 
+      refreshSinglePreview('cfg-logoUrl', 'prev-logoUrl');
+      refreshSinglePreview('cfg-portraitUrl', 'prev-portraitUrl');
       renderShowcaseEditor();
+      renderMarqueeEditor();
       renderProjectsEditor();
       renderBehanceOverridesEditor();
       renderYtEditor();
@@ -836,24 +907,213 @@
       `).join('');
     }
 
-    /* ---------------- SHOWCASE EDITOR ---------------- */
+    /* ---------------- SMART MEDIA UPLOAD ENGINE (DEVICE + CLOUDINARY + LINKS) ---------------- */
+    function setUploadProgress(show, label, pct) {
+      const box = document.getElementById('upload-progress-box');
+      if (!box) return;
+      if (!show) { box.classList.add('hidden'); return; }
+      box.classList.remove('hidden');
+      document.getElementById('upload-progress-label').textContent = label || 'جاري الرفع...';
+      document.getElementById('upload-progress-pct').textContent = `${Math.round(pct || 0)}%`;
+      document.getElementById('upload-progress-bar').style.width = `${Math.min(100, Math.max(0, pct || 0))}%`;
+    }
+
+    function refreshSinglePreview(inputId, imgId) {
+      const inp = document.getElementById(inputId);
+      const img = document.getElementById(imgId);
+      if (!inp || !img) return;
+      const val = inp.value.trim();
+      img.src = val || './MYLOGO.webp';
+    }
+
+    function clearField(inputId, cb) {
+      const inp = document.getElementById(inputId);
+      if (inp) inp.value = '';
+      if (typeof cb === 'function') cb();
+      showToast('🗑️ تم حذف العنصر — اضغط حفظ ونشر لتطبيق التغيير');
+    }
+
+    function compressImageToDataUrl(file, maxDim = 1400, quality = 0.84) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => {
+          const img = new Image();
+          img.onerror = () => resolve(reader.result);
+          img.onload = () => {
+            let { width, height } = img;
+            if (width > maxDim || height > maxDim) {
+              const ratio = Math.min(maxDim / width, maxDim / height);
+              width = Math.round(width * ratio);
+              height = Math.round(height * ratio);
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            try {
+              const webp = canvas.toDataURL('image/webp', quality);
+              if (webp && webp.startsWith('data:image/webp')) return resolve(webp);
+            } catch (e) {}
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function uploadToCloudinary(file, resourceType) {
+      return new Promise((resolve, reject) => {
+        const cloud = (document.getElementById('cfg-cloudinaryCloud')?.value || cfg.cloudinaryCloud || '').trim();
+        const preset = (document.getElementById('cfg-cloudinaryPreset')?.value || cfg.cloudinaryPreset || '').trim();
+        if (!cloud || !preset) return reject(new Error('NO_CLOUDINARY'));
+
+        const url = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloud)}/${resourceType}/upload`;
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('upload_preset', preset);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            setUploadProgress(true, `☁️ رفع إلى Cloudinary (${file.name.slice(0, 18)})`, (e.loaded / e.total) * 100);
+          }
+        };
+        xhr.onload = () => {
+          setUploadProgress(false);
+          if (xhr.status >= 200 && xhr.status < 300) {
+            const data = JSON.parse(xhr.responseText);
+            if (data && data.secure_url) return resolve(data.secure_url);
+          }
+          reject(new Error('CLOUDINARY_FAILED'));
+        };
+        xhr.onerror = () => { setUploadProgress(false); reject(new Error('CLOUDINARY_NET_ERR')); };
+        xhr.send(fd);
+      });
+    }
+
+    async function handleDeviceMediaUpload(file, forceType) {
+      if (!file) return null;
+      const isVideo = forceType === 'video' || (file.type && file.type.startsWith('video/')) || /\.(mp4|webm|mov|m4v)$/i.test(file.name);
+      const resourceType = isVideo ? 'video' : 'image';
+
+      // 1. Try Cloudinary first if configured (supports up to 100MB videos + HD images)
+      const cloud = (document.getElementById('cfg-cloudinaryCloud')?.value || cfg.cloudinaryCloud || '').trim();
+      const preset = (document.getElementById('cfg-cloudinaryPreset')?.value || cfg.cloudinaryPreset || '').trim();
+      if (cloud && preset) {
+        try {
+          const cdnUrl = await uploadToCloudinary(file, resourceType);
+          showToast(`✅ تم رفع ${isVideo ? 'الفيديو' : 'الصورة'} بنجاح على Cloudinary!`);
+          return { url: cdnUrl, type: resourceType };
+        } catch (err) {
+          showToast('⚠️ تعذر الرفع على Cloudinary — جاري المعالجة المحلية...');
+        }
+      }
+
+      // 2. Local browser processing (Zero setup!)
+      if (!isVideo) {
+        setUploadProgress(true, '🖼️ جاري ضغط وتجهيز الصورة...', 55);
+        try {
+          const dataUrl = await compressImageToDataUrl(file, 1400, 0.85);
+          setUploadProgress(false);
+          showToast('✅ تم رفع وتجهيز الصورة بنجاح! اضغط "حفظ ونشر مباشر"');
+          return { url: dataUrl, type: 'image' };
+        } catch (e) {
+          setUploadProgress(false);
+          showToast('❌ تعذر قراءة الصورة');
+          return null;
+        }
+      } else {
+        // Video without Cloudinary
+        if (file.size <= 4.5 * 1024 * 1024) {
+          setUploadProgress(true, '🎬 جاري تجهيز الفيديو...', 60);
+          return await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              setUploadProgress(false);
+              showToast('✅ تم رفع الفيديو بنجاح! اضغط "حفظ ونشر مباشر"');
+              resolve({ url: reader.result, type: 'video' });
+            };
+            reader.onerror = () => {
+              setUploadProgress(false);
+              showToast('❌ تعذر قراءة ملف الفيديو');
+              resolve(null);
+            };
+            reader.readAsDataURL(file);
+          });
+        } else {
+          const mb = (file.size / (1024 * 1024)).toFixed(1);
+          alert(
+            `حجم الفيديو (${mb} MB) أكبر من الحد المباشر لقاعدة بيانات Firebase (4.5 MB).\n\n` +
+            `لديك 3 حلول سهلة لرفع فيديوهات كبيرة (حتى 100 MB):\n` +
+            `1) أضف حساب Cloudinary مجاني في تبويب "⚙️ النظام والنسخ الاحتياطي" (يأخذ دقيقة واحدة) لرفع أي فيديو من جهازك مباشرة.\n` +
+            `2) ارفع ملف الفيديو إلى مستودع GitHub واكتب اسمه هنا مثل: ./${file.name}\n` +
+            `3) ارفع الفيديو على YouTube أو Google Drive أو Dropbox والصق الرابط هنا مباشرة.`
+          );
+          return null;
+        }
+      }
+    }
+
+    async function uploadIntoField(event, inputId, mediaType, cb) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      if (!file) return;
+      const res = await handleDeviceMediaUpload(file, mediaType);
+      if (res && res.url) {
+        const inp = document.getElementById(inputId);
+        if (inp) inp.value = res.url;
+        if (typeof cb === 'function') cb();
+      }
+    }
+
+    function isVideoLikeUrl(u) {
+      if (!u) return false;
+      return u.startsWith('data:video/') || /\.(mp4|webm|mov|m4v)(\?|$)/i.test(u) || /youtube\.com|youtu\.be|vimeo\.com|drive\.google\.com|\/video\/upload/i.test(u);
+    }
+
+    function renderMiniPreview(url, forceType) {
+      if (!url) return '<div class="w-16 h-12 rounded-lg bg-black/70 border border-[#C59367]/20 flex items-center justify-center text-[10px] text-[#9A9186] shrink-0">فارغ</div>';
+      const isVid = forceType === 'video' || isVideoLikeUrl(url);
+      if (isVid) {
+        if (url.startsWith('data:video/') || /\.(mp4|webm|mov|m4v)(\?|$)/i.test(url) || /\/video\/upload/i.test(url)) {
+          return `<video src="${esc(url)}" muted playsinline class="w-16 h-12 rounded-lg object-cover bg-black border border-[#C59367]/40 shrink-0"></video>`;
+        }
+        return '<div class="w-16 h-12 rounded-lg bg-[#0E3E3F]/60 border border-[#C59367]/50 flex items-center justify-center text-base shrink-0">🎬</div>';
+      }
+      return `<img src="${esc(url)}" alt="" class="w-16 h-12 rounded-lg object-cover bg-black border border-[#C59367]/40 shrink-0" />`;
+    }
+
+    /* ---------------- SHOWCASE EDITOR (DEVICE UPLOAD + EXTERNAL LINKS + DELETE) ---------------- */
     function renderShowcaseEditor() {
       const box = document.getElementById('showcase-editor-list');
       const list = Array.isArray(cfg.heroShowcaseItems) ? cfg.heroShowcaseItems : [];
       if (list.length === 0) {
-        box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-4">لا توجد شرائح حالياً — اضغط "+ إضافة شريحة"</p>';
+        box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-4">لا توجد شرائح حالياً — ارفع فيديو/صورة من جهازك أو أضف رابطاً خارجياً.</p>';
         return;
       }
       box.innerHTML = list.map((it, i) => `
-        <div class="sub-card p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-          <select onchange="cfg.heroShowcaseItems[${i}].type=this.value" class="inp md:col-span-2">
-            <option value="video" ${it.type==='video'?'selected':''}>فيديو 🎬</option>
-            <option value="image" ${it.type==='image'?'selected':''}>صورة 🖼️</option>
-          </select>
-          <input value="${esc(it.url)}" oninput="cfg.heroShowcaseItems[${i}].url=this.value" dir="ltr" class="inp md:col-span-4" placeholder="رابط الفيديو أو الصورة" />
-          <input value="${esc(it.titleEn)}" oninput="cfg.heroShowcaseItems[${i}].titleEn=this.value" dir="ltr" class="inp md:col-span-3" placeholder="Title EN" />
-          <input value="${esc(it.titleAr)}" oninput="cfg.heroShowcaseItems[${i}].titleAr=this.value" class="inp md:col-span-2" placeholder="العنوان عربي" />
-          <button type="button" onclick="cfg.heroShowcaseItems.splice(${i},1);renderShowcaseEditor()" class="text-xs text-red-400 font-bold md:col-span-1">حذف</button>
+        <div class="sub-card p-3.5 space-y-2.5">
+          <div class="flex flex-wrap items-center gap-3">
+            ${renderMiniPreview(it.url, it.type)}
+            <select onchange="cfg.heroShowcaseItems[${i}].type=this.value;renderShowcaseEditor()" class="inp !w-28">
+              <option value="video" ${it.type==='video'?'selected':''}>فيديو 🎬</option>
+              <option value="image" ${it.type==='image'?'selected':''}>صورة 🖼️</option>
+            </select>
+            <input value="${esc(it.url)}" oninput="cfg.heroShowcaseItems[${i}].url=this.value" dir="ltr" class="inp flex-1 min-w-[200px]" placeholder="رابط MP4 / YouTube / Google Drive / Dropbox / صورة" />
+            <label class="px-3 py-2 rounded-xl bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-bold cursor-pointer shrink-0">
+              ⬆ من جهازي
+              <input type="file" accept="video/*,image/*" onchange="replaceShowcaseFile(event, ${i})" class="hidden" />
+            </label>
+            <button type="button" onclick="cfg.heroShowcaseItems.splice(${i},1);renderShowcaseEditor();showToast('تم حذف الشريحة')" class="px-3 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-600 hover:text-white text-xs font-bold shrink-0">🗑️ حذف</button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+            <input value="${esc(it.titleEn)}" oninput="cfg.heroShowcaseItems[${i}].titleEn=this.value" dir="ltr" class="inp" placeholder="Title EN" />
+            <input value="${esc(it.titleAr)}" oninput="cfg.heroShowcaseItems[${i}].titleAr=this.value" class="inp" placeholder="العنوان بالعربي" />
+          </div>
         </div>
       `).join('');
     }
@@ -861,8 +1121,30 @@
       cfg.heroShowcaseItems.push({ type: 'video', url: '', titleEn: 'New 3D Slide', titleAr: 'عرض 3D جديد' });
       renderShowcaseEditor();
     }
+    async function uploadNewShowcaseFiles(event) {
+      const files = Array.from(event.target.files || []);
+      event.target.value = '';
+      for (const file of files) {
+        const res = await handleDeviceMediaUpload(file);
+        if (res && res.url) {
+          const cleanTitle = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ');
+          cfg.heroShowcaseItems.push({ type: res.type, url: res.url, titleEn: cleanTitle, titleAr: cleanTitle });
+          renderShowcaseEditor();
+        }
+      }
+    }
+    async function replaceShowcaseFile(event, idx) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      const res = await handleDeviceMediaUpload(file);
+      if (res && res.url && cfg.heroShowcaseItems[idx]) {
+        cfg.heroShowcaseItems[idx].url = res.url;
+        cfg.heroShowcaseItems[idx].type = res.type;
+        renderShowcaseEditor();
+      }
+    }
 
-    /* ---------------- MANUAL PROJECTS EDITOR ---------------- */
+    /* ---------------- MANUAL PROJECTS EDITOR (COVER + GALLERY UPLOAD/DELETE) ---------------- */
     function renderProjectsEditor() {
       const box = document.getElementById('projects-editor-list');
       const list = Array.isArray(cfg.projects) ? cfg.projects : [];
@@ -870,11 +1152,13 @@
         box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-4">لا توجد مشاريع يدوية مضافة بعد (الموقع يعرض مشاريع Behance تلقائياً).</p>';
         return;
       }
-      box.innerHTML = list.map((p, i) => `
-        <div class="sub-card p-4 space-y-3">
+      box.innerHTML = list.map((p, i) => {
+        const boards = Array.isArray(p.extraBoards) ? p.extraBoards : [];
+        return `
+        <div class="sub-card p-4 space-y-3.5">
           <div class="flex justify-between items-center">
-            <span class="text-xs font-bold text-[#C59367]">مشروع #${i + 1}</span>
-            <button type="button" onclick="cfg.projects.splice(${i},1);renderProjectsEditor()" class="text-xs text-red-400 font-bold">حذف المشروع</button>
+            <span class="text-xs font-extrabold text-[#C59367]">مشروع #${i + 1}</span>
+            <button type="button" onclick="cfg.projects.splice(${i},1);renderProjectsEditor();showToast('تم حذف المشروع')" class="px-3 py-1 rounded-full bg-red-950/60 border border-red-500/40 text-xs text-red-300 hover:bg-red-600 hover:text-white font-bold">🗑️ حذف المشروع</button>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
             <input value="${esc(p.titleEn)}" oninput="cfg.projects[${i}].titleEn=this.value" dir="ltr" class="inp" placeholder="Project Title EN" />
@@ -891,20 +1175,50 @@
               <option value="mixed" ${p.contentType==='mixed'?'selected':''}>فيديو + صور</option>
             </select>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <input value="${esc(p.image)}" oninput="cfg.projects[${i}].image=this.value" dir="ltr" class="inp" placeholder="رابط صورة الغلاف (Cover Image URL)" />
-            <input value="${esc(p.url)}" oninput="cfg.projects[${i}].url=this.value" dir="ltr" class="inp" placeholder="رابط المشروع على Behance (اختياري)" />
+
+          <!-- Cover Image with Upload & Delete -->
+          <div class="p-3 rounded-xl bg-[#050B0A] border border-[#C59367]/20 flex flex-wrap items-center gap-2.5">
+            ${renderMiniPreview(p.image, 'image')}
+            <input value="${esc(p.image)}" oninput="cfg.projects[${i}].image=this.value" dir="ltr" class="inp flex-1 min-w-[200px]" placeholder="رابط صورة الغلاف أو ارفع من جهازك" />
+            <label class="px-3 py-2 rounded-xl bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-bold cursor-pointer shrink-0">
+              ⬆ غلاف من جهازي
+              <input type="file" accept="image/*" onchange="uploadProjectCover(event, ${i})" class="hidden" />
+            </label>
+            <button type="button" onclick="cfg.projects[${i}].image='';renderProjectsEditor()" class="px-2.5 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 text-xs font-bold">🗑️</button>
           </div>
+
+          <input value="${esc(p.url)}" oninput="cfg.projects[${i}].url=this.value" dir="ltr" class="inp" placeholder="رابط المشروع على Behance (اختياري)" />
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <textarea rows="2" oninput="cfg.projects[${i}].descEn=this.value" dir="ltr" class="inp" placeholder="Description EN">${esc(p.descEn)}</textarea>
             <textarea rows="2" oninput="cfg.projects[${i}].descAr=this.value" class="inp" placeholder="وصف المشروع بالعربي">${esc(p.descAr)}</textarea>
           </div>
-          <div>
-            <label class="block text-[11px] text-[#9A9186] mb-1">روابط صور أو فيديوهات إضافية داخل المشروع (رابط في كل سطر)</label>
-            <textarea rows="2" dir="ltr" oninput="cfg.projects[${i}].extraBoards=this.value.split(/\\n+/).map(s=>s.trim()).filter(Boolean)" class="inp">${esc((p.extraBoards||[]).join('\n'))}</textarea>
+
+          <!-- Visual Project Gallery (Images & Videos from Device or Link) -->
+          <div class="p-3.5 rounded-xl bg-[#050B0A] border border-[#C59367]/20 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs font-bold text-[#C59367]">📂 صور وفيديوهات المشروع الداخلية (${boards.length})</span>
+              <div class="flex flex-wrap gap-2">
+                <label class="px-3 py-1.5 rounded-full bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-[11px] font-bold cursor-pointer">
+                  ⬆ إضافة صور/فيديو من جهازي
+                  <input type="file" accept="image/*,video/*" multiple onchange="uploadProjectBoardFiles(event, ${i})" class="hidden" />
+                </label>
+                <button type="button" onclick="addProjectBoardLink(${i})" class="px-3 py-1.5 rounded-full bg-[#C59367] text-[#060D0C] text-[11px] font-extrabold">+ إضافة رابط خارجي</button>
+              </div>
+            </div>
+            <div class="space-y-2">
+              ${boards.map((bUrl, bIdx) => `
+                <div class="flex items-center gap-2">
+                  ${renderMiniPreview(bUrl)}
+                  <input value="${esc(bUrl)}" oninput="cfg.projects[${i}].extraBoards[${bIdx}]=this.value" dir="ltr" class="inp flex-1" placeholder="رابط صورة أو فيديو (MP4 / YouTube / Drive)" />
+                  <button type="button" onclick="cfg.projects[${i}].extraBoards.splice(${bIdx},1);renderProjectsEditor()" class="px-2.5 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 text-xs font-bold">🗑️</button>
+                </div>
+              `).join('') || '<p class="text-[11px] text-[#9A9186]">لا توجد صور أو فيديوهات إضافية بعد.</p>'}
+            </div>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
     function addManualProject() {
       cfg.projects.unshift({
@@ -924,8 +1238,36 @@
       });
       renderProjectsEditor();
     }
+    async function uploadProjectCover(event, pIdx) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      const res = await handleDeviceMediaUpload(file, 'image');
+      if (res && res.url && cfg.projects[pIdx]) {
+        cfg.projects[pIdx].image = res.url;
+        renderProjectsEditor();
+      }
+    }
+    async function uploadProjectBoardFiles(event, pIdx) {
+      const files = Array.from(event.target.files || []);
+      event.target.value = '';
+      if (!cfg.projects[pIdx]) return;
+      if (!Array.isArray(cfg.projects[pIdx].extraBoards)) cfg.projects[pIdx].extraBoards = [];
+      for (const file of files) {
+        const res = await handleDeviceMediaUpload(file);
+        if (res && res.url) {
+          cfg.projects[pIdx].extraBoards.push(res.url);
+          renderProjectsEditor();
+        }
+      }
+    }
+    function addProjectBoardLink(pIdx) {
+      if (!cfg.projects[pIdx]) return;
+      if (!Array.isArray(cfg.projects[pIdx].extraBoards)) cfg.projects[pIdx].extraBoards = [];
+      cfg.projects[pIdx].extraBoards.push('');
+      renderProjectsEditor();
+    }
 
-    /* ---------------- BEHANCE OVERRIDES EDITOR ---------------- */
+    /* ---------------- BEHANCE OVERRIDES EDITOR (DEVICE UPLOAD + LINKS + DELETE) ---------------- */
     function renderBehanceOverridesEditor() {
       const box = document.getElementById('behance-overrides-list');
       const entries = Object.entries(cfg.behanceOverrides || {});
@@ -933,23 +1275,41 @@
         box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-3">لا توجد تخصيصات Behance حالياً.</p>';
         return;
       }
-      box.innerHTML = entries.map(([url, ov], i) => `
-        <div class="sub-card p-4 space-y-2.5">
-          <div class="flex justify-between items-center gap-2">
+      box.innerHTML = entries.map(([url, ov], i) => {
+        const media = Array.isArray(ov.extraMedia) ? ov.extraMedia : [];
+        return `
+        <div class="sub-card p-4 space-y-3">
+          <div class="flex flex-wrap justify-between items-center gap-2">
             <span class="text-xs font-mono text-[#C59367] truncate" dir="ltr">${esc(url)}</span>
-            <button type="button" onclick="deleteBehanceOverride(${i})" class="text-xs text-red-400 font-bold shrink-0">حذف</button>
+            <div class="flex items-center gap-2">
+              <select onchange="updateBehanceOverrideType(${i}, this.value)" class="inp !w-36 !py-1.5 text-xs">
+                <option value="auto" ${(ov.contentType||'auto')==='auto'?'selected':''}>تلقائي</option>
+                <option value="video" ${ov.contentType==='video'?'selected':''}>فيديو ▶</option>
+                <option value="mixed" ${ov.contentType==='mixed'?'selected':''}>فيديو + صور 🎬</option>
+                <option value="images" ${ov.contentType==='images'?'selected':''}>صور فقط 🖼️</option>
+              </select>
+              <button type="button" onclick="deleteBehanceOverride(${i})" class="px-3 py-1.5 rounded-xl bg-red-950/60 border border-red-500/40 text-xs text-red-300 font-bold shrink-0">🗑️ حذف</button>
+            </div>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
-            <select onchange="updateBehanceOverrideType(${i}, this.value)" class="inp md:col-span-3">
-              <option value="auto" ${(ov.contentType||'auto')==='auto'?'selected':''}>تلقائي</option>
-              <option value="video" ${ov.contentType==='video'?'selected':''}>فيديو ▶</option>
-              <option value="mixed" ${ov.contentType==='mixed'?'selected':''}>فيديو + صور 🎬</option>
-              <option value="images" ${ov.contentType==='images'?'selected':''}>صور فقط 🖼️</option>
-            </select>
-            <textarea rows="2" dir="ltr" oninput="updateBehanceOverrideMedia(${i}, this.value)" class="inp md:col-span-9" placeholder="روابط فيديو أو صور إضافية (رابط في كل سطر)">${esc((ov.extraMedia||[]).join('\n'))}</textarea>
+          <div class="flex flex-wrap gap-2">
+            <label class="px-3 py-1.5 rounded-full bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-[11px] font-bold cursor-pointer">
+              ⬆ إرفاق فيديو/صورة من جهازي
+              <input type="file" accept="video/*,image/*" multiple onchange="uploadBehanceOverrideFiles(event, ${i})" class="hidden" />
+            </label>
+            <button type="button" onclick="addBehanceOverrideLink(${i})" class="px-3 py-1.5 rounded-full bg-[#C59367] text-[#060D0C] text-[11px] font-extrabold">+ إضافة رابط خارجي</button>
+          </div>
+          <div class="space-y-2">
+            ${media.map((mUrl, mIdx) => `
+              <div class="flex items-center gap-2">
+                ${renderMiniPreview(mUrl)}
+                <input value="${esc(mUrl)}" oninput="updateBehanceOverrideItem(${i}, ${mIdx}, this.value)" dir="ltr" class="inp flex-1" placeholder="رابط فيديو أو صورة" />
+                <button type="button" onclick="removeBehanceOverrideItem(${i}, ${mIdx})" class="px-2.5 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 text-xs font-bold">🗑️</button>
+              </div>
+            `).join('')}
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
     function addBehanceOverride() {
       const url = prompt('ضع رابط مشروع Behance بالكامل:');
@@ -966,27 +1326,115 @@
       const key = Object.keys(cfg.behanceOverrides)[idx];
       if (key) cfg.behanceOverrides[key].contentType = val;
     }
-    function updateBehanceOverrideMedia(idx, val) {
+    function addBehanceOverrideLink(idx) {
       const key = Object.keys(cfg.behanceOverrides)[idx];
-      if (key) cfg.behanceOverrides[key].extraMedia = val.split(/\n+/).map(s => s.trim()).filter(Boolean);
+      if (!key) return;
+      if (!Array.isArray(cfg.behanceOverrides[key].extraMedia)) cfg.behanceOverrides[key].extraMedia = [];
+      cfg.behanceOverrides[key].extraMedia.push('');
+      renderBehanceOverridesEditor();
+    }
+    function updateBehanceOverrideItem(idx, mIdx, val) {
+      const key = Object.keys(cfg.behanceOverrides)[idx];
+      if (key && cfg.behanceOverrides[key].extraMedia) cfg.behanceOverrides[key].extraMedia[mIdx] = val;
+    }
+    function removeBehanceOverrideItem(idx, mIdx) {
+      const key = Object.keys(cfg.behanceOverrides)[idx];
+      if (key && cfg.behanceOverrides[key].extraMedia) {
+        cfg.behanceOverrides[key].extraMedia.splice(mIdx, 1);
+        renderBehanceOverridesEditor();
+      }
+    }
+    async function uploadBehanceOverrideFiles(event, idx) {
+      const files = Array.from(event.target.files || []);
+      event.target.value = '';
+      const key = Object.keys(cfg.behanceOverrides)[idx];
+      if (!key) return;
+      if (!Array.isArray(cfg.behanceOverrides[key].extraMedia)) cfg.behanceOverrides[key].extraMedia = [];
+      for (const file of files) {
+        const res = await handleDeviceMediaUpload(file);
+        if (res && res.url) {
+          cfg.behanceOverrides[key].extraMedia.push(res.url);
+          renderBehanceOverridesEditor();
+        }
+      }
     }
 
-    /* ---------------- YOUTUBE, EXPERIENCE, STATS, SKILLS, FONTS ---------------- */
+    /* ---------------- YOUTUBE (AUTO-EXTRACT ID FROM FULL LINK + THUMBNAIL PREVIEW) ---------------- */
+    function extractYoutubeId(raw) {
+      const s = String(raw || '').trim();
+      const m = s.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+      return m ? m[1] : s;
+    }
     function renderYtEditor() {
       const box = document.getElementById('yt-editor-list');
-      box.innerHTML = cfg.youtubeVideos.map((v, i) => `
-        <div class="sub-card p-4 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-          <input value="${esc(v.id)}" oninput="cfg.youtubeVideos[${i}].id=this.value" dir="ltr" class="inp md:col-span-3" placeholder="YouTube Video ID" />
-          <input value="${esc(v.titleEn)}" oninput="cfg.youtubeVideos[${i}].titleEn=this.value" dir="ltr" class="inp md:col-span-4" placeholder="Title EN" />
-          <input value="${esc(v.titleAr)}" oninput="cfg.youtubeVideos[${i}].titleAr=this.value" class="inp md:col-span-3" placeholder="العنوان بالعربي" />
-          <input value="${esc(v.duration)}" oninput="cfg.youtubeVideos[${i}].duration=this.value" dir="ltr" class="inp md:col-span-1" placeholder="0:30" />
-          <button type="button" onclick="cfg.youtubeVideos.splice(${i},1);renderYtEditor()" class="text-xs text-red-400 font-bold md:col-span-1">حذف</button>
+      box.innerHTML = cfg.youtubeVideos.map((v, i) => {
+        const cleanId = extractYoutubeId(v.id);
+        return `
+        <div class="sub-card p-3.5 flex flex-wrap md:flex-nowrap gap-3 items-center">
+          <img src="${cleanId ? `https://i.ytimg.com/vi/${esc(cleanId)}/hqdefault.jpg` : './MYLOGO.webp'}" alt="" class="w-20 h-12 rounded-lg object-cover bg-black border border-[#C59367]/35 shrink-0" />
+          <input value="${esc(v.id)}" onchange="cfg.youtubeVideos[${i}].id=extractYoutubeId(this.value);renderYtEditor()" dir="ltr" class="inp md:w-52" placeholder="رابط يوتيوب كامل أو الـ ID" />
+          <input value="${esc(v.titleEn)}" oninput="cfg.youtubeVideos[${i}].titleEn=this.value" dir="ltr" class="inp flex-1" placeholder="Title EN" />
+          <input value="${esc(v.titleAr)}" oninput="cfg.youtubeVideos[${i}].titleAr=this.value" class="inp flex-1" placeholder="العنوان بالعربي" />
+          <input value="${esc(v.duration)}" oninput="cfg.youtubeVideos[${i}].duration=this.value" dir="ltr" class="inp !w-20 text-center" placeholder="0:30" />
+          <button type="button" onclick="cfg.youtubeVideos.splice(${i},1);renderYtEditor();showToast('تم حذف الفيديو')" class="px-3 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-xs text-red-300 font-bold shrink-0">🗑️ حذف</button>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
     function addYouTubeItem() {
       cfg.youtubeVideos.unshift({ id: '', titleEn: 'New Video', titleAr: 'فيديو جديد', duration: '0:30' });
       renderYtEditor();
+    }
+
+
+    /* ---------------- CLIENT LOGOS MARQUEE EDITOR ---------------- */
+    function renderMarqueeEditor() {
+      const box = document.getElementById('marquee-editor-list');
+      if (!box) return;
+      const list = Array.isArray(cfg.clientLogos) ? cfg.clientLogos : [];
+      if (list.length === 0) {
+        box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-4">لا توجد لوجوهات مضافة حالياً — اضغط "⬆ رفع لوجوهات من جهازي" أو "+ إضافة براند".</p>';
+        return;
+      }
+      box.innerHTML = list.map((b, i) => `
+        <div class="sub-card p-3.5 flex flex-wrap md:flex-nowrap items-center gap-3">
+          ${renderMiniPreview(b.logoUrl, 'image')}
+          <input value="${esc(b.name)}" oninput="cfg.clientLogos[${i}].name=this.value" class="inp md:w-48" placeholder="اسم البراند (أو اتركه فارغاً)" />
+          <input value="${esc(b.logoUrl)}" oninput="cfg.clientLogos[${i}].logoUrl=this.value" dir="ltr" class="inp flex-1 min-w-[180px]" placeholder="رابط اللوجو (PNG/WebP/SVG) أو ارفع من جهازك" />
+          <label class="px-3 py-2 rounded-xl bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-bold cursor-pointer shrink-0">
+            ⬆ من جهازي
+            <input type="file" accept="image/*" onchange="replaceClientLogoFile(event, ${i})" class="hidden" />
+          </label>
+          <button type="button" onclick="cfg.clientLogos.splice(${i},1);renderMarqueeEditor();showToast('تم حذف البراند')" class="px-3 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-600 hover:text-white text-xs font-bold shrink-0">🗑️ حذف</button>
+        </div>
+      `).join('');
+    }
+    function addClientLogoItem() {
+      if (!Array.isArray(cfg.clientLogos)) cfg.clientLogos = [];
+      cfg.clientLogos.push({ name: 'New Brand', logoUrl: '' });
+      renderMarqueeEditor();
+    }
+    async function uploadNewClientLogos(event) {
+      const files = Array.from(event.target.files || []);
+      event.target.value = '';
+      if (!Array.isArray(cfg.clientLogos)) cfg.clientLogos = [];
+      for (const file of files) {
+        const res = await handleDeviceMediaUpload(file, 'image');
+        if (res && res.url) {
+          const cleanName = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim();
+          cfg.clientLogos.push({ name: cleanName, logoUrl: res.url });
+          renderMarqueeEditor();
+        }
+      }
+    }
+    async function replaceClientLogoFile(event, idx) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      const res = await handleDeviceMediaUpload(file, 'image');
+      if (res && res.url && cfg.clientLogos[idx]) {
+        cfg.clientLogos[idx].logoUrl = res.url;
+        renderMarqueeEditor();
+      }
     }
 
     function renderExpEditor() {
@@ -1111,6 +1559,7 @@
         if (el) cfg[k] = el.value.trim();
       });
       cfg.heroSlideSeconds = Number(document.getElementById('cfg-heroSlideSeconds').value) || 5;
+      cfg.marqueeSpeedSeconds = Number(document.getElementById('cfg-marqueeSpeedSeconds').value) || 28;
       cfg.heroShowcaseEmpty = !Array.isArray(cfg.heroShowcaseItems) || cfg.heroShowcaseItems.length === 0;
 
       cfg.typography = {
@@ -1130,6 +1579,7 @@
 
       cfg.sections = {
         heroReveal: document.getElementById('sec-heroReveal').checked,
+        clientsMarquee: document.getElementById('sec-clientsMarquee').checked,
         work: document.getElementById('sec-work').checked,
         behanceSync: document.getElementById('sec-behanceSync').checked,
         cinema: document.getElementById('sec-cinema').checked,

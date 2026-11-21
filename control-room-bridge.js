@@ -104,8 +104,18 @@
         { num: '60', en: 'Projects Delivered', ar: 'مشروع مكتمل' },
         { num: '25', en: 'Happy Brands', ar: 'علامة تجارية' }
       ],
+      marqueeSpeedSeconds: 28,
+      clientLogos: [
+        { name: 'Shawahid Industrial', logoUrl: '' },
+        { name: 'El Gazzar Co.', logoUrl: '' },
+        { name: 'Techno Print', logoUrl: '' },
+        { name: 'Pro Media', logoUrl: '' },
+        { name: 'Fast Up', logoUrl: '' },
+        { name: 'Salik', logoUrl: '' }
+      ],
       sections: {
         heroReveal: true,
+        clientsMarquee: true,
         about: true,
         skills: true,
         work: true,
@@ -427,12 +437,34 @@
     return u;
   }
 
+  function normalizeExternalImageUrl(rawUrl) {
+    if (!rawUrl || typeof rawUrl !== 'string') return '';
+    let u = rawUrl.trim();
+    if (!u) return '';
+    const gdrive = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9_-]{10,})/i);
+    if (gdrive) return `https://lh3.googleusercontent.com/d/${gdrive[1]}`;
+    if (/dropbox\.com/i.test(u)) {
+      return u.replace(/[?&]dl=0/i, '').replace(/www\.dropbox\.com/i, 'dl.dropboxusercontent.com');
+    }
+    return u;
+  }
+
   function classifyVideoUrl(rawUrl) {
     if (!rawUrl || typeof rawUrl !== 'string') return null;
-    const url = rawUrl.trim();
+    let url = rawUrl.trim();
     if (!url) return null;
 
-    if (url.startsWith('data:video/') || /\.(mp4|webm|mov|m4v)(\?|$)/i.test(url)) {
+    if (/dropbox\.com/i.test(url)) {
+      url = url.replace(/[?&]dl=0/i, '').replace(/www\.dropbox\.com/i, 'dl.dropboxusercontent.com');
+      if (/\.(mp4|webm|mov|m4v)/i.test(url)) return { url, kind: 'mp4' };
+    }
+
+    const gdrive = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9_-]{10,})/i);
+    if (gdrive) {
+      return { url: `https://drive.google.com/file/d/${gdrive[1]}/preview`, kind: 'iframe' };
+    }
+
+    if (url.startsWith('data:video/') || /\.(mp4|webm|mov|m4v)(\?|$)/i.test(url) || /res\.cloudinary\.com\/.*\/video\/upload/i.test(url)) {
       return { url, kind: 'mp4' };
     }
 
@@ -670,7 +702,7 @@
 
     setup(items, slideSeconds) {
       this.clearImageTimer();
-      const stageBox = document.querySelector('#top .mb-12.rounded-3xl.glass-card');
+      const stageBox = document.getElementById('motion-feature') || document.querySelector('#top .mb-12.rounded-3xl.glass-card');
 
       if (!Array.isArray(items) || items.length === 0) {
         this.items = [];
@@ -796,7 +828,7 @@
           ifr.classList.add('hidden');
         }
         if (img) {
-          img.src = item.url;
+          img.src = normalizeExternalImageUrl(item.url);
           img.classList.remove('hidden');
         }
         if (this.isPlaying && this.items.length > 1) {
@@ -820,18 +852,29 @@
           ifr.classList.add('hidden');
         }
         if (vid) {
+          const finalUrl = (classifiedVid && classifiedVid.url) ? classifiedVid.url : item.url;
           vid.classList.remove('hidden');
           vid.loop = this.items.length === 1;
           vid.muted = this.isMuted;
-          if (vid.getAttribute('data-active-url') !== item.url) {
-            vid.src = item.url;
-            vid.setAttribute('data-active-url', item.url);
+          vid.playsInline = true;
+          const currentAttrSrc = vid.getAttribute('data-active-url') || vid.getAttribute('src') || '';
+          if (currentAttrSrc !== finalUrl) {
+            vid.src = finalUrl;
+            vid.setAttribute('data-active-url', finalUrl);
             vid.load();
           }
-          if (this.isPlaying) {
-            vid.play().catch(() => {});
+          const startPlayback = () => {
+            if (this.isPlaying && this.isPowered) {
+              vid.play().catch(() => {});
+            } else {
+              vid.pause();
+            }
+          };
+          if (vid.readyState >= 2) {
+            startPlayback();
           } else {
-            vid.pause();
+            vid.addEventListener('canplay', startPlayback, { once: true });
+            startPlayback();
           }
         }
       }
@@ -1464,7 +1507,7 @@
       const img = document.getElementById(imgId);
       const vec = document.getElementById(vecId);
       if (img && cfg.logoUrl) {
-        img.src = cfg.logoUrl;
+        img.src = normalizeExternalImageUrl(cfg.logoUrl);
         img.classList.remove('hidden');
         if (vec) vec.classList.add('hidden');
       }
@@ -1473,7 +1516,7 @@
     const portraitImg = document.getElementById('portraitImg');
     const portraitFallback = document.getElementById('portraitFallback');
     if (portraitImg && cfg.portraitUrl) {
-      portraitImg.src = cfg.portraitUrl;
+      portraitImg.src = normalizeExternalImageUrl(cfg.portraitUrl);
       portraitImg.classList.remove('hidden');
       if (portraitFallback) portraitFallback.classList.add('hidden');
       if (typeof setPortraitMode === 'function' && cfg.portraitMode) {
@@ -1535,15 +1578,23 @@
             ]);
     KHHeroShowcase.setup(showcaseItems, cfg.heroSlideSeconds || 5);
     const ambientVid = document.getElementById('heroBgAmbientVideo');
-    const firstVideoItem = showcaseItems.find(it => it && it.type === 'video' && it.url && !classifyVideoUrl(it.url)?.kind?.includes('iframe'));
+    const firstDirectVideoItem = showcaseItems.find(it => {
+      if (!it || it.type !== 'video' || !it.url) return false;
+      const c = classifyVideoUrl(it.url);
+      return !c || c.kind === 'mp4';
+    });
     if (ambientVid) {
-      const targetSrc = (firstVideoItem && firstVideoItem.url) || cfg.revealVideo1;
-      if (targetSrc && ambientVid.getAttribute('data-active-url') !== targetSrc) {
+      const rawTarget = (firstDirectVideoItem && firstDirectVideoItem.url) || cfg.revealVideo1;
+      const cls = classifyVideoUrl(rawTarget);
+      const targetSrc = (cls && cls.kind === 'mp4') ? cls.url : rawTarget;
+      const currentSrc = ambientVid.getAttribute('data-active-url') || ambientVid.getAttribute('src') || '';
+      if (targetSrc && currentSrc !== targetSrc) {
         ambientVid.src = targetSrc;
         ambientVid.setAttribute('data-active-url', targetSrc);
         ambientVid.load();
       }
       ambientVid.muted = true;
+      ambientVid.playsInline = true;
       ambientVid.play().catch(() => {});
     }
 
@@ -1642,13 +1693,45 @@
       FlashMediaDeck.updateUI();
     }
 
-    const revealStageBox = document.querySelector('#top .mb-12.rounded-3xl.glass-card');
+    const revealStageBox = document.getElementById('motion-feature') || document.querySelector('#top .mb-12.rounded-3xl.glass-card');
     if (revealStageBox) {
       const shouldShow = cfg.sections.heroReveal !== false && showcaseItems.length > 0;
       revealStageBox.style.display = shouldShow ? '' : 'none';
       if (!shouldShow) {
         const vid = document.getElementById('heroRevealVideo');
         if (vid) vid.pause();
+      }
+    }
+
+
+    // Render Transparent Animated Brand Logos Marquee
+    const marqueeSec = document.getElementById('clients-marquee');
+    const marqueeTrack = document.getElementById('clients-marquee-track');
+    const logosList = Array.isArray(cfg.clientLogos) ? cfg.clientLogos.filter(b => b && (b.logoUrl || b.name)) : [];
+    if (marqueeSec && marqueeTrack) {
+      const showMarquee = cfg.sections.clientsMarquee !== false && logosList.length > 0;
+      marqueeSec.style.display = showMarquee ? '' : 'none';
+      if (showMarquee) {
+        const speed = Math.min(90, Math.max(8, Number(cfg.marqueeSpeedSeconds) || 28));
+        marqueeTrack.style.setProperty('--marquee-speed', `${speed}s`);
+        const renderItem = (b) => {
+          const safeName = String(b.name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          const imgUrl = b.logoUrl ? normalizeExternalImageUrl(b.logoUrl) : '';
+          if (imgUrl) {
+            return `<div class="brand-marquee-item" title="${safeName}">
+              <img src="${imgUrl}" alt="${safeName}" class="brand-marquee-logo" loading="lazy" />
+              ${safeName ? `<span class="font-mono text-[11px] uppercase tracking-[0.14em] text-[#C9BFB2]">${safeName}</span>` : ''}
+            </div>`;
+          }
+          return `<div class="brand-marquee-item">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#C59367]/75"></span>
+            <span class="font-display font-bold text-xs sm:text-sm uppercase tracking-[0.14em] text-[#F2EADF]/85">${safeName}</span>
+          </div>`;
+        };
+        const singleSet = logosList.map(renderItem).join('');
+        // Duplicate set enough times so loop is always seamless even with 2-3 logos
+        const repeatCount = logosList.length < 5 ? 4 : 2;
+        marqueeTrack.innerHTML = singleSet.repeat(repeatCount);
       }
     }
 
