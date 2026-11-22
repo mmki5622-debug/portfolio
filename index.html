@@ -383,6 +383,47 @@
       transform: scale(1.06);
     }
 
+
+    /* Luxury Animated Sheen Sweep on Hero Headline Text */
+    .hero-sheen-light {
+      background: linear-gradient(
+        115deg,
+        #F2EADF 0%,
+        #F2EADF 38%,
+        #FFFFFF 49%,
+        #F7DFC4 53%,
+        #F2EADF 64%,
+        #F2EADF 100%
+      );
+      background-size: 240% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent !important;
+      animation: khTextSheen 4.8s ease-in-out infinite;
+    }
+    .hero-sheen-copper {
+      background: linear-gradient(
+        115deg,
+        #A06620 0%,
+        #C59367 34%,
+        #FFF3E2 49%,
+        #E2B483 56%,
+        #C59367 70%,
+        #A06620 100%
+      );
+      background-size: 240% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent !important;
+      animation: khTextSheen 4.8s ease-in-out infinite;
+      animation-delay: 0.35s;
+    }
+    @keyframes khTextSheen {
+      0% { background-position: 130% 0; }
+      55% { background-position: -30% 0; }
+      100% { background-position: -30% 0; }
+    }
+
     ::-webkit-scrollbar { width: 7px; height: 7px; }
     ::-webkit-scrollbar-track { background: #0A0908; }
     ::-webkit-scrollbar-thumb { background: #4B3B2D; }
@@ -477,27 +518,27 @@
           <div class="font-display text-lg sm:text-xl font-bold tracking-[0.12em] text-[#C59367] uppercase">KERLOS HANY</div>
           <div class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-[#9A9186]">
             <span class="w-1.5 h-1.5 rounded-full bg-[#C59367]"></span>
-            <span data-i18n="heroEyebrow">FULL-SERVICE CREATIVE DIRECTION</span>
+            <span data-i18n="heroEyebrow">GRAPHIC, BRAND &amp; 3D DESIGNER</span>
           </div>
         </div>
 
-        <h1 class="font-display font-bold uppercase text-5xl sm:text-7xl lg:text-[5.5rem] leading-[0.92] tracking-tight text-[#F2EADF]">
-          <span class="block" data-i18n="heroTitle1">DESIGNED TO</span>
-          <span class="block text-[#C59367]" data-i18n="heroTitle2">BE</span>
-          <span class="block text-[#C59367]" data-i18n="heroTitle3">REMEMBERED</span>
+        <h1 class="font-display font-bold uppercase text-5xl sm:text-7xl lg:text-[5.5rem] leading-[0.94] tracking-tight">
+          <span class="block hero-sheen-light" data-i18n="heroTitle1">BUILDING BOLD</span>
+          <span class="block hero-sheen-copper" data-i18n="heroTitle2">BRAND WORLDS</span>
+          <span class="block hero-sheen-copper" data-i18n="heroTitle3">&amp; 3D REALITIES</span>
         </h1>
 
         <p class="text-sm sm:text-base text-[#C9BFB2] max-w-md leading-relaxed" data-i18n="heroSubtitle">
-          A visual designer turning brand intent into identity, campaign, motion, and crafted 3D imagery with a stronger point of view.
+          I'm Kerlos Hany Nassif — a Graphic &amp; 3D Designer with 6+ years of experience transforming brand visions into memorable logos, commercial 3D product renders, and high-impact visual campaigns.
         </p>
 
         <div class="flex flex-wrap items-center gap-6 pt-3">
           <a href="#work" class="inline-flex items-center gap-3 pb-1.5 border-b border-[#C59367] font-mono text-xs uppercase tracking-[0.18em] text-[#F2EADF] hover:text-[#C59367] transition-colors">
-            <span data-i18n="heroBtnWork">EXPLORE THE WORK</span>
+            <span data-i18n="heroBtnWork">VIEW MY WORK</span>
             <span>↓</span>
           </a>
           <a id="cvDownloadLink" href="./media/local-uploads/kerloshanyresname.pdf" download="Kerlos_Hany_Nassif_CV.pdf" class="inline-flex items-center gap-2 pb-1.5 border-b border-[#9A9186]/50 font-mono text-xs uppercase tracking-[0.18em] text-[#9A9186] hover:text-[#F2EADF] hover:border-[#F2EADF] transition-colors">
-            <span data-i18n="heroBtnCv">DOWNLOAD CV</span>
+            <span data-i18n="heroBtnCv">DOWNLOAD CV (PDF)</span>
             <span>↓</span>
           </a>
         </div>
@@ -912,7 +953,7 @@
         <a href="https://www.behance.net/kerloshany11" target="_blank" rel="noopener noreferrer" class="hover:text-[#C59367]">BEHANCE</a>
         <a href="https://www.youtube.com/@kerloshany-m8e" target="_blank" rel="noopener noreferrer" class="hover:text-[#C59367]">YOUTUBE</a>
         <a href="https://www.linkedin.com/in/kerlos-hany-391453187/" target="_blank" rel="noopener noreferrer" class="hover:text-[#C59367]">LINKEDIN</a>
-        <a href="mailto:hkerlos@gmail.com" class="hover:text-[#C59367]">EMAIL</a>
+        <a id="footerEmailLink" href="https://mail.google.com/mail/?view=cm&fs=1&to=hkerlos@gmail.com" target="_blank" rel="noopener noreferrer" class="hover:text-[#C59367]">EMAIL (GMAIL)</a>
       </div>
       <div>© 2026 KERLOS HANY</div>
     </div>
@@ -926,7 +967,7 @@
       <div class="flex items-center justify-between gap-4 px-5 sm:px-7 py-4 bg-[#0A0908] border-b border-[#C59367]/25 shrink-0">
         <div class="flex items-center gap-3 min-w-0">
           <span id="pm-badge" class="px-3 py-1 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[10px] font-bold uppercase shrink-0">CASE STUDY</span>
-          <span id="pm-content-type" class="px-2.5 py-1 border border-[#C59367]/45 text-[#C59367] font-mono text-[10px] font-bold uppercase shrink-0">🖼️ صور</span>
+          <span id="pm-content-type" class="hidden px-2.5 py-1 border border-[#C59367]/45 text-[#C59367] font-mono text-[10px] font-bold uppercase shrink-0"></span>
           <h3 id="pm-title" class="font-display text-sm sm:text-lg font-bold uppercase text-[#F2EADF] truncate">Project Title</h3>
         </div>
         <div class="flex items-center gap-2 shrink-0">
@@ -1065,13 +1106,13 @@
         navCinema: 'MOTION',
         navExperience: 'EXPERIENCE',
         navCta: 'START A PROJECT',
-        heroEyebrow: 'FULL-SERVICE CREATIVE DIRECTION',
-        heroTitle1: 'DESIGNED TO',
-        heroTitle2: 'BE',
-        heroTitle3: 'REMEMBERED',
-        heroSubtitle: 'A visual designer turning brand intent into identity, campaign, motion, and crafted 3D imagery with a stronger point of view.',
-        heroBtnWork: 'EXPLORE THE WORK',
-        heroBtnCv: 'DOWNLOAD CV',
+        heroEyebrow: 'GRAPHIC, BRAND & 3D DESIGNER',
+        heroTitle1: 'BUILDING BOLD',
+        heroTitle2: 'BRAND WORLDS',
+        heroTitle3: '& 3D REALITIES',
+        heroSubtitle: "I'm Kerlos Hany Nassif — a Graphic & 3D Designer with 6+ years of experience transforming brand visions into memorable logos, commercial 3D product renders, and high-impact visual campaigns.",
+        heroBtnWork: 'VIEW MY WORK',
+        heroBtnCv: 'DOWNLOAD CV (PDF)',
         clientsMarqueeTitle: 'TRUSTED BY BRANDS & PARTNERS',
         practiceTag: 'THE PRACTICE',
         practiceSide: 'DESIGN WITH INTELLIGENCE',
@@ -1123,9 +1164,9 @@
         navExperience: 'الخبرات',
         navCta: 'ابدأ مشروعك',
         heroEyebrow: 'إخراج إبداعي متكامل',
-        heroTitle1: 'مُصمَّم ليبقى',
-        heroTitle2: 'راسخاً',
-        heroTitle3: 'في الذاكرة',
+        heroTitle1: 'نصنع عوالم',
+        heroTitle2: 'بصرية جريئة',
+        heroTitle3: 'وتجارب 3D لا تُنسى',
         heroSubtitle: 'مصمم بصري يحوّل رؤية العلامات التجارية إلى هويات بصرية وحملات وموشن جرافيك وتجارب 3D متقنة.',
         heroBtnWork: 'استكشف الأعمال',
         heroBtnCv: 'تحميل السيرة الذاتية',
@@ -1529,9 +1570,7 @@
                 <span class="absolute top-3 start-3 w-8 h-8 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[11px] font-bold flex items-center justify-center shadow-md z-10">${num}</span>
                 <div class="absolute top-3 end-3 flex items-center gap-1.5 z-10">
                   ${hasAudio ? `<span class="px-2.5 py-1 rounded-full bg-[#0E3E3F]/90 border border-[#C59367]/60 text-[#F2EADF] font-mono text-[10px] font-bold">🎵</span>` : ''}
-                  <span class="kh-video-badge px-3 py-1 rounded-full ${meta.hasVid ? 'bg-[#C59367] text-[#0A0908]' : 'bg-[#0A0908]/85 text-[#C59367] border border-[#C59367]/35'} font-mono text-[10px] font-bold uppercase">
-                    ${meta.label}
-                  </span>
+                  ${meta.hasVid ? `<span class="kh-video-badge px-3 py-1 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[10px] font-bold uppercase">${meta.label}</span>` : ''}
                 </div>
                 ${meta.hasVid ? `
                   <button type="button" onclick="playCardInlineVideo(event, '${p.id}')" title="${currentLang === 'ar' ? 'لمشاهدة الفيديو اضغط هنا' : 'Click here to watch video'}" class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/35 hover:bg-black/20 transition-colors z-10">
@@ -1680,7 +1719,11 @@
       currentModalProjectId = id;
       const meta = getProjectContentMeta(p);
       document.getElementById('pm-badge').textContent = p.source === 'behance' ? 'BEHANCE CASE STUDY' : (p.category || 'PROJECT').toUpperCase();
-      document.getElementById('pm-content-type').textContent = meta.label;
+      const pmTypeEl = document.getElementById('pm-content-type');
+      if (pmTypeEl) {
+        if (meta.hasVid) { pmTypeEl.textContent = meta.label; pmTypeEl.classList.remove('hidden'); }
+        else { pmTypeEl.classList.add('hidden'); }
+      }
       document.getElementById('pm-title').textContent = currentLang === 'ar' ? (p.titleAr || p.titleEn) : (p.titleEn || p.titleAr);
       document.getElementById('pm-desc').textContent = currentLang === 'ar' ? (p.descAr || p.descEn) : (p.descEn || p.descAr);
       document.getElementById('pm-role').textContent = currentLang === 'ar' ? (p.roleAr || p.roleEn) : (p.roleEn || p.roleAr);
@@ -1754,7 +1797,9 @@
       const name = document.getElementById('inq-name').value.trim() || 'Client';
       const service = document.getElementById('inq-service').value;
       const msg = document.getElementById('inq-msg').value.trim();
-      window.location.href = `mailto:hkerlos@gmail.com?subject=${encodeURIComponent(`Project Inquiry (${service}) — ${name}`)}&body=${encodeURIComponent(msg)}`;
+      const su = encodeURIComponent(`Project Inquiry (${service}) — ${name}`);
+      const body = encodeURIComponent(`Name: ${name}\nService: ${service}\n\n${msg}`);
+      window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=hkerlos@gmail.com&su=${su}&body=${body}`, '_blank', 'noopener,noreferrer');
       closeContactModal();
     }
 

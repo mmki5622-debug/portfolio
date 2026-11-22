@@ -1,6 +1,6 @@
 (function () {
   const DEFAULT_FIREBASE_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
-  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_v6';
+  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_v8';
 
   function getDefaultConfig() {
     return {
@@ -89,12 +89,12 @@
       ],
       availEn: 'Available for freelance & brand projects',
       availAr: 'متاح للمشاريع الحرة وتصميم الهويات التجارية',
-      heroTitle1En: 'Crafting Iconic',
-      heroTitle1Ar: 'أصنع هويات بصرية',
-      heroTitle2En: 'Visual Identities',
-      heroTitle2Ar: 'استثنائية',
-      heroTitle3En: '& 3D Experiences',
-      heroTitle3Ar: 'وتجارب ثلاثية الأبعاد',
+      heroTitle1En: 'Building Bold',
+      heroTitle1Ar: 'نصنع عوالم',
+      heroTitle2En: 'Brand Worlds',
+      heroTitle2Ar: 'بصرية جريئة',
+      heroTitle3En: '& 3D Realities',
+      heroTitle3Ar: 'وتجارب 3D لا تُنسى',
       heroSubEn: "I'm Kerlos Hany Nassif — a Graphic & 3D Designer with 6+ years of experience transforming brand visions into memorable logos, commercial 3D product renders, and high-impact visual campaigns.",
       heroSubAr: 'أنا كيرلس هاني نصيف — مصمم جرافيك و3D بخبرة تتجاوز 6 سنوات في تحويل رؤى العلامات التجارية إلى شعارات خالدة، وتصميمات منتجات 3D واقعية، وحملات إعلانية مؤثرة.',
       aboutDescEn: "I'm Kerlos Hany Nassif, a Graphic Designer with over 6 years of experience specializing in Logo Design, Brand Identity, Motion Graphics, and 3D Visualization. Based in Tanta, Egypt, I help brands transform ideas into clear, impactful, and memorable visual identities that stand out in competitive markets.",
@@ -573,11 +573,12 @@
     const manual = (p && p.contentType) || 'auto';
     if (manual !== 'auto') return manual;
     const vCount = Array.isArray(p && p.videos) ? p.videos.length : 0;
+    const hasDetectedVid = Boolean(vCount > 0 || (p && (p.hasVideo || p.videoDetectedOnly)));
     const iCount = Array.isArray(p && p.mediaGallery)
       ? p.mediaGallery.filter(m => !classifyVideoUrl(m.src)).length
       : (p && p.image ? 1 : 0);
-    if (vCount > 0 && iCount > 1) return 'mixed';
-    if (vCount > 0) return 'video';
+    if (hasDetectedVid && iCount > 1) return 'mixed';
+    if (hasDetectedVid) return 'video';
     return 'images';
   }
 
@@ -1135,12 +1136,10 @@
 
         const cType = resolveContentType(p);
         const vidCount = Array.isArray(p.videos) ? p.videos.length : 0;
-        if (thumbBox && !thumbBox.querySelector('.kh-video-badge')) {
+        const isVidStyle = cType === 'video' || cType === 'mixed';
+        if (isVidStyle && thumbBox && !thumbBox.querySelector('.kh-video-badge')) {
           const badge = document.createElement('span');
-          const isVidStyle = cType === 'video' || cType === 'mixed';
-          badge.className = `kh-video-badge absolute top-3 end-3 px-3 py-1 rounded-full ${
-            isVidStyle ? 'bg-[#A06620] text-[#F5F4F0]' : 'bg-[#021411]/88 text-[#B97B2E]'
-          } text-[10px] font-extrabold uppercase tracking-wider shadow-lg flex items-center gap-1 border border-[#F5F4F0]/35 z-10`;
+          badge.className = 'kh-video-badge absolute top-3 end-3 px-3 py-1 rounded-full bg-[#A06620] text-[#F5F4F0] text-[10px] font-extrabold uppercase tracking-wider shadow-lg flex items-center gap-1 border border-[#F5F4F0]/35 z-10';
           badge.textContent = getContentTypeLabel(cType, lang, vidCount);
           thumbBox.appendChild(badge);
         }
@@ -1189,7 +1188,12 @@
         const lang = typeof currentLang !== 'undefined' ? currentLang : 'en';
         const cType = resolveContentType(p);
         const vCount = Array.isArray(p.videos) ? p.videos.length : 0;
-        typeBadge.textContent = getContentTypeLabel(cType, lang, vCount);
+        if (cType === 'video' || cType === 'mixed') {
+          typeBadge.textContent = getContentTypeLabel(cType, lang, vCount);
+          typeBadge.classList.remove('hidden');
+        } else {
+          typeBadge.classList.add('hidden');
+        }
       }
       if (behanceBtn && p) {
         const specificUrl = getSpecificBehanceProjectUrl(p.url);
@@ -1282,13 +1286,13 @@
         }).join('');
 
         streamEl.insertAdjacentHTML('afterbegin', videosHtml);
-      } else if (streamEl && p.source === 'behance' && !p.enriched) {
-        const loadingMsg = lang === 'ar'
-          ? 'جاري تحميل فيديوهات ولوحات المشروع عالية الدقة من Behance...'
-          : 'Loading HD boards & project videos from Behance...';
+      } else if (streamEl && p.source === 'behance' && p.videoDetectedOnly && getSpecificBehanceProjectUrl(p.url)) {
+        const watchBtnLabel = lang === 'ar'
+          ? '▶ لمشاهدة الفيديو بجودته الكاملة على Behance اضغط هنا ↗'
+          : '▶ Click here to watch the full video on Behance ↗';
         streamEl.insertAdjacentHTML(
           'afterbegin',
-          `<div id="pm-behance-loading" class="p-4 rounded-2xl bg-[#0E3E3F]/45 border border-[#A06620]/50 text-xs font-bold text-[#B97B2E] text-center animate-pulse">${loadingMsg}</div>`
+          `<a href="${getSpecificBehanceProjectUrl(p.url)}" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-2xl bg-gradient-to-r from-[#C59367] to-[#A06620] hover:brightness-110 text-[#060D0C] text-xs sm:text-sm font-extrabold text-center shadow-lg transition-all">${watchBtnLabel}</a>`
         );
       }
 
@@ -1415,13 +1419,17 @@
                   captionAr: `لوحة عرض المشروع من Behance 0${bIdx + 1}`
                 }));
 
+            const titleLooksLikeVideo = /\b(ads?|video|motion|reel|animation|cgi|fooh|reveal|commercial|promo|film|3d\s*\+\s*ai)\b|(فيديو|موشن|إعلان|اعلان|تحريك|ريلز)/i.test(item.title || '');
+            const autoDetectedVideo = mergedVideos.length > 0 || titleLooksLikeVideo;
+
             return {
               id: `behance-${idx}-${(item.guid || projectUrl).toString().slice(-8)}`,
               category: 'branding',
               source: 'behance',
               pubDate: item.pubDate || '',
               enriched: Boolean(prev && prev.enriched),
-              hasVideo: mergedVideos.length > 0,
+              hasVideo: autoDetectedVideo,
+              videoDetectedOnly: mergedVideos.length === 0 && titleLooksLikeVideo,
               videos: mergedVideos,
               roleEn: 'Behance Published Project',
               roleAr: 'مشروع منشور على Behance',
@@ -1567,8 +1575,10 @@
       if (a.textContent.includes('+')) a.innerHTML = `<span>WhatsApp · +${cfg.whatsapp}</span>`;
     });
 
-    document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
-      a.href = `mailto:${cfg.email}`;
+    document.querySelectorAll('a[href^="mailto:"], #footerEmailLink').forEach(a => {
+      a.href = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(cfg.email || 'hkerlos@gmail.com')}`;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
     });
 
     const footerLoc = document.querySelector('footer .text-\\[11px\\].text-\\[\\#B97B2E\\]');
@@ -1597,7 +1607,7 @@
       const msg = document.getElementById('inq-msg').value.trim();
       const subject = encodeURIComponent(`Design Inquiry (${service}) — ${name}`);
       const body = encodeURIComponent(`Name: ${name}\nService: ${service}\n\n${msg}`);
-      window.location.href = `mailto:${cfg.email}?subject=${subject}&body=${body}`;
+      window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(cfg.email || 'hkerlos@gmail.com')}&su=${subject}&body=${body}`, '_blank', 'noopener,noreferrer');
       closeContactModal();
     };
     window.sendViaEmail = sendViaEmail;
