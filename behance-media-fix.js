@@ -1,5 +1,44 @@
 (function () {
   const FB_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
+  const PROFILE_URL = 'https://www.behance.net/kerloshany11';
+
+  function resolveProjectBehanceUrl(project) {
+    if (project && typeof project.url === 'string' && /behance\.net\/gallery\//i.test(project.url.trim())) {
+      return project.url.trim();
+    }
+    const id = window.currentModalProjectId;
+    const list = Array.isArray(window.projectsData) ? window.projectsData : [];
+    const cur = id ? list.find(p => p && p.id === id) : null;
+    if (cur && typeof cur.url === 'string' && /behance\.net\/gallery\//i.test(cur.url.trim())) {
+      return cur.url.trim();
+    }
+    const modalLink = document.getElementById('pm-behance-link');
+    if (modalLink && modalLink.href && /behance\.net\/gallery\//i.test(modalLink.href)) {
+      return modalLink.href;
+    }
+    return PROFILE_URL;
+  }
+
+  function wireBehanceButtons(project) {
+    const targetUrl = resolveProjectBehanceUrl(project);
+
+    const pmLink = document.getElementById('pm-behance-link');
+    if (pmLink) {
+      pmLink.href = targetUrl;
+      pmLink.target = '_blank';
+      pmLink.rel = 'noopener noreferrer';
+      pmLink.style.display = '';
+    }
+
+    const streamEl = document.getElementById('pm-media-stream');
+    if (streamEl) {
+      streamEl.querySelectorAll('a[href*="behance.net"]').forEach((a) => {
+        a.href = targetUrl;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+      });
+    }
+  }
 
   function classifyMediaUrl(raw) {
     if (!raw || typeof raw !== 'string') return null;
@@ -56,21 +95,23 @@
   function polishModalMedia(project) {
     const streamEl = document.getElementById('pm-media-stream');
     if (!streamEl || !project) return;
+    if (streamEl.dataset.khPolished === '1') {
+      wireBehanceButtons(project);
+      return;
+    }
+
     const isAr = typeof currentLang !== 'undefined' && currentLang === 'ar';
     const title = isAr ? (project.titleAr || project.titleEn || '') : (project.titleEn || project.titleAr || '');
-    const behanceHref = (project.url && /behance\.net\/gallery\//i.test(project.url))
-      ? project.url
-      : 'https://www.behance.net/kerloshany11';
+    const behanceHref = resolveProjectBehanceUrl(project);
 
-    // 1. Fix all images inside #pm-media-stream to equal width & clean fallback
     const allImgs = [...streamEl.querySelectorAll('img')];
     const validImgs = [];
     const seenSrc = new Set();
 
     allImgs.forEach((img) => {
       const src = (img.currentSrc || img.getAttribute('src') || '').trim();
+      const fig = img.closest('figure');
       if (!src || seenSrc.has(src)) {
-        const fig = img.closest('figure');
         if (fig) fig.remove();
         return;
       }
@@ -90,8 +131,8 @@
             return;
           }
         } catch (e) {}
-        const fig = this.closest('figure') || this.parentElement;
-        if (fig) fig.remove();
+        const parentFig = this.closest('figure') || this.parentElement;
+        if (parentFig) parentFig.remove();
       };
       validImgs.push(img);
     });
@@ -113,7 +154,6 @@
       streamEl.appendChild(wrap);
     }
 
-    // 2. Fix blocked Adobe CCV iframes in #pm-media-stream
     streamEl.querySelectorAll('iframe').forEach((ifr) => {
       const src = ifr.getAttribute('src') || '';
       if (/www-ccv\.adobe\.io/i.test(src)) {
@@ -122,7 +162,7 @@
         card.innerHTML = `
           <div class="space-y-1 text-center sm:text-start">
             <div class="text-sm font-bold text-[#F2EADF]">${isAr ? 'فيديو Behance المدمج' : 'Behance Embedded Video'}</div>
-            <div class="text-xs text-[#9A9186]">${isAr ? 'مشغل Adobe يمنع التشغيل المباشر خارج Behance. افتح المشروع لمشاهدة الفيديو بجودته الكاملة.' : 'Adobe player blocks external playback. Open on Behance to watch the video.'}</div>
+            <div class="text-xs text-[#9A9186]">${isAr ? 'مشغل Adobe يمنع التشغيل المباشر خارج Behance. افتح صفحة المشروع لمشاهدة الفيديو بجودته الكاملة.' : 'Adobe player blocks external playback. Open the project page to watch the full video.'}</div>
           </div>
           <a href="${behanceHref}" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#060D0C] text-xs font-extrabold shrink-0">${isAr ? 'مشاهدة على Behance ↗' : 'WATCH ON BEHANCE ↗'}</a>
         `;
@@ -131,6 +171,9 @@
         else ifr.replaceWith(card);
       }
     });
+
+    streamEl.dataset.khPolished = '1';
+    wireBehanceButtons(project);
   }
 
   function hookModal() {
@@ -138,17 +181,18 @@
       window.__khMediaPatchHooked = true;
       const prevOpen = window.openProjectModal;
       window.openProjectModal = function (id, focusVideo) {
+        const streamEl = document.getElementById('pm-media-stream');
+        if (streamEl) delete streamEl.dataset.khPolished;
         const res = prevOpen.apply(this, arguments);
         const list = Array.isArray(window.projectsData) ? window.projectsData : [];
         const proj = list.find((item) => item && item.id === id);
-        setTimeout(() => polishModalMedia(proj), 60);
-        setTimeout(() => polishModalMedia(proj), 400);
+        wireBehanceButtons(proj);
+        setTimeout(() => polishModalMedia(proj), 80);
         return res;
       };
     }
   }
 
-  // Helper to attach extra images or videos to any project and save to Firebase
   window.addProjectMedia = async function (projectIdOrUrl, mediaUrls) {
     const urls = Array.isArray(mediaUrls) ? mediaUrls : [mediaUrls];
     const list = Array.isArray(window.projectsData) ? window.projectsData : [];
@@ -198,6 +242,8 @@
       });
     }
 
+    const streamEl = document.getElementById('pm-media-stream');
+    if (streamEl) delete streamEl.dataset.khPolished;
     if (typeof window.renderProjects === 'function') window.renderProjects();
     if (typeof window.openProjectModal === 'function') window.openProjectModal(proj.id);
     console.log('Media added & saved:', proj.titleEn);
