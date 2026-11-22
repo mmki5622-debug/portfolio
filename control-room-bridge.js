@@ -36,7 +36,7 @@
       typography: {
         customFonts: [],
         fontAr: 'Cairo',
-        fontEn: 'Syne',
+        fontEn: 'Plus Jakarta Sans',
         fontAccent: 'Playfair Display',
         baseFontSize: 16,
         headingScale: 100,
@@ -368,12 +368,7 @@
         line-height: ${headingLH} !important;
       }
       #top h1 {
-        font-family: '${safeEn}', 'Space Grotesk', '${safeAr}', sans-serif !important;
-        font-weight: 800 !important;
         font-size: calc(clamp(2.25rem, 4.5vw, 3.75rem) * ${hScale}) !important;
-      }
-      html[dir="rtl"] #top h1 {
-        font-family: '${safeAr}', '${safeEn}', sans-serif !important;
       }
       section h2 {
         font-size: calc(clamp(1.875rem, 3.6vw, 3rem) * ${hScale}) !important;
