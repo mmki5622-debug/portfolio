@@ -1,0 +1,136 @@
+name: Sync Behance to Firebase
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install chromium
+
+      - name: Scrape Behance and Save to Firebase
+        run: |
+          node << 'EOF'
+          const { chromium } = require('playwright');
+
+          const PROFILE_URL = 'https://www.behance.net/kerloshany11';
+          const FB_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const context = await browser.newContext({
+              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+              viewport: { width: 1440, height: 900 }
+            });
+            const page = await context.newPage();
+
+            console.log('Opening Behance profile...');
+            await page.goto(PROFILE_URL, { waitUntil: 'domcontentloaded', timeout: 45000 });
+            await page.waitForTimeout(3000);
+
+            // Scroll to load projects
+            for (let i = 0; i < 4; i++) {
+              await page.mouse.wheel(0, 1500);
+              await page.waitForTimeout(1000);
+            }
+
+            const links = await page.evaluate(() => {
+              return [...new Set(
+                [...document.querySelectorAll('a[href*="/gallery/"]')]
+                  .map(a => a.href.split('?')[0])
+              )];
+            });
+
+            console.log(`Found ${links.length} projects.`);
+
+            const prio = { fs: 5, source: 5, '2800_opt_1': 4, '1400': 4, max_1200: 3, disp: 2 };
+
+            for (const url of links.slice(0, 15)) {
+              const idMatch = url.match(/gallery\/(\d+)/);
+              if (!idMatch) continue;
+              const key = 'bh_' + idMatch[1];
+
+              try {
+                await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
+                await page.waitForTimeout(2500);
+                const rawHtml = await page.content();
+                const html = rawHtml.replace(/\\u002F|\\\//g, '/').replace(/&amp;/g, '&');
+
+                const map = new Map();
+                const order = [];
+                const imgRx = /https:\/\/mir-s3-cdn-cf\.behance\.net\/project_modules\/([^\/\s"'<>)]+)\/([^"'\s<>)?]+)/gi;
+                let m;
+                while ((m = imgRx.exec(html)) !== null) {
+                  const fileKey = m[2].toLowerCase();
+                  const p = prio[m[1].toLowerCase()] || 1;
+                  if (!fileKey || fileKey.includes('spacer.gif')) continue;
+                  if (!map.has(fileKey)) {
+                    order.push(fileKey);
+                    map.set(fileKey, { u: m[0], p });
+                  } else if (p > map.get(fileKey).p) {
+                    map.set(fileKey, { u: m[0], p });
+                  }
+                }
+
+                const mediaGallery = order.map((k, i) => ({
+                  src: map.get(k).u,
+                  srcCandidates: [map.get(k).u],
+                  captionEn: `Behance Board 0${i + 1}`,
+                  captionAr: `لوحة عرض المشروع 0${i + 1}`
+                }));
+
+                const videos = [];
+                const seenV = new Set();
+                const addV = (u, kind) => {
+                  const k = u.split('?')[0];
+                  if (!seenV.has(k)) {
+                    seenV.add(k);
+                    videos.push({ url: u, kind });
+                  }
+                };
+
+                for (const x of html.matchAll(/https:\/\/www-ccv\.adobe\.io\/v1\/player\/ccv\/[a-zA-Z0-9_-]+\/embed(?:\?[^"'\s<>)]*)?/gi)) addV(x[0], 'iframe');
+                for (const x of html.matchAll(/"ccv_id"\s*:\s*"([a-zA-Z0-9_-]{8,})"/gi)) addV(`https://www-ccv.adobe.io/v1/player/ccv/${x[1]}/embed?api_key=behance1&bgcolor=%23021411`, 'iframe');
+                for (const x of html.matchAll(/https:\/\/player\.vimeo\.com\/video\/\d+/gi)) addV(x[0], 'iframe');
+                for (const x of html.matchAll(/https:\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\/[a-zA-Z0-9_-]{11}/gi)) addV(x[0], 'iframe');
+                for (const x of html.matchAll(/https:\/\/[^"'\s<>)]+\.mp4(?:\?[^"'\s<>)]*)?/gi)) addV(x[0], 'mp4');
+
+                const hasVideo = videos.length > 0 || /"type"\s*:\s*"video"|"module_type"\s*:\s*"video"/i.test(html);
+
+                if (mediaGallery.length > 0 || videos.length > 0) {
+                  const res = await fetch(`${FB_URL}/behanceCache/${key}.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      url,
+                      mediaGallery,
+                      videos,
+                      hasVideo,
+                      videoDetectedOnly: hasVideo && videos.length === 0,
+                      enriched: true,
+                      updatedAt: Date.now()
+                    })
+                  });
+                  console.log(`Saved ${key}: ${mediaGallery.length} boards, ${videos.length} videos (HTTP ${res.status})`);
+                }
+              } catch (err) {
+                console.warn(`Failed ${url}:`, err.message);
+              }
+            }
+
+            await browser.close();
+            console.log('Done!');
+          })();
+          EOF
