@@ -59,7 +59,7 @@
   <!-- Fonts: Space Grotesk (Display), Space Mono (Editorial Meta), Inter, Cairo & Tajawal -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -384,39 +384,49 @@
     }
 
 
-    /* Luxury Animated Sheen Sweep on Hero Headline Text */
+    /* Hero Headline Font & Luxury Sheen Sweep */
+    #top h1 {
+      font-family: 'Syne', 'Space Grotesk', 'Cairo', sans-serif !important;
+      font-weight: 800 !important;
+      font-size: clamp(2.75rem, 5.2vw, 4.75rem) !important;
+      letter-spacing: -0.02em;
+    }
+    html[dir="rtl"] #top h1 {
+      font-family: 'Cairo', 'Syne', sans-serif !important;
+      letter-spacing: 0;
+    }
     .hero-sheen-light {
       background: linear-gradient(
         115deg,
         #F2EADF 0%,
-        #F2EADF 38%,
-        #FFFFFF 49%,
-        #F7DFC4 53%,
+        #F2EADF 36%,
+        #FFFFFF 48%,
+        #F7DFC4 52%,
         #F2EADF 64%,
         #F2EADF 100%
       );
-      background-size: 240% 100%;
+      background-size: 230% 100%;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent !important;
-      animation: khTextSheen 4.8s ease-in-out infinite;
+      animation: khTextSheen 4.5s ease-in-out infinite;
     }
     .hero-sheen-copper {
       background: linear-gradient(
         115deg,
         #A06620 0%,
         #C59367 34%,
-        #FFF3E2 49%,
-        #E2B483 56%,
-        #C59367 70%,
+        #FFF3E2 48%,
+        #E2B483 54%,
+        #C59367 68%,
         #A06620 100%
       );
-      background-size: 240% 100%;
+      background-size: 230% 100%;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent !important;
-      animation: khTextSheen 4.8s ease-in-out infinite;
-      animation-delay: 0.35s;
+      animation: khTextSheen 4.5s ease-in-out infinite;
+      animation-delay: 0.3s;
     }
     @keyframes khTextSheen {
       0% { background-position: 130% 0; }
@@ -1660,11 +1670,11 @@
 
       const imgsHtml = imgs.map((m, i) => `
         <figure class="w-full bg-[#060D0C] flex justify-center">
-          <img src="${(m.srcCandidates && m.srcCandidates[0]) || m.src}" alt="${title} — ${i + 1}" class="w-full max-w-4xl h-auto block" loading="lazy" />
+          <img src="${(m.srcCandidates && m.srcCandidates[0]) || m.src}" alt="${title} — ${i + 1}" class="w-full max-w-[680px] max-h-[76vh] object-contain mx-auto block" loading="lazy" />
         </figure>
       `).join('');
 
-      streamEl.innerHTML = audioHtml + vidsHtml + `<div class="max-w-4xl mx-auto rounded-2xl overflow-hidden border border-[#C59367]/25 bg-[#060D0C] shadow-2xl">${imgsHtml}</div>`;
+      streamEl.innerHTML = audioHtml + vidsHtml + `<div class="max-w-[680px] mx-auto rounded-2xl overflow-hidden border border-[#C59367]/25 bg-[#060D0C] shadow-2xl">${imgsHtml}</div>`;
       if (countEl) {
         if (currentLang === 'ar') {
           countEl.textContent = vids.length > 0
