@@ -1,6 +1,6 @@
 (function () {
   const DEFAULT_FIREBASE_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
-  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_v11';
+  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_permanent_v1';
 
   function getDefaultConfig() {
     return {
@@ -367,14 +367,7 @@
       h1, h2, h3, h4 {
         line-height: ${headingLH} !important;
       }
-      #top h1 {
-        font-family: 'Space Grotesk', 'Cairo', sans-serif !important;
-        font-weight: 700 !important;
-        font-size: clamp(2.5rem, 4.6vw, 4.25rem) !important;
-      }
-      html[dir="rtl"] #top h1 {
-        font-family: '${safeAr}', '${safeEn}', sans-serif !important;
-      }
+      /* #top h1 locked in index.html to prevent any post-load resize */
       section h2 {
         font-size: calc(clamp(1.875rem, 3.6vw, 3rem) * ${hScale}) !important;
       }
@@ -768,6 +761,53 @@
     }
   }
 
+  function getBehanceFirebaseKey(url) {
+    if (!url || typeof url !== 'string') return '';
+    const m = url.match(/behance\.net\/gallery\/(\d+)/i);
+    if (m) return 'bh_' + m[1];
+    return 'bh_' + url.replace(/[^a-zA-Z0-9]/g, '_').slice(-40);
+  }
+
+  function getActiveFirebaseBaseUrl() {
+    const u = (activeAppliedConfig && activeAppliedConfig.firebaseUrl) || DEFAULT_FIREBASE_URL;
+    return String(u || '').replace(/\/+$/, '');
+  }
+
+  async function loadFirebaseBehanceCache(fbUrlOverride) {
+    const fb = String(fbUrlOverride || getActiveFirebaseBaseUrl()).replace(/\/+$/, '');
+    if (!fb) return {};
+    try {
+      const r = await fetchWithTimeout(`${fb}/behanceCache.json`, 5000);
+      if (!r.ok) return {};
+      const data = await r.json();
+      return (data && typeof data === 'object') ? data : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  async function saveProjectToFirebaseBehanceCache(p) {
+    if (!p || !p.url || !p.enriched) return;
+    const fb = getActiveFirebaseBaseUrl();
+    const key = getBehanceFirebaseKey(p.url);
+    if (!fb || !key) return;
+    try {
+      await fetch(`${fb}/behanceCache/${key}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: p.url,
+          mediaGallery: Array.isArray(p.mediaGallery) ? p.mediaGallery : [],
+          videos: Array.isArray(p.videos) ? p.videos : [],
+          hasVideo: Boolean(p.hasVideo),
+          videoDetectedOnly: Boolean(p.videoDetectedOnly),
+          enriched: true,
+          updatedAt: Date.now()
+        })
+      });
+    } catch (e) {}
+  }
+
   function saveBehanceCache(items) {
     try {
       localStorage.setItem(BEHANCE_ENHANCED_CACHE_KEY, JSON.stringify(items));
@@ -775,12 +815,19 @@
   }
 
   function loadBehanceCache() {
-    try {
-      const arr = JSON.parse(localStorage.getItem(BEHANCE_ENHANCED_CACHE_KEY) || '[]');
-      return Array.isArray(arr) ? arr : [];
-    } catch (e) {
-      return [];
+    const keysToTry = [
+      BEHANCE_ENHANCED_CACHE_KEY,
+      'kh_behance_projects_v11',
+      'kh_behance_projects_v10',
+      'kh_behance_projects_v9'
+    ];
+    for (const k of keysToTry) {
+      try {
+        const arr = JSON.parse(localStorage.getItem(k) || '[]');
+        if (Array.isArray(arr) && arr.length > 0) return arr;
+      } catch (e) {}
     }
+    return [];
   }
 
   /* --------------------------------------------------------------------------
@@ -1440,6 +1487,10 @@
 
         applyBehanceOverridesToProject(p, activeAppliedConfig);
 
+        if (p.enriched) {
+          saveProjectToFirebaseBehanceCache(p);
+        }
+
         const behanceList = projectsData.filter(item => item.source === 'behance');
         saveBehanceCache(behanceList);
         renderProjects();
@@ -1487,6 +1538,7 @@
         if (rawFeedItems.length > 0) {
           const previousCached = loadBehanceCache();
           const prevByUrl = new Map(previousCached.map(x => [x.url, x]));
+          const fbBehanceCache = await loadFirebaseBehanceCache();
 
           const liveItems = rawFeedItems.slice(0, 12).map((item, idx) => {
             const rawHtml = item.content || item.description || '';
@@ -1502,7 +1554,9 @@
             const hdThumbCandidates = upgradeImageCandidates(rawThumb);
             const cleanDesc = rawHtml.replace(/<[^>]*>/g, '').trim().slice(0, 220) || 'Published portfolio project on Behance by Kerlos Hany Nassif.';
             const projectUrl = item.link || 'https://www.behance.net/kerloshany11';
-            const prev = prevByUrl.get(projectUrl);
+            const fbPrev = fbBehanceCache[getBehanceFirebaseKey(projectUrl)] || null;
+            const localPrev = prevByUrl.get(projectUrl) || null;
+            const prev = (fbPrev && fbPrev.enriched) ? fbPrev : localPrev;
 
             const mergedVideos = videos.length > 0 ? videos : (prev && Array.isArray(prev.videos) ? prev.videos : []);
             const mergedGallery = (prev && prev.enriched && Array.isArray(prev.mediaGallery) && prev.mediaGallery.length > 0)
@@ -1517,7 +1571,7 @@
 
             const combinedText = `${item.title || ''} ${cleanDesc}`;
             const titleLooksLikeVideo = /\b(ads?|video|motion|reel|reels|animation|cgi|fooh|reveal|commercial|promo|film|3d\s*\+\s*ai|showreel|teaser|spot)\b|(فيديو|موشن|إعلان|اعلان|تحريك|ريلز|إعلانات|اعلانات)/i.test(combinedText);
-            const autoDetectedVideo = mergedVideos.length > 0 || titleLooksLikeVideo;
+            const autoDetectedVideo = mergedVideos.length > 0 || Boolean(prev && prev.hasVideo) || titleLooksLikeVideo;
 
             return {
               id: `behance-${idx}-${(item.guid || projectUrl).toString().slice(-8)}`,
@@ -1526,7 +1580,7 @@
               pubDate: item.pubDate || '',
               enriched: Boolean(prev && prev.enriched),
               hasVideo: autoDetectedVideo,
-              videoDetectedOnly: mergedVideos.length === 0 && titleLooksLikeVideo,
+              videoDetectedOnly: mergedVideos.length === 0 && (Boolean(prev && prev.videoDetectedOnly) || titleLooksLikeVideo),
               videos: mergedVideos,
               roleEn: 'Behance Published Project',
               roleAr: 'مشروع منشور على Behance',
@@ -1552,8 +1606,11 @@
 
           (async () => {
             const pending = liveItems.filter(item => !item.enriched);
-            for (let i = 0; i < pending.length; i += 3) {
-              await Promise.all(pending.slice(i, i + 3).map(item => enrichBehanceProjectMedia(item)));
+            for (const item of pending) {
+              if (!item.enriched && !item.enriching) {
+                await enrichBehanceProjectMedia(item);
+                await new Promise(r => setTimeout(r, 3000));
+              }
             }
           })();
         }
