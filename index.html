@@ -388,7 +388,7 @@
     #top h1 {
       font-family: 'Space Grotesk', 'Cairo', sans-serif !important;
       font-weight: 700 !important;
-      font-size: clamp(2.25rem, 4.4vw, 3.75rem) !important;
+      font-size: clamp(2.5rem, 4.6vw, 4.25rem) !important;
       letter-spacing: -0.03em;
     }
     html[dir="rtl"] #top h1 {
@@ -532,7 +532,7 @@
           </div>
         </div>
 
-        <h1 class="font-display font-bold uppercase text-5xl sm:text-7xl lg:text-[5.5rem] leading-[0.94] tracking-tight">
+        <h1 class="font-display font-bold uppercase leading-[0.94] tracking-tight">
           <span class="block hero-sheen-light" data-i18n="heroTitle1">BUILDING BOLD</span>
           <span class="block hero-sheen-copper" data-i18n="heroTitle2">BRAND WORLDS</span>
           <span class="block hero-sheen-copper" data-i18n="heroTitle3">&amp; 3D REALITIES</span>
@@ -1917,7 +1917,7 @@
 
       renderProjects();
       FlashMediaDeck.init();
-      syncBehanceProjects();
+      if (!window.KHControlRoom) syncBehanceProjects();
 
       document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {

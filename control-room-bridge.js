@@ -1,6 +1,6 @@
 (function () {
   const DEFAULT_FIREBASE_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
-  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_v10';
+  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_v11';
 
   function getDefaultConfig() {
     return {
@@ -368,7 +368,12 @@
         line-height: ${headingLH} !important;
       }
       #top h1 {
-        font-size: calc(clamp(2.25rem, 4.5vw, 3.75rem) * ${hScale}) !important;
+        font-family: 'Space Grotesk', 'Cairo', sans-serif !important;
+        font-weight: 700 !important;
+        font-size: clamp(2.5rem, 4.6vw, 4.25rem) !important;
+      }
+      html[dir="rtl"] #top h1 {
+        font-family: '${safeAr}', '${safeEn}', sans-serif !important;
       }
       section h2 {
         font-size: calc(clamp(1.875rem, 3.6vw, 3rem) * ${hScale}) !important;
@@ -736,7 +741,7 @@
     for (const fn of proxies) {
       try {
         const txt = await fn();
-        if (txt && txt.length > 150 && (!isGalleryPage || /project_modules|behance\.net|ccv_id/i.test(txt))) {
+        if (txt && txt.length > 150 && (!isGalleryPage || /project_modules|ccv_id|player\.vimeo\.com|youtube\.com\/embed/i.test(txt))) {
           return txt;
         }
       } catch (e) {}
@@ -1409,7 +1414,9 @@
         if (!html) return;
 
         const { videos, images, hasVideoSignature } = extractBehanceVideosAndImages(html, p.image);
-        p.enriched = true;
+        if (images.length > 1 || videos.length > 0 || hasVideoSignature) {
+          p.enriched = true;
+        }
 
         if (videos.length > 0) {
           p.videos = videos;
