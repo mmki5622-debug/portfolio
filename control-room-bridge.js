@@ -1356,15 +1356,48 @@
       }
 
       const imageOnlyGallery = (Array.isArray(p.mediaGallery) ? p.mediaGallery : [])
-        .filter(m => !classifyVideoUrl(m.src))
-        .map(m => ({
-          ...m,
-          srcCandidates: upgradeImageCandidates(m.src)
-        }));
-      const clonedProject = { ...p, videos: [], extraBoards: [], mediaGallery: imageOnlyGallery };
+        .filter(m => m && m.src && !classifyVideoUrl(m.src))
+        .map(m => {
+          const cands = [...new Set([...(Array.isArray(m.srcCandidates) ? m.srcCandidates : []), ...upgradeImageCandidates(m.src), m.src].filter(Boolean))];
+          return {
+            ...m,
+            src: cands[0] || m.src,
+            srcCandidates: cands
+          };
+        });
 
-      if (imageOnlyGallery.length > 0 && typeof origRenderMediaStream === 'function') {
-        origRenderMediaStream(clonedProject);
+      if (imageOnlyGallery.length > 0 && streamEl) {
+        const title = lang === 'ar' ? (p.titleAr || p.titleEn) : (p.titleEn || p.titleAr);
+        const imgsHtml = imageOnlyGallery.map((m, i) => {
+          const encCands = encodeURIComponent(JSON.stringify(m.srcCandidates || [m.src]));
+          const firstSrc = (m.srcCandidates && m.srcCandidates[0]) || m.src;
+          return `
+            <figure class="w-full bg-[#060D0C] flex justify-center">
+              <img
+                src="${firstSrc}"
+                data-cands="${encCands}"
+                data-cidx="0"
+                alt="${title} — ${i + 1}"
+                class="w-full h-auto block"
+                loading="lazy"
+                onerror="(function(el){
+                  try {
+                    const list = JSON.parse(decodeURIComponent(el.getAttribute('data-cands')||'[]'));
+                    let idx = parseInt(el.getAttribute('data-cidx')||'0', 10) + 1;
+                    if (idx < list.length) {
+                      el.setAttribute('data-cidx', String(idx));
+                      el.src = list[idx];
+                      return;
+                    }
+                  } catch(e){}
+                  const fig = el.closest('figure');
+                  if (fig) fig.remove();
+                })(this)"
+              />
+            </figure>
+          `;
+        }).join('');
+        streamEl.innerHTML = `<div class="w-fit max-w-[92vw] sm:max-w-[540px] mx-auto rounded-2xl overflow-hidden border border-[#C59367]/30 bg-[#060D0C] shadow-2xl">${imgsHtml}</div>`;
       } else if (streamEl) {
         streamEl.innerHTML = (p.audioUrl && String(p.audioUrl).trim()) ? `
           <div class="p-4 rounded-2xl bg-[#0A0908] border border-[#C59367]/45 flex flex-wrap items-center justify-between gap-3">
