@@ -1,6 +1,6 @@
 (function () {
   const DEFAULT_FIREBASE_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
-  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_v9';
+  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_v10';
 
   function getDefaultConfig() {
     return {
@@ -36,7 +36,7 @@
       typography: {
         customFonts: [],
         fontAr: 'Cairo',
-        fontEn: 'Plus Jakarta Sans',
+        fontEn: 'Syne',
         fontAccent: 'Playfair Display',
         baseFontSize: 16,
         headingScale: 100,
@@ -368,7 +368,12 @@
         line-height: ${headingLH} !important;
       }
       #top h1 {
+        font-family: '${safeEn}', 'Space Grotesk', '${safeAr}', sans-serif !important;
+        font-weight: 800 !important;
         font-size: calc(clamp(2.25rem, 4.5vw, 3.75rem) * ${hScale}) !important;
+      }
+      html[dir="rtl"] #top h1 {
+        font-family: '${safeAr}', '${safeEn}', sans-serif !important;
       }
       section h2 {
         font-size: calc(clamp(1.875rem, 3.6vw, 3rem) * ${hScale}) !important;
@@ -571,12 +576,45 @@
       images.push(fallbackThumb);
     }
 
+    const videoUrlsFound = [];
+    const seenV = new Set();
+    const pushRawV = (u) => {
+      const c = classifyVideoUrl(u);
+      if (c && !seenV.has(c.url.split('?')[0])) {
+        seenV.add(c.url.split('?')[0]);
+        videoUrlsFound.push(c);
+      }
+    };
+
+    const extraPatterns = [
+      /https:\/\/player\.vimeo\.com\/video\/[^"'\s<>)]+/gi,
+      /https:\/\/vimeo\.com\/\d+/gi,
+      /https:\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/(?:embed|watch\?v=|shorts)\/[a-zA-Z0-9_-]{11}[^"'\s<>)]*/gi,
+      /https:\/\/youtu\.be\/[a-zA-Z0-9_-]{11}/gi,
+      /https:\/\/[^"'\s<>)]+\.(?:mp4|webm|m3u8)(?:\?[^"'\s<>)]*)?/gi,
+      /"video_url"\s*:\s*"([^"]+)"/gi,
+      /"stream_url"\s*:\s*"([^"]+)"/gi,
+      /"embed_url"\s*:\s*"([^"]+)"/gi
+    ];
+    extraPatterns.forEach((rx) => {
+      let match;
+      while ((match = rx.exec(html)) !== null) {
+        pushRawV(match[1] || match[0]);
+      }
+    });
+    videoUrlsFound.forEach((v) => {
+      if (!videos.some((ex) => ex.url.split('?')[0] === v.url.split('?')[0])) {
+        videos.push(v);
+      }
+    });
+
     const hasVideoSignature = videos.length > 0 ||
       /"type"\s*:\s*"video"/i.test(html) ||
       /"module_type"\s*:\s*"video"/i.test(html) ||
+      /"has_video"\s*:\s*true/i.test(html) ||
       /<video[\s>]/i.test(html) ||
-      /\.m3u8(?:\?|"|')/i.test(html) ||
-      /www-ccv\.adobe\.io/i.test(html);
+      /\.(?:mp4|m3u8|webm)(?:\?|"|')/i.test(html) ||
+      /www-ccv\.adobe\.io|vimeo\.com|youtube\.com|youtu\.be/i.test(html);
 
     return { videos, images, hasVideoSignature };
   }
@@ -1475,7 +1513,8 @@
                   captionAr: `لوحة عرض المشروع من Behance 0${bIdx + 1}`
                 }));
 
-            const titleLooksLikeVideo = /\b(ads?|video|motion|reel|animation|cgi|fooh|reveal|commercial|promo|film|3d\s*\+\s*ai)\b|(فيديو|موشن|إعلان|اعلان|تحريك|ريلز)/i.test(item.title || '');
+            const combinedText = `${item.title || ''} ${cleanDesc}`;
+            const titleLooksLikeVideo = /\b(ads?|video|motion|reel|reels|animation|cgi|fooh|reveal|commercial|promo|film|3d\s*\+\s*ai|showreel|teaser|spot)\b|(فيديو|موشن|إعلان|اعلان|تحريك|ريلز|إعلانات|اعلانات)/i.test(combinedText);
             const autoDetectedVideo = mergedVideos.length > 0 || titleLooksLikeVideo;
 
             return {
