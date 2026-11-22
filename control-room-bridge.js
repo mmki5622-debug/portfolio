@@ -559,7 +559,14 @@
       images.push(fallbackThumb);
     }
 
-    return { videos, images };
+    const hasVideoSignature = videos.length > 0 ||
+      /"type"\s*:\s*"video"/i.test(html) ||
+      /"module_type"\s*:\s*"video"/i.test(html) ||
+      /<video[\s>]/i.test(html) ||
+      /\.m3u8(?:\?|"|')/i.test(html) ||
+      /www-ccv\.adobe\.io/i.test(html);
+
+    return { videos, images, hasVideoSignature };
   }
 
   function resolveContentType(p) {
@@ -1153,7 +1160,7 @@
             actionBar.className = 'kh-behance-action-bar px-5 sm:px-6 pb-5 pt-3 border-t border-[#6A5639]/25 flex flex-wrap items-center justify-between gap-2';
             const btnText = lang === 'ar' ? 'صفحة المشروع على Behance' : 'Behance Project';
             const watchText = hasVidAction
-              ? (lang === 'ar' ? '▶ مشاهدة الفيديو' : '▶ Watch Video')
+              ? (lang === 'ar' ? '▶ لمشاهدة الفيديو اضغط هنا' : '▶ Click here to watch video')
               : (lang === 'ar' ? 'معاينة المشروع ←' : 'Preview Case →');
             const rightAction = hasVidAction
               ? `<button type="button" onclick="event.stopPropagation(); openProjectModal('${p.id}')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#A06620] hover:bg-[#B97B2E] text-[11px] font-extrabold text-[#F5F4F0] shadow-md transition-all"><span>${watchText}</span></button>`
@@ -1308,12 +1315,17 @@
         const html = await fetchExternalTextWithFallback(p.url);
         if (!html) return;
 
-        const { videos, images } = extractBehanceVideosAndImages(html, p.image);
+        const { videos, images, hasVideoSignature } = extractBehanceVideosAndImages(html, p.image);
         p.enriched = true;
 
         if (videos.length > 0) {
           p.videos = videos;
           p.hasVideo = true;
+          p.videoDetectedOnly = false;
+          if (!p.tags.includes('Video')) p.tags = ['Behance', 'Video'];
+        } else if (hasVideoSignature) {
+          p.hasVideo = true;
+          p.videoDetectedOnly = true;
           if (!p.tags.includes('Video')) p.tags = ['Behance', 'Video'];
         }
         if (images.length > 0) {
@@ -1434,10 +1446,9 @@
           renderHeroFloatingCards(activeAppliedConfig);
 
           (async () => {
-            for (const item of liveItems) {
-              if (!item.enriched) {
-                await enrichBehanceProjectMedia(item);
-              }
+            const pending = liveItems.filter(item => !item.enriched);
+            for (let i = 0; i < pending.length; i += 3) {
+              await Promise.all(pending.slice(i, i + 3).map(item => enrichBehanceProjectMedia(item)));
             }
           })();
         }

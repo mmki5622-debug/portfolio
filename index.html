@@ -1437,6 +1437,11 @@
         }
       }
       if (!firstVid) {
+        const bhUrl = getProjectBehanceLink(p.url);
+        if (p.videoDetectedOnly && bhUrl) {
+          window.open(bhUrl, '_blank', 'noopener,noreferrer');
+          return;
+        }
         openProjectModal(projectId, true);
         return;
       }
@@ -1529,8 +1534,11 @@
                   </span>
                 </div>
                 ${meta.hasVid ? `
-                  <button type="button" onclick="playCardInlineVideo(event, '${p.id}')" title="${currentLang === 'ar' ? 'تشغيل الفيديو داخل الكارت' : 'Play video inline'}" class="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/15 transition-colors z-10">
+                  <button type="button" onclick="playCardInlineVideo(event, '${p.id}')" title="${currentLang === 'ar' ? 'لمشاهدة الفيديو اضغط هنا' : 'Click here to watch video'}" class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/35 hover:bg-black/20 transition-colors z-10">
                     <span class="w-14 h-10 rounded-xl bg-red-600/95 hover:bg-red-600 text-white flex items-center justify-center text-lg shadow-2xl border border-white/20 transition-transform group-hover:scale-110">▶</span>
+                    <span class="px-3.5 py-1 rounded-full bg-[#0A0908]/90 border border-[#C59367]/70 text-[#F2EADF] font-bold text-[11px] shadow-xl">
+                      ${currentLang === 'ar' ? 'لمشاهدة الفيديو اضغط هنا' : 'Click here to watch video'}
+                    </span>
                   </button>
                 ` : ''}
               </div>
@@ -1557,7 +1565,7 @@
                 ? `<a href="${behanceUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="px-3.5 py-1.5 rounded-full border border-[#C59367]/50 bg-[#0E3E3F]/45 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#0A0908] font-bold transition-all">${currentLang === 'ar' ? 'صفحة Behance ↗' : 'BEHANCE PAGE ↗'}</a>`
                 : '<span></span>'}
               ${meta.hasVid
-                ? `<button type="button" onclick="playCardInlineVideo(event, '${p.id}')" class="px-3.5 py-1.5 rounded-full bg-[#C59367] hover:bg-[#D4A478] text-[#0A0908] font-bold transition-all">${currentLang === 'ar' ? '▶ تشغيل هنا' : '▶ PLAY INLINE'}</button>`
+                ? `<button type="button" onclick="playCardInlineVideo(event, '${p.id}')" class="px-3.5 py-1.5 rounded-full bg-[#C59367] hover:bg-[#D4A478] text-[#0A0908] font-bold transition-all">${currentLang === 'ar' ? '▶ لمشاهدة الفيديو اضغط هنا' : '▶ Click here to watch video'}</button>`
                 : `<span class="text-[#C59367] font-bold">${currentLang === 'ar' ? 'عرض المشروع كامل ←' : 'OPEN CASE STUDY →'}</span>`}
             </div>
           </article>
