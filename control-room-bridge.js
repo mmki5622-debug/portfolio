@@ -1,6 +1,6 @@
 (function () {
   const DEFAULT_FIREBASE_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
-  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_v8';
+  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_v9';
 
   function getDefaultConfig() {
     return {
@@ -537,16 +537,28 @@
       }
     }
 
-    const images = [];
-    const seenImgs = new Set();
-    const modRegex = /https:\/\/mir-s3-cdn-cf\.behance\.net\/project_modules\/[^"'\s<>)]+/gi;
+    // Extract ALL unique Behance project_modules images (deduplicated by file hash, picking highest resolution)
+    const sizePriority = { fs: 5, source: 5, '2800_opt_1': 4, '1400': 4, max_1200: 3, disp: 2 };
+    const byFileKey = new Map();
+    const orderedKeys = [];
+    const modRegex = /https:\/\/mir-s3-cdn-cf\.behance\.net\/project_modules\/([^\/\s"'<>)]+)\/([^"'\s<>)?]+)/gi;
     while ((m = modRegex.exec(html)) !== null) {
-      if (!seenImgs.has(m[0])) {
-        seenImgs.add(m[0]);
-        images.push(m[0]);
+      const fullUrl = m[0];
+      const sizeFolder = (m[1] || '').toLowerCase();
+      const fileKey = (m[2] || '').toLowerCase();
+      if (!fileKey || /spacer\.gif/i.test(fileKey)) continue;
+      const prio = sizePriority[sizeFolder] || 1;
+      if (!byFileKey.has(fileKey)) {
+        orderedKeys.push(fileKey);
+        byFileKey.set(fileKey, { url: fullUrl, prio });
+      } else if (prio > byFileKey.get(fileKey).prio) {
+        byFileKey.set(fileKey, { url: fullUrl, prio });
       }
     }
+    const images = orderedKeys.map(k => byFileKey.get(k).url);
+
     if (images.length === 0) {
+      const seenImgs = new Set();
       const imgTagRegex = /<img[^>]+src=["']([^"']+)["']/gi;
       while ((m = imgTagRegex.exec(html)) !== null) {
         if (m[1] && !m[1].includes('spacer.gif') && !seenImgs.has(m[1])) {
@@ -650,28 +662,50 @@
     }
   }
 
+  async function fetchWithTimeout(url, ms = 7000) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    try {
+      const r = await fetch(url, { signal: ctrl.signal });
+      clearTimeout(t);
+      return r;
+    } catch (e) {
+      clearTimeout(t);
+      throw e;
+    }
+  }
+
   async function fetchExternalTextWithFallback(targetUrl) {
+    const isGalleryPage = /behance\.net\/gallery\//i.test(targetUrl);
     const proxies = [
       async () => {
-        const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`);
+        const r = await fetchWithTimeout(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`, 6500);
         if (!r.ok) return '';
         const d = await r.json();
         return (d && d.contents) || '';
       },
       async () => {
-        const r = await fetch(`https://corsproxy.io/?${encodeURIComponent(targetUrl)}`);
+        const r = await fetchWithTimeout(`https://corsproxy.io/?${encodeURIComponent(targetUrl)}`, 6500);
         return r.ok ? await r.text() : '';
       },
       async () => {
-        const r = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`);
+        const r = await fetchWithTimeout(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`, 6500);
         return r.ok ? await r.text() : '';
       }
     ];
+    if (isGalleryPage) {
+      proxies.unshift(async () => {
+        const r = await fetchWithTimeout(`https://r.jina.ai/${targetUrl}`, 8000);
+        return r.ok ? await r.text() : '';
+      });
+    }
 
     for (const fn of proxies) {
       try {
         const txt = await fn();
-        if (txt && txt.length > 80) return txt;
+        if (txt && txt.length > 150 && (!isGalleryPage || /project_modules|behance\.net|ccv_id/i.test(txt))) {
+          return txt;
+        }
       } catch (e) {}
     }
     return '';
@@ -1242,7 +1276,7 @@
           ...m,
           srcCandidates: upgradeImageCandidates(m.src)
         }));
-      const clonedProject = { ...p, mediaGallery: imageOnlyGallery };
+      const clonedProject = { ...p, videos: [], extraBoards: [], mediaGallery: imageOnlyGallery };
 
       if (imageOnlyGallery.length > 0 && typeof origRenderMediaStream === 'function') {
         origRenderMediaStream(clonedProject);
@@ -1289,10 +1323,29 @@
       } else if (streamEl && p.source === 'behance' && p.videoDetectedOnly && getSpecificBehanceProjectUrl(p.url)) {
         const watchBtnLabel = lang === 'ar'
           ? '▶ لمشاهدة الفيديو بجودته الكاملة على Behance اضغط هنا ↗'
-          : '▶ Click here to watch the full video on Behance ↗';
+          : '▶ Watch Full Video on Behance ↗';
         streamEl.insertAdjacentHTML(
           'afterbegin',
-          `<a href="${getSpecificBehanceProjectUrl(p.url)}" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-2xl bg-gradient-to-r from-[#C59367] to-[#A06620] hover:brightness-110 text-[#060D0C] text-xs sm:text-sm font-extrabold text-center shadow-lg transition-all">${watchBtnLabel}</a>`
+          `<div class="p-5 rounded-2xl bg-[#060D0C] border border-[#C59367]/45 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+            <div class="flex items-center gap-3">
+              <span class="w-11 h-9 rounded-xl bg-red-600 text-white flex items-center justify-center text-base shrink-0">▶</span>
+              <div>
+                <div class="text-xs sm:text-sm font-bold text-[#F2EADF]">${lang === 'ar' ? 'هذا المشروع يحتوي على فيديو' : 'This project includes a video'}</div>
+                <div class="text-[11px] text-[#9A9186]">${lang === 'ar' ? 'شاهد الفيديو مباشرة أو تصفّح كامل لوحات المشروع بالأسفل' : 'Watch the video or scroll below for the full project boards'}</div>
+              </div>
+            </div>
+            <a href="${getSpecificBehanceProjectUrl(p.url)}" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] hover:brightness-110 text-[#060D0C] text-xs font-extrabold shrink-0 transition-all">${watchBtnLabel}</a>
+          </div>`
+        );
+      }
+
+      if (streamEl && p.source === 'behance' && p.enriching) {
+        const loadMsg = lang === 'ar'
+          ? '⏳ جاري استيراد كامل لوحات وصور المشروع من Behance...'
+          : '⏳ Importing full Behance presentation sheet...';
+        streamEl.insertAdjacentHTML(
+          'afterbegin',
+          `<div id="pm-behance-loading" class="p-3.5 rounded-2xl bg-[#0E3E3F]/45 border border-[#C59367]/45 text-xs font-bold text-[#C59367] text-center animate-pulse">${loadMsg}</div>`
         );
       }
 
@@ -1315,6 +1368,9 @@
     enrichBehanceProjectMedia = async function (p) {
       if (!p || p.source !== 'behance' || !p.url || p.enriched || p.enriching) return;
       p.enriching = true;
+      if (typeof currentModalProjectId !== 'undefined' && currentModalProjectId === p.id) {
+        renderProjectMediaStream(p);
+      }
       try {
         const html = await fetchExternalTextWithFallback(p.url);
         if (!html) return;

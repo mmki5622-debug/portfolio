@@ -960,52 +960,55 @@
   </footer>
 
   <!-- ========================================================================
-       PROJECT CASE STUDY MODAL (#project-modal)
+       PROJECT FULL SHEET MODAL (#project-modal)
        ======================================================================== -->
-  <div id="project-modal" class="hidden fixed inset-0 z-50 bg-[#0A0908]/95 backdrop-blur-md items-center justify-center p-3 sm:p-6">
-    <div class="w-full max-w-5xl max-h-[92vh] rounded-3xl bg-[#0A1312] border border-[#C59367]/45 flex flex-col overflow-hidden shadow-2xl">
-      <div class="flex items-center justify-between gap-4 px-5 sm:px-7 py-4 bg-[#0A0908] border-b border-[#C59367]/25 shrink-0">
+  <div id="project-modal" class="hidden fixed inset-0 z-50 bg-[#0A0908]/95 backdrop-blur-md items-center justify-center p-2 sm:p-5">
+    <div class="w-full max-w-6xl max-h-[94vh] rounded-3xl bg-[#0A1312] border border-[#C59367]/40 flex flex-col overflow-hidden shadow-2xl">
+      <div class="flex items-center justify-between gap-4 px-5 sm:px-7 py-4 bg-[#060D0C] border-b border-[#C59367]/25 shrink-0">
         <div class="flex items-center gap-3 min-w-0">
-          <span id="pm-badge" class="px-3 py-1 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[10px] font-bold uppercase shrink-0">CASE STUDY</span>
-          <span id="pm-content-type" class="hidden px-2.5 py-1 border border-[#C59367]/45 text-[#C59367] font-mono text-[10px] font-bold uppercase shrink-0"></span>
+          <span id="pm-badge" class="px-3 py-1 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[10px] font-bold uppercase shrink-0">PROJECT</span>
+          <span id="pm-content-type" class="hidden px-2.5 py-1 rounded-full border border-[#C59367]/50 bg-[#0E3E3F]/50 text-[#F2EADF] font-mono text-[10px] font-bold uppercase shrink-0"></span>
           <h3 id="pm-title" class="font-display text-sm sm:text-lg font-bold uppercase text-[#F2EADF] truncate">Project Title</h3>
         </div>
         <div class="flex items-center gap-2 shrink-0">
-          <button onclick="navigateProjectModal(-1)" class="px-3 py-1.5 border border-[#C59367]/35 font-mono text-xs text-[#F2EADF] hover:border-[#C59367]">‹</button>
-          <button onclick="navigateProjectModal(1)" class="px-3 py-1.5 border border-[#C59367]/35 font-mono text-xs text-[#F2EADF] hover:border-[#C59367]">›</button>
-          <button onclick="closeProjectModal()" class="w-9 h-9 rounded-full bg-[#C59367] text-[#0A0908] font-bold text-sm">✕</button>
+          <button onclick="navigateProjectModal(-1)" title="Previous" class="w-9 h-9 rounded-full border border-[#C59367]/35 font-mono text-sm text-[#F2EADF] hover:border-[#C59367] transition-colors">‹</button>
+          <button onclick="navigateProjectModal(1)" title="Next" class="w-9 h-9 rounded-full border border-[#C59367]/35 font-mono text-sm text-[#F2EADF] hover:border-[#C59367] transition-colors">›</button>
+          <button onclick="closeProjectModal()" title="Close" class="w-9 h-9 rounded-full bg-[#C59367] hover:bg-[#D4A478] text-[#0A0908] font-bold text-sm transition-colors">✕</button>
         </div>
       </div>
 
-      <div id="pm-scroll-body" class="overflow-y-auto p-5 sm:p-8 space-y-6">
+      <div id="pm-scroll-body" class="overflow-y-auto p-4 sm:p-8 space-y-6">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div class="lg:col-span-8 space-y-3">
-            <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#C59367]">PROJECT OVERVIEW &amp; MEDIA</div>
+            <div id="pm-overview-label" class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#C59367]">PROJECT DETAILS</div>
             <p id="pm-desc" class="text-xs sm:text-sm text-[#C9BFB2] leading-relaxed"></p>
             <div id="pm-tags" class="flex flex-wrap gap-2 pt-1"></div>
           </div>
 
-          <div class="lg:col-span-4 border border-[#C59367]/25 bg-[#0A0908] p-4 space-y-3">
-            <div>
-              <div class="font-mono text-[10px] uppercase text-[#9A9186]">DISCIPLINE</div>
-              <div id="pm-role" class="text-xs font-bold text-[#F2EADF] mt-0.5">Brand Identity</div>
-            </div>
-            <div>
-              <div class="font-mono text-[10px] uppercase text-[#9A9186]">MEDIA ASSETS</div>
-              <div id="pm-media-count" class="text-xs font-bold text-[#C59367] mt-0.5">High-Res Boards</div>
+          <div class="lg:col-span-4 rounded-2xl border border-[#C59367]/25 bg-[#060D0C] p-4 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <div id="pm-role-label" class="font-mono text-[10px] uppercase text-[#9A9186]">CATEGORY</div>
+                <div id="pm-role" class="text-xs font-bold text-[#F2EADF] mt-0.5">Brand Identity</div>
+              </div>
+              <div class="text-end">
+                <div id="pm-assets-label" class="font-mono text-[10px] uppercase text-[#9A9186]">SHEET</div>
+                <div id="pm-media-count" class="text-xs font-bold text-[#C59367] mt-0.5">Full Presentation</div>
+              </div>
             </div>
             <div class="pt-2 flex flex-col gap-2">
-              <a id="pm-behance-link" href="https://www.behance.net/kerloshany11" target="_blank" rel="noopener noreferrer" class="w-full text-center px-4 py-2.5 border border-[#C59367]/50 hover:bg-[#C59367] hover:text-[#0A0908] font-mono text-[11px] font-bold uppercase text-[#F2EADF] transition-colors">
-                OPEN ON BEHANCE ↗
+              <a id="pm-behance-link" href="https://www.behance.net/kerloshany11" target="_blank" rel="noopener noreferrer" class="w-full text-center px-4 py-2.5 rounded-full border border-[#C59367]/50 hover:bg-[#C59367] hover:text-[#0A0908] font-mono text-[11px] font-bold uppercase text-[#F2EADF] transition-colors">
+                VIEW ON BEHANCE ↗
               </a>
-              <button onclick="closeProjectModal(); openContactModal();" class="w-full px-4 py-2.5 bg-[#C59367] hover:bg-[#D4A478] text-[#0A0908] font-mono text-[11px] font-bold uppercase transition-colors">
+              <button id="pm-request-btn" onclick="closeProjectModal(); openContactModal();" class="w-full px-4 py-2.5 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] hover:brightness-110 text-[#0A0908] font-mono text-[11px] font-bold uppercase transition-all">
                 REQUEST SIMILAR PROJECT ↗
               </button>
             </div>
           </div>
         </div>
 
-        <div id="pm-media-stream" class="space-y-5"></div>
+        <!-- Full Behance Presentation Sheet (Video Player + Stacked Full-Width Boards) -->
+        <div id="pm-media-stream" class="space-y-4"></div>
       </div>
     </div>
   </div>
@@ -1458,63 +1461,6 @@
       return { hasVid, vidCount, imgCount, type, label };
     }
 
-    function playCardInlineVideo(event, projectId) {
-      if (event) event.stopPropagation();
-      const p = projectsData.find(x => x.id === projectId);
-      if (!p) return;
-      const box = document.getElementById(`card-media-${projectId}`);
-      if (!box) return;
-
-      // Find first playable video
-      let firstVid = null;
-      if (Array.isArray(p.videos) && p.videos.length > 0) {
-        const v0 = p.videos[0];
-        firstVid = typeof v0 === 'string' ? classifyProjectVideoUrl(v0) : v0;
-      }
-      if (!firstVid && Array.isArray(p.extraBoards)) {
-        for (const b of p.extraBoards) {
-          const c = classifyProjectVideoUrl(b);
-          if (c) { firstVid = c; break; }
-        }
-      }
-      if (!firstVid) {
-        const bhUrl = getProjectBehanceLink(p.url);
-        if (p.videoDetectedOnly && bhUrl) {
-          window.open(bhUrl, '_blank', 'noopener,noreferrer');
-          return;
-        }
-        openProjectModal(projectId, true);
-        return;
-      }
-
-      const ytBar = `
-        <div class="flex items-center justify-between gap-2 px-3 py-1.5 bg-[#0A0908] border-t border-[#C59367]/30 font-mono text-[10px]">
-          <span class="text-[#C59367] font-bold">▶ INLINE PLAYER</span>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="event.stopPropagation(); openProjectModal('${projectId}', true)" class="px-2.5 py-0.5 rounded-full bg-[#C59367] text-[#0A0908] font-bold">تكبير ↗</button>
-            <button type="button" onclick="event.stopPropagation(); renderProjects()" class="px-2 py-0.5 rounded-full border border-[#C59367]/40 text-[#F2EADF]">✕</button>
-          </div>
-        </div>
-      `;
-
-      if (firstVid.kind === 'iframe') {
-        const sep = firstVid.url.includes('?') ? '&' : '?';
-        box.innerHTML = `
-          <div class="w-full aspect-video bg-black" onclick="event.stopPropagation()">
-            <iframe src="${firstVid.url}${sep}autoplay=1" class="w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-          </div>
-          ${ytBar}
-        `;
-      } else {
-        box.innerHTML = `
-          <div class="w-full aspect-video bg-black" onclick="event.stopPropagation()">
-            <video src="${firstVid.url}" controls autoplay playsinline class="w-full h-full object-contain bg-black"></video>
-          </div>
-          ${ytBar}
-        `;
-      }
-    }
-
     function formatShortDate(rawDate) {
       if (!rawDate) return '';
       try {
@@ -1537,11 +1483,11 @@
 
       if (filtered.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-full border border-[#C59367]/30 bg-[#110F0D] p-10 text-center space-y-3">
+          <div class="col-span-full rounded-3xl border border-[#C59367]/30 bg-[#110F0D] p-10 text-center space-y-3">
             <div class="font-mono text-xs text-[#C59367] animate-pulse">
-              ${currentLang === 'ar' ? 'جاري تحميل المشاريع مباشرة من Behance...' : 'LOADING PROJECTS DIRECTLY FROM BEHANCE...'}
+              ${currentLang === 'ar' ? 'جاري تحميل المشاريع من Behance...' : 'LOADING PROJECTS FROM BEHANCE...'}
             </div>
-            <button onclick="syncBehanceProjects()" class="px-5 py-2 bg-[#C59367] text-[#0A0908] font-mono text-xs font-bold uppercase">
+            <button onclick="syncBehanceProjects()" class="px-5 py-2 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-xs font-bold uppercase">
               ${currentLang === 'ar' ? '↻ تحديث الآن' : '↻ REFRESH NOW'}
             </button>
           </div>
@@ -1552,48 +1498,51 @@
       grid.innerHTML = filtered.map((p, idx) => {
         const num = String(idx + 1).padStart(2, '0');
         const title = currentLang === 'ar' ? (p.titleAr || p.titleEn) : (p.titleEn || p.titleAr);
-        const role = currentLang === 'ar' ? (p.roleAr || p.roleEn || 'مشروع Behance') : (p.roleEn || p.roleAr || 'Behance Project');
-        const desc = (currentLang === 'ar' ? (p.descAr || p.descEn) : (p.descEn || p.descAr)) || '';
+        const role = currentLang === 'ar'
+          ? (p.roleAr && p.roleAr !== 'مشروع منشور على Behance' ? p.roleAr : 'عرض مشروع')
+          : (p.roleEn && p.roleEn !== 'Behance Published Project' ? p.roleEn : 'Featured Project');
+        const rawDesc = (currentLang === 'ar' ? (p.descAr || p.descEn) : (p.descEn || p.descAr)) || '';
+        const isGenericDesc = /Published portfolio project on Behance/i.test(rawDesc);
+        const desc = isGenericDesc ? '' : rawDesc;
         const imgSrc = (p.imageCandidates && p.imageCandidates[0]) || p.image || '';
         const meta = getProjectContentMeta(p);
         const behanceUrl = getProjectBehanceLink(p.url);
         const dateStr = formatShortDate(p.pubDate);
         const hasAudio = Boolean(p.audioUrl && String(p.audioUrl).trim());
-        const tagsList = Array.isArray(p.tags) ? p.tags.slice(0, 3) : [];
+        const tagsList = Array.isArray(p.tags)
+          ? p.tags.filter(t => !/^Case Study$/i.test(t)).slice(0, 3)
+          : [];
 
         return `
           <article onclick="openProjectModal('${p.id}', ${meta.hasVid ? 'true' : 'false'})" class="project-card cursor-pointer group flex flex-col justify-between">
             <div>
-              <!-- Natural Behance Aspect Ratio Container + Inline YouTube-Style Player Slot -->
+              <!-- Natural Behance Cover Image + Clear Video Indicator (Opens Full Sheet) -->
               <div id="card-media-${p.id}" class="relative w-full bg-[#0A0908] overflow-hidden">
                 <img data-project-thumb="${p.id}" src="${imgSrc}" alt="${title}" class="w-full h-auto block group-hover:scale-[1.03] transition-transform duration-500" loading="lazy" />
                 <span class="absolute top-3 start-3 w-8 h-8 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[11px] font-bold flex items-center justify-center shadow-md z-10">${num}</span>
                 <div class="absolute top-3 end-3 flex items-center gap-1.5 z-10">
                   ${hasAudio ? `<span class="px-2.5 py-1 rounded-full bg-[#0E3E3F]/90 border border-[#C59367]/60 text-[#F2EADF] font-mono text-[10px] font-bold">🎵</span>` : ''}
-                  ${meta.hasVid ? `<span class="kh-video-badge px-3 py-1 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[10px] font-bold uppercase">${meta.label}</span>` : ''}
+                  ${meta.hasVid ? `<span class="kh-video-badge px-3 py-1 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[10px] font-bold uppercase shadow-lg">${currentLang === 'ar' ? '▶ فيديو' : '▶ VIDEO'}</span>` : ''}
                 </div>
                 ${meta.hasVid ? `
-                  <button type="button" onclick="playCardInlineVideo(event, '${p.id}')" title="${currentLang === 'ar' ? 'لمشاهدة الفيديو اضغط هنا' : 'Click here to watch video'}" class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/35 hover:bg-black/20 transition-colors z-10">
-                    <span class="w-14 h-10 rounded-xl bg-red-600/95 hover:bg-red-600 text-white flex items-center justify-center text-lg shadow-2xl border border-white/20 transition-transform group-hover:scale-110">▶</span>
-                    <span class="px-3.5 py-1 rounded-full bg-[#0A0908]/90 border border-[#C59367]/70 text-[#F2EADF] font-bold text-[11px] shadow-xl">
-                      ${currentLang === 'ar' ? 'لمشاهدة الفيديو اضغط هنا' : 'Click here to watch video'}
-                    </span>
-                  </button>
+                  <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/25 group-hover:bg-black/15 transition-colors z-10">
+                    <span class="w-14 h-10 rounded-xl bg-red-600/95 text-white flex items-center justify-center text-lg shadow-2xl border border-white/25 transition-transform group-hover:scale-110">▶</span>
+                  </div>
                 ` : ''}
               </div>
 
-              <!-- Full Imported Behance Metadata -->
-              <div class="p-5 space-y-2.5">
+              <!-- Clean Project Metadata -->
+              <div class="p-5 space-y-2">
                 <div class="flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wider text-[#C59367]">
                   <span class="truncate">${role}</span>
                   ${dateStr ? `<span class="text-[#9A9186] shrink-0">${dateStr}</span>` : ''}
                 </div>
                 <h3 class="font-display font-bold uppercase text-lg text-[#F2EADF] group-hover:text-[#C59367] transition-colors line-clamp-2">${title}</h3>
                 ${desc ? `<p class="text-xs text-[#9A9186] leading-relaxed line-clamp-2">${desc}</p>` : ''}
-                ${tagsList.length > 0 ? `
+                ${(tagsList.length > 0 || meta.imgCount > 1) ? `
                   <div class="flex flex-wrap gap-1.5 pt-1">
                     ${tagsList.map(t => `<span class="px-2 py-0.5 rounded-md bg-[#0E3E3F]/40 border border-[#C59367]/20 font-mono text-[9px] text-[#C9BFB2]">${t}</span>`).join('')}
-                    ${meta.imgCount > 1 ? `<span class="px-2 py-0.5 rounded-md bg-[#0A0908] border border-[#C59367]/20 font-mono text-[9px] text-[#C59367]">${meta.imgCount} ${currentLang === 'ar' ? 'صور' : 'Boards'}</span>` : ''}
+                    ${meta.imgCount > 1 ? `<span class="px-2 py-0.5 rounded-md bg-[#0A0908] border border-[#C59367]/25 font-mono text-[9px] text-[#C59367]">${meta.imgCount} ${currentLang === 'ar' ? 'لوحة' : 'Boards'}</span>` : ''}
                   </div>
                 ` : ''}
               </div>
@@ -1601,11 +1550,13 @@
 
             <div class="kh-behance-action-bar px-5 pb-5 pt-3 border-t border-[#C59367]/15 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase">
               ${behanceUrl
-                ? `<a href="${behanceUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="px-3.5 py-1.5 rounded-full border border-[#C59367]/50 bg-[#0E3E3F]/45 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#0A0908] font-bold transition-all">${currentLang === 'ar' ? 'صفحة Behance ↗' : 'BEHANCE PAGE ↗'}</a>`
+                ? `<a href="${behanceUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="px-3.5 py-1.5 rounded-full border border-[#C59367]/45 bg-[#0E3E3F]/40 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#0A0908] font-bold transition-all">BEHANCE ↗</a>`
                 : '<span></span>'}
-              ${meta.hasVid
-                ? `<button type="button" onclick="playCardInlineVideo(event, '${p.id}')" class="px-3.5 py-1.5 rounded-full bg-[#C59367] hover:bg-[#D4A478] text-[#0A0908] font-bold transition-all">${currentLang === 'ar' ? '▶ لمشاهدة الفيديو اضغط هنا' : '▶ Click here to watch video'}</button>`
-                : `<span class="text-[#C59367] font-bold">${currentLang === 'ar' ? 'عرض المشروع كامل ←' : 'OPEN CASE STUDY →'}</span>`}
+              <span class="px-3.5 py-1.5 rounded-full ${meta.hasVid ? 'bg-[#C59367] text-[#0A0908]' : 'text-[#C59367]'} font-bold transition-all">
+                ${meta.hasVid
+                  ? (currentLang === 'ar' ? '▶ افتح المشروع والفيديو' : '▶ OPEN VIDEO & SHEET')
+                  : (currentLang === 'ar' ? 'عرض المشروع كامل ←' : 'VIEW FULL PROJECT →')}
+              </span>
             </div>
           </article>
         `;
@@ -1683,34 +1634,48 @@
       if (Array.isArray(p.mediaGallery)) p.mediaGallery.forEach(m => pushV(m.src));
 
       const imgs = (Array.isArray(p.mediaGallery) ? p.mediaGallery : [{ src: p.image }]).filter(m => m && m.src && !classifyProjectVideoUrl(m.src));
-
-      const vidsHtml = vids.map((v, i) => `
-        <figure class="border border-[#C59367]/40 bg-black">
-          ${v.kind === 'iframe'
-            ? `<div class="aspect-video"><iframe src="${v.url}" class="w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`
-            : `<video src="${v.url}" controls playsinline class="w-full max-h-[75vh] mx-auto bg-black"></video>`}
-          <figcaption class="px-4 py-2.5 bg-[#0A0908] font-mono text-[11px] text-[#C59367]">🎬 VIDEO 0${i + 1}</figcaption>
-        </figure>
-      `).join('');
+      const title = currentLang === 'ar' ? (p.titleAr || p.titleEn) : (p.titleEn || p.titleAr);
 
       const audioHtml = (p.audioUrl && String(p.audioUrl).trim()) ? `
-        <div class="p-4 rounded-2xl bg-[#0A0908] border border-[#C59367]/45 flex flex-wrap items-center justify-between gap-3">
+        <div class="p-4 rounded-2xl bg-[#060D0C] border border-[#C59367]/40 flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-2.5 text-xs font-bold text-[#C59367]">
             <span class="text-base">🎵</span>
-            <span>${currentLang === 'ar' ? 'موسيقى / صوت المشروع' : 'Project Soundtrack / Audio'}</span>
+            <span>${currentLang === 'ar' ? 'الموسيقى التصويرية للمشروع' : 'Project Soundtrack'}</span>
           </div>
           <audio src="${p.audioUrl}" controls class="h-9 flex-1 min-w-[220px]"></audio>
         </div>
       ` : '';
 
-      const imgsHtml = imgs.map((m, i) => `
-        <figure class="overflow-hidden bg-[#0A0908]">
-          <img src="${(m.srcCandidates && m.srcCandidates[0]) || m.src}" alt="Board ${i + 1}" class="w-full h-auto block" loading="lazy" />
+      const vidsHtml = vids.map((v, i) => `
+        <figure class="rounded-2xl overflow-hidden border border-[#C59367]/45 bg-black shadow-2xl">
+          ${v.kind === 'iframe'
+            ? `<div class="aspect-video"><iframe src="${v.url}" class="w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`
+            : `<video src="${v.url}" controls playsinline preload="metadata" class="w-full max-h-[78vh] mx-auto bg-black"></video>`}
+          <figcaption class="px-4 py-2.5 bg-[#060D0C] border-t border-[#C59367]/20 flex items-center justify-between text-xs">
+            <span class="font-bold text-[#F2EADF]">🎬 ${currentLang === 'ar' ? `فيديو المشروع ${i + 1}` : `Project Video 0${i + 1}`} — ${title}</span>
+            <span class="font-mono text-[10px] text-[#C59367]">HD VIDEO</span>
+          </figcaption>
         </figure>
       `).join('');
 
-      streamEl.innerHTML = audioHtml + vidsHtml + `<div class="rounded-2xl overflow-hidden border border-[#C59367]/25 divide-y divide-[#C59367]/10">${imgsHtml}</div>`;
-      if (countEl) countEl.textContent = vids.length > 0 ? `${vids.length} Video(s) · ${imgs.length} Board(s)` : `${imgs.length} High-Res Board(s)`;
+      const imgsHtml = imgs.map((m, i) => `
+        <figure class="w-full bg-[#060D0C]">
+          <img src="${(m.srcCandidates && m.srcCandidates[0]) || m.src}" alt="${title} — ${i + 1}" class="w-full h-auto block" loading="lazy" />
+        </figure>
+      `).join('');
+
+      streamEl.innerHTML = audioHtml + vidsHtml + `<div class="rounded-2xl overflow-hidden border border-[#C59367]/25">${imgsHtml}</div>`;
+      if (countEl) {
+        if (currentLang === 'ar') {
+          countEl.textContent = vids.length > 0
+            ? `${vids.length} فيديو · ${imgs.length} لوحة`
+            : `${imgs.length} ${imgs.length === 1 ? 'لوحة عرض' : 'لوحات عرض'}`;
+        } else {
+          countEl.textContent = vids.length > 0
+            ? `${vids.length} Video · ${imgs.length} Boards`
+            : `${imgs.length} ${imgs.length === 1 ? 'Board' : 'Boards'}`;
+        }
+      }
     }
 
     function openProjectModal(id, focusVideo = false) {
@@ -1718,31 +1683,69 @@
       if (!p) return;
       currentModalProjectId = id;
       const meta = getProjectContentMeta(p);
-      document.getElementById('pm-badge').textContent = p.source === 'behance' ? 'BEHANCE CASE STUDY' : (p.category || 'PROJECT').toUpperCase();
+      const isAr = currentLang === 'ar';
+
+      document.getElementById('pm-badge').textContent = p.source === 'behance'
+        ? (isAr ? 'مشروع BEHANCE' : 'BEHANCE PROJECT')
+        : (p.category || 'PROJECT').toUpperCase();
+
       const pmTypeEl = document.getElementById('pm-content-type');
       if (pmTypeEl) {
-        if (meta.hasVid) { pmTypeEl.textContent = meta.label; pmTypeEl.classList.remove('hidden'); }
-        else { pmTypeEl.classList.add('hidden'); }
+        if (meta.hasVid) {
+          pmTypeEl.textContent = isAr ? '▶ يحتوي على فيديو' : '▶ VIDEO PROJECT';
+          pmTypeEl.classList.remove('hidden');
+        } else {
+          pmTypeEl.classList.add('hidden');
+        }
       }
-      document.getElementById('pm-title').textContent = currentLang === 'ar' ? (p.titleAr || p.titleEn) : (p.titleEn || p.titleAr);
-      document.getElementById('pm-desc').textContent = currentLang === 'ar' ? (p.descAr || p.descEn) : (p.descEn || p.descAr);
-      document.getElementById('pm-role').textContent = currentLang === 'ar' ? (p.roleAr || p.roleEn) : (p.roleEn || p.roleAr);
+
+      document.getElementById('pm-title').textContent = isAr ? (p.titleAr || p.titleEn) : (p.titleEn || p.titleAr);
+      const rawDesc = (isAr ? (p.descAr || p.descEn) : (p.descEn || p.descAr)) || '';
+      const cleanDesc = /Published portfolio project on Behance/i.test(rawDesc)
+        ? (isAr ? 'عرض متكامل لتفاصيل ولوحات المشروع بجودته الأصلية.' : 'Full visual presentation and project showcase boards.')
+        : rawDesc;
+      document.getElementById('pm-desc').textContent = cleanDesc;
+
+      const roleText = isAr
+        ? (p.roleAr && p.roleAr !== 'مشروع منشور على Behance' ? p.roleAr : 'هوية بصرية وإخراج فني')
+        : (p.roleEn && p.roleEn !== 'Behance Published Project' ? p.roleEn : 'Visual Identity & Direction');
+      document.getElementById('pm-role').textContent = roleText;
+
+      const ovLbl = document.getElementById('pm-overview-label');
+      const roleLbl = document.getElementById('pm-role-label');
+      const assetsLbl = document.getElementById('pm-assets-label');
+      const reqBtn = document.getElementById('pm-request-btn');
+      if (ovLbl) ovLbl.textContent = isAr ? 'تفاصيل المشروع' : 'PROJECT DETAILS';
+      if (roleLbl) roleLbl.textContent = isAr ? 'التخصص' : 'DISCIPLINE';
+      if (assetsLbl) assetsLbl.textContent = isAr ? 'محتوى الشيت' : 'SHEET CONTENT';
+      if (reqBtn) reqBtn.textContent = isAr ? 'اطلب مشروعاً مشابهاً ↗' : 'REQUEST SIMILAR PROJECT ↗';
 
       const bhLink = document.getElementById('pm-behance-link');
       const specificUrl = getProjectBehanceLink(p.url);
       if (bhLink) {
-        if (specificUrl) { bhLink.href = specificUrl; bhLink.style.display = ''; }
-        else { bhLink.style.display = 'none'; }
+        if (specificUrl) {
+          bhLink.href = specificUrl;
+          bhLink.textContent = isAr ? 'فتح الصفحة الأصلية على Behance ↗' : 'VIEW ORIGINAL ON BEHANCE ↗';
+          bhLink.style.display = '';
+        } else {
+          bhLink.style.display = 'none';
+        }
       }
 
-      document.getElementById('pm-tags').innerHTML = (p.tags || []).map(t => `<span class="px-2.5 py-1 border border-[#C59367]/30 font-mono text-[10px] text-[#C9BFB2]">${t}</span>`).join('');
+      const cleanTags = (p.tags || []).filter(t => !/^Case Study$/i.test(t));
+      document.getElementById('pm-tags').innerHTML = cleanTags.map(t => `<span class="px-2.5 py-1 rounded-full border border-[#C59367]/30 bg-[#060D0C] font-mono text-[10px] text-[#C9BFB2]">${t}</span>`).join('');
+
       renderProjectMediaStream(p);
 
       const modal = document.getElementById('project-modal');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
-      if (focusVideo) {
-        setTimeout(() => document.getElementById('pm-media-stream')?.scrollIntoView({ behavior: 'smooth' }), 100);
+      const scrollBody = document.getElementById('pm-scroll-body');
+      if (scrollBody) scrollBody.scrollTop = 0;
+
+      // Immediately fetch full Behance sheet if not yet loaded
+      if (p.source === 'behance' && !p.enriched && typeof window.enrichBehanceProjectMedia === 'function') {
+        window.enrichBehanceProjectMedia(p);
       }
     }
 
