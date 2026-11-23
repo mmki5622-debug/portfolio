@@ -249,24 +249,47 @@
       opacity: 1;
     }
 
-    /* Shimmer Animation for Primary CTA Buttons */
-    .btn-shimmer {
+    /* Global Hover Shimmer & Glow for All Buttons and Pill Links */
+    button:not(.no-shine),
+    a[class*="rounded-full"]:not(.no-shine),
+    .btn-shimmer,
+    .filter-pill {
       position: relative;
       overflow: hidden;
+      isolation: isolate;
     }
-    .btn-shimmer::after {
+    button:not(.no-shine)::after,
+    a[class*="rounded-full"]:not(.no-shine)::after,
+    .btn-shimmer::after,
+    .filter-pill::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: -120%;
-      width: 60%;
-      height: 100%;
-      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-      transform: skewX(-20deg);
-      transition: left 0.65s ease;
+      top: -10%;
+      left: -130%;
+      width: 65%;
+      height: 120%;
+      background: linear-gradient(
+        115deg,
+        transparent 0%,
+        rgba(255, 244, 230, 0.14) 35%,
+        rgba(255, 255, 255, 0.45) 50%,
+        rgba(255, 244, 230, 0.14) 65%,
+        transparent 100%
+      );
+      transform: skewX(-22deg);
+      transition: left 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      z-index: 2;
     }
-    .btn-shimmer:hover::after {
-      left: 140%;
+    button:not(.no-shine):hover::after,
+    a[class*="rounded-full"]:not(.no-shine):hover::after,
+    .btn-shimmer:hover::after,
+    .filter-pill:hover::after {
+      left: 145%;
+    }
+    button:not(.no-shine):hover,
+    a[class*="rounded-full"]:not(.no-shine):hover {
+      box-shadow: 0 0 18px rgba(197, 147, 103, 0.32);
     }
 
     /* Animated Nav Underline */
@@ -478,6 +501,19 @@
       overscroll-behavior: contain;
     }
   </style>
+  <script>
+    // Instant pre-paint hydrator from localStorage cache so zero flash of old text occurs on reload
+    (function(){
+      try {
+        var raw = localStorage.getItem('kh_control_room_config_v1');
+        if (!raw) return;
+        var c = JSON.parse(raw);
+        if (!c || typeof c !== 'object') return;
+        window.__KH_INSTANT_CFG = c;
+        if (c.seo && c.seo.siteTitle) document.title = c.seo.siteTitle;
+      } catch(e) {}
+    })();
+  </script>
 </head>
 <body class="antialiased selection:bg-[#C59367] selection:text-[#0A0908]">
   <div id="scroll-progress-bar"></div>
@@ -495,8 +531,8 @@
           </svg>
         </div>
         <div class="hidden sm:flex flex-col leading-none">
-          <span class="text-xs font-display font-bold tracking-[0.16em] text-[#F2EADF] uppercase">KERLOS HANY</span>
-          <span class="text-[10px] font-mono text-[#C59367] mt-0.5">KHN / 01</span>
+          <span id="hdr-brand-name" class="text-xs font-display font-bold tracking-[0.16em] text-[#F2EADF] uppercase">KERLOS HANY</span>
+          <span id="hdr-brand-tagline" class="text-[10px] font-mono text-[#C59367] mt-0.5">كيرلس هاني · Brand &amp; 3D</span>
         </div>
       </a>
 
@@ -534,6 +570,18 @@
       </button>
     </div>
   </header>
+  <script>
+    (function(){
+      var c = window.__KH_INSTANT_CFG;
+      if (!c) return;
+      var bn = document.getElementById('hdr-brand-name');
+      var bt = document.getElementById('hdr-brand-tagline');
+      var hl = document.getElementById('headerLogoImg');
+      if (bn && c.brandName) bn.textContent = c.brandName;
+      if (bt && c.brandTagline) bt.textContent = c.brandTagline;
+      if (hl && c.logoUrl) hl.src = c.logoUrl;
+    })();
+  </script>
 
   <!-- ========================================================================
        SECTION 1: HERO (DARK ARCHITECTURAL + 3D REVEAL BACKDROP)
@@ -557,27 +605,27 @@
 
     <!-- Top Right Practice Metadata -->
     <div class="hidden md:block absolute top-24 end-8 text-end font-mono text-[10px] uppercase tracking-[0.2em] text-[#9A9186] z-10">
-      <div>INDEPENDENT DESIGN PRACTICE</div>
-      <div class="text-[#C59367] mt-1">VISUAL IDENTITY · 3D · MOTION</div>
+      <div id="hero-meta-top">INDEPENDENT DESIGN PRACTICE</div>
+      <div id="hero-meta-sub" class="text-[#C59367] mt-1">VISUAL IDENTITY · 3D · MOTION</div>
     </div>
 
     <!-- Giant Watermark Bottom Right -->
-    <div class="pointer-events-none select-none hidden lg:block absolute bottom-20 end-8 text-end z-0 opacity-15 animate-subtle-float">
-      <div class="font-display font-bold text-[7.5rem] leading-[0.82] tracking-tighter text-[#F2EADF]/40">KERLOS</div>
-      <div class="font-display font-bold text-[7.5rem] leading-[0.82] tracking-tighter text-[#C59367]/50">HANY</div>
+    <div id="hero-watermark-box" class="pointer-events-none select-none hidden lg:block absolute bottom-20 end-8 text-end z-0 opacity-15 animate-subtle-float">
+      <div id="hero-wm-1" class="font-display font-bold text-[7.5rem] leading-[0.82] tracking-tighter text-[#F2EADF]/40">KERLOS</div>
+      <div id="hero-wm-2" class="font-display font-bold text-[7.5rem] leading-[0.82] tracking-tighter text-[#C59367]/50">HANY</div>
     </div>
 
     <!-- Bottom Right Coordinates -->
     <div class="hidden sm:block absolute bottom-6 end-8 text-end font-mono text-[10px] tracking-[0.18em] text-[#F2EADF] z-10 border-t border-[#C59367]/40 pt-2">
-      <div class="font-bold">KHN / 01</div>
-      <div class="text-[#9A9186]">TANTA / EG</div>
+      <div id="hero-coord-code" class="font-bold">KHN / 01</div>
+      <div id="hero-coord-loc" class="text-[#9A9186]">TANTA / EG</div>
     </div>
 
     <!-- Main Hero Left Column -->
     <div class="max-w-[1440px] w-full mx-auto px-4 sm:px-8 relative z-10">
       <div class="max-w-3xl py-6 sm:py-10 space-y-6 reveal-up">
         <div class="space-y-1.5">
-          <div class="font-display text-lg sm:text-xl font-bold tracking-[0.12em] text-[#C59367] uppercase">KERLOS HANY</div>
+          <div id="hero-kicker-name" class="font-display text-lg sm:text-xl font-bold tracking-[0.12em] text-[#C59367] uppercase">KERLOS HANY</div>
           <div class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-[#9A9186]">
             <span class="w-1.5 h-1.5 rounded-full bg-[#C59367]"></span>
             <span data-i18n="heroEyebrow">GRAPHIC, BRAND &amp; 3D DESIGNER</span>
@@ -607,6 +655,34 @@
       </div>
     </div>
   </section>
+  <script>
+    (function(){
+      var c = window.__KH_INSTANT_CFG;
+      if (!c) return;
+      var setTxt = function(id, val){ var el = document.getElementById(id); if (el && val) el.textContent = val; };
+      setTxt('hero-kicker-name', c.brandName);
+      setTxt('hero-meta-top', c.heroMetaTop);
+      setTxt('hero-meta-sub', c.heroMetaSub);
+      setTxt('hero-wm-1', c.heroWatermark1);
+      setTxt('hero-wm-2', c.heroWatermark2);
+      setTxt('hero-coord-code', c.heroCoordCode);
+      setTxt('hero-coord-loc', c.heroCoordLoc);
+      document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var k = el.getAttribute('data-i18n');
+        var map = {
+          availableBadge: c.availEn,
+          heroEyebrow: c.heroEyebrowEn,
+          heroTitle1: c.heroTitle1En,
+          heroTitle2: c.heroTitle2En,
+          heroTitle3: c.heroTitle3En,
+          heroSubtitle: c.heroSubEn,
+          heroBtnWork: c.heroBtnWorkEn,
+          heroBtnCv: c.heroBtnCvEn
+        };
+        if (map[k]) el.textContent = map[k];
+      });
+    })();
+  </script>
 
 
   <!-- ========================================================================

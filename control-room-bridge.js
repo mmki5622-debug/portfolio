@@ -69,6 +69,54 @@
       heroBtnWorkAr: 'استكشف أعمالي',
       heroBtnCvEn: 'Download CV (PDF)',
       heroBtnCvAr: 'تحميل السيرة الذاتية (PDF)',
+      navWorkEn: 'WORK',
+      navWorkAr: 'الأعمال',
+      navServicesEn: 'SERVICES',
+      navServicesAr: 'الخدمات',
+      navCinemaEn: 'MOTION',
+      navCinemaAr: 'الموشن',
+      navExperienceEn: 'EXPERIENCE',
+      navExperienceAr: 'الخبرات',
+      navCtaEn: 'START A PROJECT',
+      navCtaAr: 'ابدأ مشروعك',
+      heroMetaTop: 'INDEPENDENT DESIGN PRACTICE',
+      heroMetaSub: 'VISUAL IDENTITY · 3D · MOTION',
+      heroWatermark1: 'KERLOS',
+      heroWatermark2: 'HANY',
+      heroCoordCode: 'KHN / 01',
+      heroCoordLoc: 'TANTA / EG',
+      practiceTitle1En: 'EVERY DETAIL',
+      practiceTitle1Ar: 'كل تفصيلة',
+      practiceTitle2En: 'HAS A',
+      practiceTitle2Ar: 'لها سبب',
+      practiceTitle3En: 'REASON TO EXIST.',
+      practiceTitle3Ar: 'لوجودها.',
+      practiceDescEn: 'Kerlos blends creative instinct with disciplined visual thinking—bringing clarity, craft, and momentum to every brand touchpoint.',
+      practiceDescAr: 'يمزج كيرلس بين الحس الإبداعي والتفكير البصري المنظم ليمنح علامتك التجارية وضوحاً وحضوراً مؤثراً.',
+      workTitle1En: 'CRAFTED FOR',
+      workTitle1Ar: 'مُصمَّمة لجذب',
+      workTitle2En: 'REAL ATTENTION.',
+      workTitle2Ar: 'الانتباه الحقيقي.',
+      ytTitle1En: 'WATCH THE WORK',
+      ytTitle1Ar: 'شاهد الأعمال',
+      ytTitle2En: 'IN MOTION.',
+      ytTitle2Ar: 'في حركة.',
+      ytIntroEn: 'A selected window into campaign motion, 3D visuals, creative experiments, and design tutorials from the official Kerlos Hany YouTube channel.',
+      ytIntroAr: 'نافذة مختارة على أعمال الموشن جرافيك وإعلانات 3D والتجارب الإبداعية من قناة كيرلس هاني الرسمية على يوتيوب.',
+      moveTitle1En: 'MAKE THE',
+      moveTitle1Ar: 'اجعل',
+      moveTitle2En: 'BRAND',
+      moveTitle2Ar: 'العلامة',
+      moveTitle3En: 'MOVE.',
+      moveTitle3Ar: 'تتحرك.',
+      moveDescEn: 'Motion design turns a static visual into a living moment—building rhythm, recognition, and a more memorable story frame by frame.',
+      moveDescAr: 'الموشن جرافيك يحوّل التصميم الثابت إلى لحظة حية تصنع إيقاعاً وهوية راسخة في ذهن المشاهد.',
+      ctaTitle1En: 'READY TO BUILD SOMETHING',
+      ctaTitle1Ar: 'جاهز لبناء شيء',
+      ctaTitle2En: 'UNFORGETTABLE?',
+      ctaTitle2Ar: 'لا يُنسى؟',
+      ctaBtnEn: 'START A PROJECT',
+      ctaBtnAr: 'ابدأ مشروعك',
       heroSlideSeconds: 5,
       heroShowcaseEmpty: false,
       heroBgConfig: {
@@ -1959,6 +2007,57 @@
     i18nStrings.ar.heroSubtitle = cfg.heroSubAr;
     i18nStrings.en.aboutDesc = cfg.aboutDescEn;
     i18nStrings.ar.aboutDesc = cfg.aboutDescAr;
+    i18nStrings.en.navWork = cfg.navWorkEn || 'WORK';
+    i18nStrings.ar.navWork = cfg.navWorkAr || 'الأعمال';
+    i18nStrings.en.navServices = cfg.navServicesEn || 'SERVICES';
+    i18nStrings.ar.navServices = cfg.navServicesAr || 'الخدمات';
+    i18nStrings.en.navCinema = cfg.navCinemaEn || 'MOTION';
+    i18nStrings.ar.navCinema = cfg.navCinemaAr || 'الموشن';
+    i18nStrings.en.navExperience = cfg.navExperienceEn || 'EXPERIENCE';
+    i18nStrings.ar.navExperience = cfg.navExperienceAr || 'الخبرات';
+    i18nStrings.en.navCta = cfg.navCtaEn || 'START A PROJECT';
+    i18nStrings.ar.navCta = cfg.navCtaAr || 'ابدأ مشروعك';
+    i18nStrings.en.practiceTitle1 = cfg.practiceTitle1En || 'EVERY DETAIL';
+    i18nStrings.ar.practiceTitle1 = cfg.practiceTitle1Ar || 'كل تفصيلة';
+    i18nStrings.en.practiceTitle2 = cfg.practiceTitle2En || 'HAS A';
+    i18nStrings.ar.practiceTitle2 = cfg.practiceTitle2Ar || 'لها سبب';
+    i18nStrings.en.practiceTitle3 = cfg.practiceTitle3En || 'REASON TO EXIST.';
+    i18nStrings.ar.practiceTitle3 = cfg.practiceTitle3Ar || 'لوجودها.';
+    i18nStrings.en.practiceDesc = cfg.practiceDescEn || i18nStrings.en.practiceDesc;
+    i18nStrings.ar.practiceDesc = cfg.practiceDescAr || i18nStrings.ar.practiceDesc;
+    i18nStrings.en.workTitle1 = cfg.workTitle1En || 'CRAFTED FOR';
+    i18nStrings.ar.workTitle1 = cfg.workTitle1Ar || 'مُصمَّمة لجذب';
+    i18nStrings.en.workTitle2 = cfg.workTitle2En || 'REAL ATTENTION.';
+    i18nStrings.ar.workTitle2 = cfg.workTitle2Ar || 'الانتباه الحقيقي.';
+    i18nStrings.en.ytTitle1 = cfg.ytTitle1En || 'WATCH THE WORK';
+    i18nStrings.ar.ytTitle1 = cfg.ytTitle1Ar || 'شاهد الأعمال';
+    i18nStrings.en.ytTitle2 = cfg.ytTitle2En || 'IN MOTION.';
+    i18nStrings.ar.ytTitle2 = cfg.ytTitle2Ar || 'في حركة.';
+    i18nStrings.en.ytIntro = cfg.ytIntroEn || i18nStrings.en.ytIntro;
+    i18nStrings.ar.ytIntro = cfg.ytIntroAr || i18nStrings.ar.ytIntro;
+    i18nStrings.en.moveTitle1 = cfg.moveTitle1En || 'MAKE THE';
+    i18nStrings.ar.moveTitle1 = cfg.moveTitle1Ar || 'اجعل';
+    i18nStrings.en.moveTitle2 = cfg.moveTitle2En || 'BRAND';
+    i18nStrings.ar.moveTitle2 = cfg.moveTitle2Ar || 'العلامة';
+    i18nStrings.en.moveTitle3 = cfg.moveTitle3En || 'MOVE.';
+    i18nStrings.ar.moveTitle3 = cfg.moveTitle3Ar || 'تتحرك.';
+    i18nStrings.en.moveDesc = cfg.moveDescEn || i18nStrings.en.moveDesc;
+    i18nStrings.ar.moveDesc = cfg.moveDescAr || i18nStrings.ar.moveDesc;
+    i18nStrings.en.ctaTitle1 = cfg.ctaTitle1En || 'READY TO BUILD SOMETHING';
+    i18nStrings.ar.ctaTitle1 = cfg.ctaTitle1Ar || 'جاهز لبناء شيء';
+    i18nStrings.en.ctaTitle2 = cfg.ctaTitle2En || 'UNFORGETTABLE?';
+    i18nStrings.ar.ctaTitle2 = cfg.ctaTitle2Ar || 'لا يُنسى؟';
+    i18nStrings.en.ctaBtn = cfg.ctaBtnEn || 'START A PROJECT';
+    i18nStrings.ar.ctaBtn = cfg.ctaBtnAr || 'ابدأ مشروعك';
+
+    const setById = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.textContent = v; };
+    setById('hero-kicker-name', cfg.brandName);
+    setById('hero-meta-top', cfg.heroMetaTop);
+    setById('hero-meta-sub', cfg.heroMetaSub);
+    setById('hero-wm-1', cfg.heroWatermark1);
+    setById('hero-wm-2', cfg.heroWatermark2);
+    setById('hero-coord-code', cfg.heroCoordCode);
+    setById('hero-coord-loc', cfg.heroCoordLoc);
 
     if (Array.isArray(cfg.stats) && cfg.stats.length >= 3) {
       i18nStrings.en.statYears = cfg.stats[0].en;
