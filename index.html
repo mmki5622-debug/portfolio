@@ -143,18 +143,30 @@
     }
 
     .project-card {
-      background: linear-gradient(155deg, rgba(14, 62, 63, 0.32) 0%, rgba(10, 13, 12, 0.94) 100%);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(197, 147, 103, 0.25);
-      border-radius: 1.5rem;
-      overflow: hidden;
-      transition: border-color 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 0.75rem;
+      overflow: visible;
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .project-card:hover {
-      border-color: #C59367;
-      transform: translateY(-6px);
-      box-shadow: 0 22px 48px rgba(160, 102, 32, 0.18), 0 10px 24px rgba(2, 20, 17, 0.75);
+      border-color: transparent;
+      transform: translateY(-4px);
+      box-shadow: none;
     }
+    .behance-cover-box {
+      aspect-ratio: 808 / 632;
+      border-radius: 0.65rem;
+      overflow: hidden;
+      border: 1px solid rgba(197, 147, 103, 0.22);
+      background: #0A0908;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .project-card:hover .behance-cover-box {
+      border-color: #C59367;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55), 0 0 18px rgba(197, 147, 103, 0.16);
+    }
+
 
     /* Smooth Scroll-Reveal Animations */
     .reveal-up {
@@ -778,7 +790,7 @@
       </div>
 
       <!-- Projects Grid -->
-      <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start"></div>
+      <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-7 items-start"></div>
     </div>
   </section>
 
@@ -1714,49 +1726,45 @@
           : [];
 
         return `
-          <article onclick="openProjectModal('${p.id}', ${meta.hasVid ? 'true' : 'false'})" class="project-card cursor-pointer group flex flex-col justify-between">
-            <div>
-              <!-- Natural Behance Cover Image + Clear Video Indicator (Opens Full Sheet) -->
-              <div id="card-media-${p.id}" class="relative w-full bg-[#0A0908] overflow-hidden">
-                <img data-project-thumb="${p.id}" src="${imgSrc}" alt="${title}" class="w-full h-auto block group-hover:scale-[1.03] transition-transform duration-500" loading="lazy" />
-                <span class="absolute top-3 start-3 w-8 h-8 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[11px] font-bold flex items-center justify-center shadow-md z-10">${num}</span>
-                <div class="absolute top-3 end-3 flex items-center gap-1.5 z-10">
-                  ${hasAudio ? `<span class="px-2.5 py-1 rounded-full bg-[#0E3E3F]/90 border border-[#C59367]/60 text-[#F2EADF] font-mono text-[10px] font-bold">🎵</span>` : ''}
-                  ${meta.hasVid ? `<span class="kh-video-badge px-3 py-1 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[10px] font-bold uppercase shadow-lg">${currentLang === 'ar' ? '▶ فيديو' : '▶ VIDEO'}</span>` : ''}
+          <article onclick="openProjectModal('${p.id}', ${meta.hasVid ? 'true' : 'false'})" class="project-card cursor-pointer group flex flex-col">
+            <!-- Exact Behance 808x632 Cover Aspect Ratio -->
+            <div id="card-media-${p.id}" class="behance-cover-box relative w-full">
+              <img
+                data-project-thumb="${p.id}"
+                src="${imgSrc}"
+                alt="${title}"
+                class="w-full h-full object-cover block group-hover:scale-[1.03] transition-transform duration-500"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+              />
+              <!-- Subtle Hover Gradient Overlay (Behance Style) -->
+              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3.5 z-10">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-display font-bold text-xs sm:text-sm text-white truncate">${title}</span>
+                  <span class="px-2.5 py-0.5 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[9px] font-bold shrink-0">
+                    ${meta.hasVid ? (currentLang === 'ar' ? '▶ فيديو' : '▶ VIDEO') : (currentLang === 'ar' ? 'عرض' : 'VIEW')}
+                  </span>
                 </div>
-                ${meta.hasVid ? `
-                  <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/25 group-hover:bg-black/15 transition-colors z-10">
-                    <span class="w-14 h-10 rounded-xl bg-red-600/95 text-white flex items-center justify-center text-lg shadow-2xl border border-white/25 transition-transform group-hover:scale-110">▶</span>
-                  </div>
-                ` : ''}
               </div>
-
-              <!-- Clean Project Metadata -->
-              <div class="p-5 space-y-2">
-                <div class="flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wider text-[#C59367]">
-                  <span class="truncate">${role}</span>
-                  ${dateStr ? `<span class="text-[#9A9186] shrink-0">${dateStr}</span>` : ''}
-                </div>
-                <h3 class="font-display font-bold uppercase text-lg text-[#F2EADF] group-hover:text-[#C59367] transition-colors line-clamp-2">${title}</h3>
-                ${desc ? `<p class="text-xs text-[#9A9186] leading-relaxed line-clamp-2">${desc}</p>` : ''}
-                ${(tagsList.length > 0 || meta.imgCount > 1) ? `
-                  <div class="flex flex-wrap gap-1.5 pt-1">
-                    ${tagsList.map(t => `<span class="px-2 py-0.5 rounded-md bg-[#0E3E3F]/40 border border-[#C59367]/20 font-mono text-[9px] text-[#C9BFB2]">${t}</span>`).join('')}
-                    ${meta.imgCount > 1 ? `<span class="px-2 py-0.5 rounded-md bg-[#0A0908] border border-[#C59367]/25 font-mono text-[9px] text-[#C59367]">${meta.imgCount} ${currentLang === 'ar' ? 'لوحة' : 'Boards'}</span>` : ''}
-                  </div>
-                ` : ''}
+              <!-- Minimal Top-Right Badges -->
+              <div class="absolute top-2.5 end-2.5 flex items-center gap-1.5 z-10">
+                ${hasAudio ? `<span class="px-2 py-0.5 rounded-full bg-[#060D0C]/85 border border-[#C59367]/50 text-[#F2EADF] font-mono text-[9px] font-bold">🎵</span>` : ''}
+                ${meta.hasVid ? `<span class="kh-video-badge px-2.5 py-0.5 rounded-full bg-[#C59367] text-[#0A0908] font-mono text-[9px] font-extrabold uppercase shadow-md">${currentLang === 'ar' ? '▶ فيديو' : '▶ VIDEO'}</span>` : ''}
               </div>
             </div>
 
-            <div class="kh-behance-action-bar px-5 pb-5 pt-3 border-t border-[#C59367]/15 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase">
+            <!-- Compact Behance-Style Footer Row Directly Under Cover -->
+            <div class="kh-behance-action-bar pt-2.5 px-0.5 flex items-center justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <h3 class="font-display font-bold text-sm text-[#F2EADF] group-hover:text-[#C59367] transition-colors truncate">${title}</h3>
+                <div class="flex items-center gap-2 font-mono text-[10px] text-[#9A9186] truncate mt-0.5">
+                  <span class="truncate">${role}</span>
+                  ${meta.imgCount > 1 ? `<span>· ${meta.imgCount} ${currentLang === 'ar' ? 'لوحة' : 'Boards'}</span>` : ''}
+                </div>
+              </div>
               ${behanceUrl
-                ? `<a href="${behanceUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="px-3.5 py-1.5 rounded-full border border-[#C59367]/45 bg-[#0E3E3F]/40 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#0A0908] font-bold transition-all">BEHANCE ↗</a>`
-                : '<span></span>'}
-              <span class="px-3.5 py-1.5 rounded-full ${meta.hasVid ? 'bg-[#C59367] text-[#0A0908]' : 'text-[#C59367]'} font-bold transition-all">
-                ${meta.hasVid
-                  ? (currentLang === 'ar' ? '▶ افتح المشروع والفيديو' : '▶ OPEN VIDEO & SHEET')
-                  : (currentLang === 'ar' ? 'عرض المشروع كامل ←' : 'VIEW FULL PROJECT →')}
-              </span>
+                ? `<a href="${behanceUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" title="Open on Behance" class="shrink-0 px-2.5 py-1 rounded-full border border-[#C59367]/35 bg-[#0E3E3F]/35 hover:bg-[#C59367] hover:text-[#0A0908] font-mono text-[10px] font-bold text-[#C59367] transition-all">Bē ↗</a>`
+                : ''}
             </div>
           </article>
         `;

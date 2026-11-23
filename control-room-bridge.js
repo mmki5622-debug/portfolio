@@ -938,7 +938,7 @@
       }
     ];
     if (isGalleryPage) {
-      proxies.push(async () => {
+      proxies.unshift(async () => {
         const r = await fetchWithTimeout(`https://r.jina.ai/${targetUrl}`, 8000);
         return r.ok ? await r.text() : '';
       });
@@ -1121,7 +1121,9 @@
 
   function loadBehanceCache() {
     const keysToTry = [
-      BEHANCE_ENHANCED_CACHE_KEY
+      BEHANCE_ENHANCED_CACHE_KEY,
+      'kh_behance_projects_permanent_v1',
+      'kh_behance_projects_v11'
     ];
     for (const k of keysToTry) {
       try {
@@ -1895,7 +1897,7 @@
             const projectUrl = item.link || 'https://www.behance.net/kerloshany11';
             const fbPrev = fbBehanceCache[getBehanceFirebaseKey(projectUrl)] || null;
             const localPrev = prevByUrl.get(projectUrl) || null;
-            const prev = (fbPrev && fbPrev.enriched && fbPrev.cacheVersion === 2) ? fbPrev : localPrev;
+            const prev = (fbPrev && fbPrev.enriched) ? fbPrev : localPrev;
 
             const mergedVideos = videos.length > 0 ? videos : (prev && Array.isArray(prev.videos) ? prev.videos : []);
             const mergedGallery = (prev && prev.enriched && Array.isArray(prev.mediaGallery) && prev.mediaGallery.length > 0)
