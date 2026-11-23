@@ -467,6 +467,16 @@
     #pm-media-stream figure.kh-vid-landscape .kh-iframe-box {
       aspect-ratio: 16 / 9 !important;
     }
+
+    /* Lock background page scroll when any modal is open */
+    html.kh-modal-open,
+    body.kh-modal-open {
+      overflow: hidden !important;
+      overscroll-behavior: none !important;
+    }
+    #pm-scroll-body {
+      overscroll-behavior: contain;
+    }
   </style>
 </head>
 <body class="antialiased selection:bg-[#C59367] selection:text-[#0A0908]">
@@ -1792,7 +1802,24 @@
       }
     }
 
+    function lockBodyScroll() {
+      document.documentElement.classList.add('kh-modal-open');
+      document.body.classList.add('kh-modal-open');
+    }
+
+    function unlockBodyScroll() {
+      const pm = document.getElementById('project-modal');
+      const cm = document.getElementById('contact-modal');
+      const pmOpen = pm && !pm.classList.contains('hidden');
+      const cmOpen = cm && !cm.classList.contains('hidden');
+      if (!pmOpen && !cmOpen) {
+        document.documentElement.classList.remove('kh-modal-open');
+        document.body.classList.remove('kh-modal-open');
+      }
+    }
+
     function openProjectModal(id, focusVideo = false) {
+      lockBodyScroll();
       const p = projectsData.find(x => x.id === id);
       if (!p) return;
       currentModalProjectId = id;
@@ -1874,6 +1901,7 @@
       const modal = document.getElementById('project-modal');
       modal.classList.add('hidden');
       modal.classList.remove('flex');
+      unlockBodyScroll();
       document.querySelectorAll('#pm-media-stream video, #pm-media-stream audio').forEach(v => v.pause());
       document.querySelectorAll('#pm-media-stream iframe').forEach(f => { f.src = 'about:blank'; });
     }
@@ -1893,12 +1921,14 @@
       }
       modal.classList.remove('hidden');
       modal.classList.add('flex');
+      lockBodyScroll();
     }
 
     function closeContactModal() {
       const modal = document.getElementById('contact-modal');
       modal.classList.add('hidden');
       modal.classList.remove('flex');
+      unlockBodyScroll();
     }
 
     function submitInquiryForm(e) {
@@ -2264,6 +2294,7 @@
         if (typeof window.openProjectModal === 'function' && !window.openProjectModal.__khWrapped) {
           const origOpen = window.openProjectModal;
           const wrappedOpen = function (id, focusVideo) {
+            if (typeof lockBodyScroll === 'function') lockBodyScroll();
             const streamEl = document.getElementById('pm-media-stream');
             if (streamEl) delete streamEl.dataset.khInlineReady;
             const ret = origOpen.apply(this, arguments);
@@ -2278,6 +2309,18 @@
           wrappedOpen.__khWrapped = true;
           window.openProjectModal = wrappedOpen;
           try { openProjectModal = wrappedOpen; } catch (e) {}
+        }
+
+        if (typeof window.closeProjectModal === 'function' && !window.closeProjectModal.__khWrapped) {
+          const origClose = window.closeProjectModal;
+          const wrappedClose = function () {
+            const ret = origClose.apply(this, arguments);
+            if (typeof unlockBodyScroll === 'function') unlockBodyScroll();
+            return ret;
+          };
+          wrappedClose.__khWrapped = true;
+          window.closeProjectModal = wrappedClose;
+          try { closeProjectModal = wrappedClose; } catch (e) {}
         }
       }
 
