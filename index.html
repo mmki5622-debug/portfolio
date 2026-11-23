@@ -501,14 +501,27 @@
         <a href="#experience" class="nav-link-anim hover:text-[#F2EADF] transition-colors" data-i18n="navExperience">EXPERIENCE</a>
       </nav>
 
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-2">
         <button id="langToggleBtn" onclick="toggleLanguage()" class="px-3.5 py-1.5 rounded-full border border-[#C59367]/40 bg-[#0E3E3F]/40 font-mono text-[11px] text-[#F2EADF] hover:border-[#C59367] transition-all">
           AR / EN
         </button>
-        <button onclick="openContactModal()" class="px-4 sm:px-5 py-2 rounded-full btn-shimmer bg-gradient-to-r from-[#C59367] to-[#A06620] hover:brightness-110 text-[#0A0908] font-mono text-[11px] font-bold uppercase tracking-wider shadow-lg shadow-[#A06620]/25 transition-all">
+        <button onclick="openContactModal()" class="hidden sm:inline-flex items-center gap-1 px-4 sm:px-5 py-2 rounded-full btn-shimmer bg-gradient-to-r from-[#C59367] to-[#A06620] hover:brightness-110 text-[#0A0908] font-mono text-[11px] font-bold uppercase tracking-wider shadow-lg shadow-[#A06620]/25 transition-all">
           <span data-i18n="navCta">START A PROJECT</span> ↗
         </button>
+        <button id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="Menu" class="lg:hidden w-9 h-9 rounded-full border border-[#C59367]/40 bg-[#0E3E3F]/40 flex items-center justify-center text-[#F2EADF] hover:border-[#C59367] transition-all">
+          <span id="mobileMenuIcon" class="text-base leading-none">☰</span>
+        </button>
       </div>
+    </div>
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-[#C59367]/20 bg-[#060D0C]/98 backdrop-blur-xl px-5 py-4 space-y-3 font-mono text-xs uppercase tracking-[0.16em] text-[#C9BFB2]">
+      <a href="#work" onclick="closeMobileMenu()" class="block py-2 border-b border-[#C59367]/10 hover:text-[#C59367]" data-i18n="navWork">WORK</a>
+      <a href="#services" onclick="closeMobileMenu()" class="block py-2 border-b border-[#C59367]/10 hover:text-[#C59367]" data-i18n="navServices">SERVICES</a>
+      <a href="#cinema" onclick="closeMobileMenu()" class="block py-2 border-b border-[#C59367]/10 hover:text-[#C59367]" data-i18n="navCinema">MOTION</a>
+      <a href="#experience" onclick="closeMobileMenu()" class="block py-2 border-b border-[#C59367]/10 hover:text-[#C59367]" data-i18n="navExperience">EXPERIENCE</a>
+      <button onclick="closeMobileMenu(); openContactModal();" class="w-full mt-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#0A0908] font-bold uppercase tracking-wider">
+        <span data-i18n="navCta">START A PROJECT</span> ↗
+      </button>
     </div>
   </header>
 
@@ -649,8 +662,8 @@
             <span class="w-10 h-px bg-[#C59367]/40"></span>
             <span data-i18n="servicesTag">CAPABILITIES &amp; SERVICES</span>
           </div>
-          <h2 class="font-display font-bold uppercase text-3xl sm:text-5xl text-[#F2EADF]" data-i18n="servicesHeading">
-            FULL-SPECTRUM <span class="text-[#C59367]">CREATIVE OUTPUT.</span>
+          <h2 class="font-display font-bold uppercase text-3xl sm:text-5xl text-[#F2EADF]">
+            <span data-i18n="servicesHeading1">FULL-SPECTRUM</span> <span class="text-[#C59367]" data-i18n="servicesHeading2">CREATIVE OUTPUT.</span>
           </h2>
         </div>
       </div>
@@ -1001,7 +1014,7 @@
   <!-- ========================================================================
        PROJECT FULL SHEET MODAL (#project-modal)
        ======================================================================== -->
-  <div id="project-modal" class="hidden fixed inset-0 z-50 bg-[#0A0908]/95 backdrop-blur-md items-center justify-center p-2 sm:p-5">
+  <div id="project-modal" onclick="if(event.target===this) closeProjectModal()" class="hidden fixed inset-0 z-50 bg-[#0A0908]/95 backdrop-blur-md items-center justify-center p-2 sm:p-5">
     <div class="w-full max-w-6xl max-h-[94vh] rounded-3xl bg-[#0A1312] border border-[#C59367]/40 flex flex-col overflow-hidden shadow-2xl">
       <div class="flex items-center justify-between gap-4 px-5 sm:px-7 py-4 bg-[#060D0C] border-b border-[#C59367]/25 shrink-0">
         <div class="flex items-center gap-3 min-w-0">
@@ -1055,7 +1068,7 @@
   <!-- ========================================================================
        CONTACT MODAL (#contact-modal)
        ======================================================================== -->
-  <div id="contact-modal" class="hidden fixed inset-0 z-50 bg-[#0A0908]/92 backdrop-blur-md items-center justify-center p-4">
+  <div id="contact-modal" onclick="if(event.target===this) closeContactModal()" class="hidden fixed inset-0 z-50 bg-[#0A0908]/92 backdrop-blur-md items-center justify-center p-4">
     <div class="w-full max-w-lg rounded-3xl bg-[#0A1312] border border-[#C59367]/45 p-6 sm:p-8 space-y-5 shadow-2xl">
       <div class="flex items-center justify-between border-b border-[#C59367]/20 pb-3">
         <h3 class="font-display text-lg font-bold uppercase text-[#F2EADF]" data-i18n="contactModalTitle">START A PROJECT</h3>
@@ -1063,11 +1076,11 @@
       </div>
       <form onsubmit="submitInquiryForm(event)" class="space-y-4">
         <div>
-          <label class="block font-mono text-[10px] uppercase text-[#C59367] mb-1.5">YOUR NAME / BRAND</label>
+          <label class="block font-mono text-[10px] uppercase text-[#C59367] mb-1.5" data-i18n="contactNameLbl">YOUR NAME / BRAND</label>
           <input id="inq-name" type="text" required placeholder="e.g. Ahmed / Horizon Brand" class="w-full px-4 py-3 bg-[#0A0908] border border-[#C59367]/35 text-xs text-[#F2EADF] focus:outline-none focus:border-[#C59367]" />
         </div>
         <div>
-          <label class="block font-mono text-[10px] uppercase text-[#C59367] mb-1.5">SERVICE NEEDED</label>
+          <label class="block font-mono text-[10px] uppercase text-[#C59367] mb-1.5" data-i18n="contactServiceLbl">SERVICE NEEDED</label>
           <select id="inq-service" class="w-full px-4 py-3 bg-[#0A0908] border border-[#C59367]/35 text-xs text-[#F2EADF] focus:outline-none focus:border-[#C59367]">
             <option value="Branding & Visual Identity">Branding &amp; Visual Identity</option>
             <option value="CGI & 3D Advertising">CGI &amp; 3D Advertising</option>
@@ -1081,7 +1094,7 @@
           </select>
         </div>
         <div>
-          <label class="block font-mono text-[10px] uppercase text-[#C59367] mb-1.5">PROJECT BRIEF</label>
+          <label class="block font-mono text-[10px] uppercase text-[#C59367] mb-1.5" data-i18n="contactBriefLbl">PROJECT BRIEF</label>
           <textarea id="inq-msg" rows="3" required placeholder="Tell me about your brand, timeline, and goals..." class="w-full px-4 py-3 bg-[#0A0908] border border-[#C59367]/35 text-xs text-[#F2EADF] focus:outline-none focus:border-[#C59367]"></textarea>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
@@ -1099,15 +1112,15 @@
     let currentLang = 'en';
 
     const servicesData = [
-      { num: '01', en: 'SOCIAL MEDIA MANAGEMENT', ar: 'إدارة السوشيال ميديا', shortEn: 'Strategic social media management that turns your brand into a consistent and engaging digital presence.', shortAr: 'إدارة استراتيجية لحسابات التواصل الاجتماعي تحوّل علامتك لحضور رقمي متماسك ومؤثر.', detailEn: 'Content strategy, monthly planning, creative direction, post & reel concepts, publishing, and performance reviews.' },
-      { num: '02', en: 'ADVERTISING & MEDIA BUYING', ar: 'الإعلانات وشراء المساحات', shortEn: 'Performance-driven advertising campaigns built to increase awareness, leads, and sales.', shortAr: 'حملات إعلانية مدروسة لزيادة الوعي بالعلامة التجارية وتحقيق المبيعات.', detailEn: 'Meta & Google paid campaigns, audience targeting, creative testing, A/B optimization, and reporting.' },
-      { num: '03', en: 'AI VIDEO PRODUCTION', ar: 'إنتاج الفيديو بالذكاء الاصطناعي', shortEn: 'Next-generation AI-powered advertising and cinematic content built around strong creative concepts.', shortAr: 'إعلانات سينمائية ومحتوى مرئي متطور باستخدام أحدث تقنيات الذكاء الاصطناعي.', detailEn: 'Commercials, cinematic scenes, branded storytelling, product integration, sound design, and campaign-ready video.' },
-      { num: '04', en: 'WEB DESIGN & DEVELOPMENT', ar: 'تصميم وتطوير المواقع', shortEn: 'Modern digital experiences designed to represent your brand and turn visitors into customers.', shortAr: 'تجارب رقمية ومواقع حديثة تعكس هوية علامتك وتحوّل الزوار إلى عملاء.', detailEn: 'Responsive websites, landing pages, portfolio sites, UX/UI systems, and performance-optimized digital platforms.' },
-      { num: '05', en: 'BRANDING & VISUAL IDENTITY', ar: 'الهوية البصرية والشعارات', shortEn: 'We build distinctive brand identities designed to be recognized, remembered, and trusted.', shortAr: 'بناء هويات بصرية وشعارات مميزة تترسخ في أذهان الجمهور وتمنحك الثقة.', detailEn: 'Brand strategy, logo design, typography, color systems, visual guidelines, stationery, and brand applications.' },
-      { num: '06', en: 'CGI & 3D ADVERTISING', ar: 'إعلانات CGI والتصميم 3D', shortEn: 'High-impact CGI advertising, 3D product animation, FOOH concepts, and cinematic visual experiences.', shortAr: 'إعلانات CGI عالية التأثير ونمذجة منتجات ثلاثية الأبعاد وإخراج سينمائي واقعي.', detailEn: '3D product visualization, modeling, texturing, lighting, animation, FOOH concepts, and rendering.' },
-      { num: '07', en: 'MOTION DESIGN', ar: 'تصميم الموشن جرافيك', shortEn: 'Dynamic animation that brings brands, campaigns, and ideas to life.', shortAr: 'تحريك احترافي يمنح العلامات التجارية والحملات الإعلانية حياة وجاذبية.', detailEn: 'Logo animation, kinetic typography, social media motion, promotional animations, and branded transitions.' },
-      { num: '08', en: 'VIDEO PRODUCTION & EDITING', ar: 'المونتاج وإنتاج الفيديو', shortEn: 'Professional video storytelling crafted for advertising, social media, and digital campaigns.', shortAr: 'مونتاج وإخراج فيديو احترافي للإعلانات التجارية وحملات السوشيال ميديا.', detailEn: 'Editing, storytelling, pacing, color correction, sound design, and final delivery across digital platforms.' },
-      { num: '09', en: 'PRINT & PACKAGING DESIGN', ar: 'التغليف والمطبوعات', shortEn: 'Creative physical brand experiences built to stand out beyond the screen.', shortAr: 'تصميم عبوات وتغليف ومطبوعات احترافية جاهزة للطباعة وفصل الألوان.', detailEn: 'Packaging, brochures, posters, menus, flyers, outdoor billboards, stationery, and print-ready artwork.' }
+      { num: '01', en: 'SOCIAL MEDIA MANAGEMENT', ar: 'إدارة السوشيال ميديا', shortEn: 'Strategic social media management that turns your brand into a consistent and engaging digital presence.', shortAr: 'إدارة استراتيجية لحسابات التواصل الاجتماعي تحوّل علامتك لحضور رقمي متماسك ومؤثر.', detailEn: 'Content strategy, monthly planning, creative direction, post & reel concepts, publishing, and performance reviews.', detailAr: 'استراتيجية المحتوى، التخطيط الشهري، الإخراج الإبداعي، أفكار البوستات والريلز، النشر ومتابعة الأداء.' },
+      { num: '02', en: 'ADVERTISING & MEDIA BUYING', ar: 'الإعلانات وشراء المساحات', shortEn: 'Performance-driven advertising campaigns built to increase awareness, leads, and sales.', shortAr: 'حملات إعلانية مدروسة لزيادة الوعي بالعلامة التجارية وتحقيق المبيعات.', detailEn: 'Meta & Google paid campaigns, audience targeting, creative testing, A/B optimization, and reporting.', detailAr: 'حملات ميتا وجوجل الممولة، استهداف الجمهور، اختبار التصاميم، تحسين النتائج والتقارير الدورية.' },
+      { num: '03', en: 'AI VIDEO PRODUCTION', ar: 'إنتاج الفيديو بالذكاء الاصطناعي', shortEn: 'Next-generation AI-powered advertising and cinematic content built around strong creative concepts.', shortAr: 'إعلانات سينمائية ومحتوى مرئي متطور باستخدام أحدث تقنيات الذكاء الاصطناعي.', detailEn: 'Commercials, cinematic scenes, branded storytelling, product integration, sound design, and campaign-ready video.', detailAr: 'إعلانات تجارية، مشاهد سينمائية، دمج المنتجات، تصميم الصوت وفيديوهات جاهزة للحملات.' },
+      { num: '04', en: 'WEB DESIGN & DEVELOPMENT', ar: 'تصميم وتطوير المواقع', shortEn: 'Modern digital experiences designed to represent your brand and turn visitors into customers.', shortAr: 'تجارب رقمية ومواقع حديثة تعكس هوية علامتك وتحوّل الزوار إلى عملاء.', detailEn: 'Responsive websites, landing pages, portfolio sites, UX/UI systems, and performance-optimized digital platforms.', detailAr: 'مواقع متجاوبة، صفحات هبوط، مواقع بورتفوليو، تصميم واجهات UX/UI ومنصات سريعة الأداء.' },
+      { num: '05', en: 'BRANDING & VISUAL IDENTITY', ar: 'الهوية البصرية والشعارات', shortEn: 'We build distinctive brand identities designed to be recognized, remembered, and trusted.', shortAr: 'بناء هويات بصرية وشعارات مميزة تترسخ في أذهان الجمهور وتمنحك الثقة.', detailEn: 'Brand strategy, logo design, typography, color systems, visual guidelines, stationery, and brand applications.', detailAr: 'استراتيجية العلامة، تصميم الشعار، الخطوط والألوان، دليل الهوية البصرية والمطبوعات والتطبيقات.' },
+      { num: '06', en: 'CGI & 3D ADVERTISING', ar: 'إعلانات CGI والتصميم 3D', shortEn: 'High-impact CGI advertising, 3D product animation, FOOH concepts, and cinematic visual experiences.', shortAr: 'إعلانات CGI عالية التأثير ونمذجة منتجات ثلاثية الأبعاد وإخراج سينمائي واقعي.', detailEn: '3D product visualization, modeling, texturing, lighting, animation, FOOH concepts, and rendering.', detailAr: 'تصوير منتجات 3D، النمذجة والخامات والإضاءة، التحريك، أفكار FOOH والرندر الواقعي.' },
+      { num: '07', en: 'MOTION DESIGN', ar: 'تصميم الموشن جرافيك', shortEn: 'Dynamic animation that brings brands, campaigns, and ideas to life.', shortAr: 'تحريك احترافي يمنح العلامات التجارية والحملات الإعلانية حياة وجاذبية.', detailEn: 'Logo animation, kinetic typography, social media motion, promotional animations, and branded transitions.', detailAr: 'تحريك الشعارات، التايبوجرافي المتحرك، موشن السوشيال ميديا، الإعلانات الترويجية والانتقالات.' },
+      { num: '08', en: 'VIDEO PRODUCTION & EDITING', ar: 'المونتاج وإنتاج الفيديو', shortEn: 'Professional video storytelling crafted for advertising, social media, and digital campaigns.', shortAr: 'مونتاج وإخراج فيديو احترافي للإعلانات التجارية وحملات السوشيال ميديا.', detailEn: 'Editing, storytelling, pacing, color correction, sound design, and final delivery across digital platforms.', detailAr: 'المونتاج والسرد البصري، ضبط الإيقاع، تصحيح الألوان، هندسة الصوت والتصدير لكل المنصات.' },
+      { num: '09', en: 'PRINT & PACKAGING DESIGN', ar: 'التغليف والمطبوعات', shortEn: 'Creative physical brand experiences built to stand out beyond the screen.', shortAr: 'تصميم عبوات وتغليف ومطبوعات احترافية جاهزة للطباعة وفصل الألوان.', detailEn: 'Packaging, brochures, posters, menus, flyers, outdoor billboards, stationery, and print-ready artwork.', detailAr: 'تغليف المنتجات، البروشورات والبوسترات، المنيوهات، اللوحات الإعلانية وملفات جاهزة للطباعة.' }
     ];
 
     function renderServices() {
@@ -1130,7 +1143,7 @@
             </div>
           </div>
           <div class="pt-6 mt-6 border-t border-[#C59367]/15 space-y-4">
-            <p class="font-mono text-[10px] text-[#9A9186] leading-relaxed">${s.detailEn}</p>
+            <p class="font-mono text-[10px] text-[#9A9186] leading-relaxed">${currentLang === 'ar' ? s.detailAr : s.detailEn}</p>
             <button onclick="openContactModal('${s.en}')" class="font-mono text-[10px] font-bold uppercase tracking-wider text-[#C59367] hover:text-[#F2EADF] transition-colors">
               ${currentLang === 'ar' ? 'اطلب هذه الخدمة ↗' : 'REQUEST THIS SERVICE ↗'}
             </button>
@@ -1163,6 +1176,8 @@
         practiceTitle3: 'REASON TO EXIST.',
         practiceDesc: 'Kerlos blends creative instinct with disciplined visual thinking—bringing clarity, craft, and momentum to every brand touchpoint.',
         servicesTag: 'CAPABILITIES & SERVICES',
+        servicesHeading1: 'FULL-SPECTRUM',
+        servicesHeading2: 'CREATIVE OUTPUT.',
         workEyebrow: '03 — REAL PROJECTS / REAL OUTPUT',
         workTitle1: 'CRAFTED FOR',
         workTitle2: 'REAL ATTENTION.',
@@ -1196,7 +1211,10 @@
         ctaTitle1: 'READY TO BUILD SOMETHING',
         ctaTitle2: 'UNFORGETTABLE?',
         ctaBtn: 'START A PROJECT',
-        contactModalTitle: 'START A PROJECT'
+        contactModalTitle: 'START A PROJECT',
+        contactNameLbl: 'YOUR NAME / BRAND',
+        contactServiceLbl: 'SERVICE NEEDED',
+        contactBriefLbl: 'PROJECT BRIEF'
       },
       ar: {
         availableBadge: 'متاح للمشاريع المختارة',
@@ -1220,6 +1238,8 @@
         practiceTitle3: 'لوجودها.',
         practiceDesc: 'يمزج كيرلس بين الحس الإبداعي والتفكير البصري المنظم ليمنح علامتك التجارية وضوحاً وحضوراً مؤثراً.',
         servicesTag: 'القدرات والخدمات',
+        servicesHeading1: 'منظومة متكاملة من',
+        servicesHeading2: 'الحلول الإبداعية.',
         workEyebrow: '03 — مشاريع حقيقية / نتائج حقيقية',
         workTitle1: 'مُصمَّمة لجذب',
         workTitle2: 'الانتباه الحقيقي.',
@@ -1253,9 +1273,50 @@
         ctaTitle1: 'جاهز لبناء شيء',
         ctaTitle2: 'لا يُنسى؟',
         ctaBtn: 'ابدأ مشروعك',
-        contactModalTitle: 'ابدأ مشروعك الآن'
+        contactModalTitle: 'ابدأ مشروعك الآن',
+        contactNameLbl: 'الاسم أو اسم العلامة التجارية',
+        contactServiceLbl: 'الخدمة المطلوبة',
+        contactBriefLbl: 'تفاصيل المشروع'
       }
     };
+
+    const experienceData = [
+      { num: '01', periodEn: '2023 — PRESENT', periodAr: '2023 — حتى الآن', companyEn: 'SHAWAHID INDUSTRIAL ROADS CO.', companyAr: 'شركة شواهد للطرق والصناعة', roleEn: 'Graphic & 3D Machine Designer', roleAr: 'مصمم جرافيك و3D للماكينات الصناعية' },
+      { num: '02', periodEn: '2022 — 2023', periodAr: '2022 — 2023', companyEn: 'EL GAZZAR COMPANY', companyAr: 'شركة الجزار', roleEn: 'Graphic Designer — Color Separation', roleAr: 'مصمم جرافيك — فصل ألوان وطباعة' },
+      { num: '03', periodEn: '2019 — 2022', periodAr: '2019 — 2022', companyEn: 'TECHNO PRINT', companyAr: 'تكنو برنت', roleEn: 'Senior Graphic Designer — Social & Print', roleAr: 'مصمم جرافيك أول — سوشيال ميديا ومطبوعات' },
+      { num: '04', periodEn: '2018 — 2019', periodAr: '2018 — 2019', companyEn: 'PRO MEDIA COMPANY', companyAr: 'شركة برو ميديا', roleEn: 'Graphic & Motion Designer', roleAr: 'مصمم جرافيك وموشن جرافيك' },
+      { num: '05', periodEn: '2015 — PRESENT', periodAr: '2015 — حتى الآن', companyEn: 'INDEPENDENT PRACTICE', companyAr: 'عمل حر ومشاريع مستقلة', roleEn: 'Branding, Motion & 3D Visualization', roleAr: 'الهويات البصرية، الموشن جرافيك والتصميم 3D' }
+    ];
+
+    function renderExperience() {
+      const list = document.getElementById('experience-list');
+      if (!list) return;
+      const isAr = currentLang === 'ar';
+      list.innerHTML = experienceData.map(e => `
+        <div class="exp-row py-5 grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-2 sm:col-span-1 font-mono text-[11px] text-[#6B5A48]">${e.num}</div>
+          <div class="col-span-10 sm:col-span-2 font-mono text-[11px] uppercase text-[#6B5A48]">${isAr ? e.periodAr : e.periodEn}</div>
+          <div class="col-span-12 sm:col-span-4 font-display font-bold text-sm sm:text-base uppercase text-[#12100E]">${isAr ? e.companyAr : e.companyEn}</div>
+          <div class="col-span-10 sm:col-span-4 text-xs text-[#12100E]/75">${isAr ? e.roleAr : e.roleEn}</div>
+          <div class="col-span-2 sm:col-span-1 text-end font-mono text-xs text-[#B8845A]">↗</div>
+        </div>
+      `).join('');
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('mobileMenuIcon');
+      if (!menu) return;
+      const isHidden = menu.classList.toggle('hidden');
+      if (icon) icon.textContent = isHidden ? '☰' : '✕';
+    }
+
+    function closeMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('mobileMenuIcon');
+      if (menu) menu.classList.add('hidden');
+      if (icon) icon.textContent = '☰';
+    }
 
     function toggleLanguage() {
       currentLang = currentLang === 'en' ? 'ar' : 'en';
@@ -1266,7 +1327,7 @@
         if (i18nStrings[currentLang][key]) el.textContent = i18nStrings[currentLang][key];
       });
       renderServices();
-
+      renderExperience();
       renderProjects();
       renderYouTubePlaylist();
       FlashMediaDeck.updateUI();
@@ -1274,9 +1335,18 @@
 
     function setPortraitMode(mode) {
       const img = document.getElementById('portraitImg');
+      const btnColor = document.getElementById('btn-portrait-color');
+      const btnBw = document.getElementById('btn-portrait-bw');
       if (!img) return;
-      img.classList.toggle('portrait-bw', mode === 'bw');
-      img.classList.toggle('portrait-color', mode !== 'bw');
+      const isBw = mode === 'bw';
+      img.classList.toggle('portrait-bw', isBw);
+      img.classList.toggle('portrait-color', !isBw);
+      if (btnColor) {
+        btnColor.className = !isBw ? 'text-[#C59367] font-bold' : 'hover:text-[#F2EADF]';
+      }
+      if (btnBw) {
+        btnBw.className = isBw ? 'text-[#C59367] font-bold' : 'hover:text-[#F2EADF]';
+      }
     }
 
     /* ------------------------------------------------------------------------
@@ -1314,10 +1384,15 @@
 
     function toggleHeroRevealPlay() {
       const vid = document.getElementById('heroRevealVideo');
+      const btn = document.getElementById('hero-play-btn');
       if (!vid) return;
-      if (vid.paused) vid.play().catch(() => {});
-      else vid.pause();
-      document.getElementById('hero-play-btn').textContent = vid.paused ? 'Play' : 'Pause';
+      if (vid.paused) {
+        if (btn) btn.textContent = 'Pause';
+        vid.play().catch(() => { if (btn) btn.textContent = 'Play'; });
+      } else {
+        vid.pause();
+        if (btn) btn.textContent = 'Play';
+      }
     }
 
     function toggleHeroRevealMute() {
@@ -2207,7 +2282,12 @@
       }
 
       ensureHooks();
-      setInterval(ensureHooks, 300);
+      let hookChecks = 0;
+      const hookTimer = setInterval(() => {
+        ensureHooks();
+        hookChecks++;
+        if (hookChecks >= 40) clearInterval(hookTimer);
+      }, 300);
     })();
   </script>
 
