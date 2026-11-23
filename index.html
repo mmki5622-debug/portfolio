@@ -1628,10 +1628,12 @@
         if (hd !== u) list.push(hd);
       }
       if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
-        const hdMod = u.replace(/\/project_modules\/(?:disp|max_1200|2800_opt_1)\//i, '/project_modules/1400/');
-        if (hdMod !== u) list.push(hdMod);
+        ['fs', '2800_opt_1', '1400', 'max_1200', 'disp'].forEach(sz => {
+          const alt = u.replace(/\/project_modules\/[^\/]+\//i, '/project_modules/' + sz + '/');
+          if (alt && !list.includes(alt)) list.push(alt);
+        });
       }
-      list.push(u);
+      if (!list.includes(u)) list.push(u);
       return list;
     }
 
@@ -2155,7 +2157,7 @@
     });
   </script>
 
-  <script src="./control-room-bridge.js?v=25"></script>
+  <script src="./control-room-bridge.js?v=26"></script>
   <script>
     (function () {
       const PROFILE_URL = 'https://www.behance.net/kerloshany11';
@@ -2285,13 +2287,14 @@
       function buildCandidates(raw) {
         if (!raw || typeof raw !== 'string') return [];
         const u = raw.trim();
-        const out = [u];
+        const out = [];
         if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
-          ['1400', 'max_1200', 'disp', 'fs'].forEach(sz => {
+          ['fs', '2800_opt_1', '1400', 'max_1200', 'disp'].forEach(sz => {
             const alt = u.replace(/\/project_modules\/[^\/]+\//i, '/project_modules/' + sz + '/');
             if (alt && !out.includes(alt)) out.push(alt);
           });
         }
+        if (!out.includes(u)) out.push(u);
         return out;
       }
 

@@ -629,13 +629,13 @@
       if (hd !== u) list.push(hd);
     }
 
-    list.push(u);
     if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
-      ['1400', 'max_1200', 'disp'].forEach(sz => {
+      ['fs', '2800_opt_1', '1400', 'max_1200', 'disp'].forEach(sz => {
         const alt = u.replace(/\/project_modules\/[^\/]+\//i, '/project_modules/' + sz + '/');
         if (alt && !list.includes(alt)) list.push(alt);
       });
     }
+    if (!list.includes(u)) list.push(u);
     return list;
   }
 
@@ -748,7 +748,7 @@
     }
 
     // Extract ALL unique Behance project_modules images (strict image extensions, deduplicated by file hash, web-safe HD priority)
-    const sizePriority = { '1400': 6, '1400_opt_1': 5, 'max_1200': 5, '2800_opt_1': 4, 'fs': 3, 'disp': 2, 'source': 1 };
+    const sizePriority = { 'fs': 7, '2800_opt_1': 6, '1400': 5, '1400_opt_1': 4, 'max_1200': 3, 'disp': 2, 'source': 1 };
     const byFileKey = new Map();
     const orderedKeys = [];
     const modRegex = /https:\/\/mir-s3-cdn-cf\.behance\.net\/project_modules\/([a-z0-9_]+)\/([a-z0-9._-]+\.(?:jpe?g|png|webp|gif))/gi;
