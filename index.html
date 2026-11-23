@@ -1622,18 +1622,24 @@
     function upgradeBehanceImageCandidates(rawUrl) {
       if (!rawUrl || typeof rawUrl !== 'string') return [];
       const u = rawUrl.trim();
+      if (!u) return [];
       const list = [];
       if (/mir-s3-cdn-cf\.behance\.net\/projects\//i.test(u)) {
-        const hd = u.replace(/\/projects\/(?:202|404|808)\//i, '/projects/max_808/');
-        if (hd !== u) list.push(hd);
+        ['max_808', '808', '404'].forEach(sz => {
+          const alt = u.replace(/\/projects\/[^\/]+\//i, '/projects/' + sz + '/');
+          if (alt && !list.includes(alt)) list.push(alt);
+        });
       }
       if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
-        ['fs', '2800_opt_1', '1400', 'max_1200', 'disp'].forEach(sz => {
+        ['fs', '2800_opt_1', '1400', '1400_opt_1', '1400_webp', 'max_1200', 'disp', 'source'].forEach(sz => {
           const alt = u.replace(/\/project_modules\/[^\/]+\//i, '/project_modules/' + sz + '/');
           if (alt && !list.includes(alt)) list.push(alt);
         });
       }
       if (!list.includes(u)) list.push(u);
+      if (/^https?:\/\//i.test(u) && !/wsrv\.nl/i.test(u)) {
+        list.push('https://wsrv.nl/?url=' + encodeURIComponent(u) + '&q=92');
+      }
       return list;
     }
 
@@ -1734,10 +1740,13 @@
               <img
                 data-project-thumb="${p.id}"
                 src="${imgSrc}"
+                data-cands="${encodeURIComponent(JSON.stringify((p.imageCandidates && p.imageCandidates.length) ? p.imageCandidates : upgradeBehanceImageCandidates(imgSrc)))}"
+                data-cidx="0"
                 alt="${title}"
                 class="w-full h-full object-cover block group-hover:scale-[1.03] transition-transform duration-500"
                 loading="lazy"
                 referrerpolicy="no-referrer"
+                onerror="(function(el){try{var l=JSON.parse(decodeURIComponent(el.getAttribute('data-cands')||'[]'));var i=parseInt(el.getAttribute('data-cidx')||'0',10)+1;if(i<l.length){el.setAttribute('data-cidx',String(i));el.src=l[i];}}catch(e){}})(this)"
               />
               <!-- Subtle Hover Gradient Overlay (Behance Style) -->
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3.5 z-10">
@@ -2157,7 +2166,7 @@
     });
   </script>
 
-  <script src="./control-room-bridge.js?v=26"></script>
+  <script src="./control-room-bridge.js?v=27"></script>
   <script>
     (function () {
       const PROFILE_URL = 'https://www.behance.net/kerloshany11';
@@ -2289,12 +2298,15 @@
         const u = raw.trim();
         const out = [];
         if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
-          ['fs', '2800_opt_1', '1400', 'max_1200', 'disp'].forEach(sz => {
+          ['fs', '2800_opt_1', '1400', '1400_opt_1', '1400_webp', 'max_1200', 'disp', 'source'].forEach(sz => {
             const alt = u.replace(/\/project_modules\/[^\/]+\//i, '/project_modules/' + sz + '/');
             if (alt && !out.includes(alt)) out.push(alt);
           });
         }
         if (!out.includes(u)) out.push(u);
+        if (/^https?:\/\//i.test(u) && !/wsrv\.nl/i.test(u)) {
+          out.push('https://wsrv.nl/?url=' + encodeURIComponent(u) + '&q=92');
+        }
         return out;
       }
 

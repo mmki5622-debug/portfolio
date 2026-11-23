@@ -625,17 +625,22 @@
     const list = [];
 
     if (/mir-s3-cdn-cf\.behance\.net\/projects\//i.test(u)) {
-      const hd = u.replace(/\/projects\/(?:202|404|808)\//i, '/projects/max_808/');
-      if (hd !== u) list.push(hd);
+      ['max_808', '808', '404'].forEach(sz => {
+        const alt = u.replace(/\/projects\/[^\/]+\//i, '/projects/' + sz + '/');
+        if (alt && !list.includes(alt)) list.push(alt);
+      });
     }
 
     if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
-      ['fs', '2800_opt_1', '1400', 'max_1200', 'disp'].forEach(sz => {
+      ['fs', '2800_opt_1', '1400', '1400_opt_1', '1400_webp', 'max_1200', 'disp', 'source'].forEach(sz => {
         const alt = u.replace(/\/project_modules\/[^\/]+\//i, '/project_modules/' + sz + '/');
         if (alt && !list.includes(alt)) list.push(alt);
       });
     }
     if (!list.includes(u)) list.push(u);
+    if (/^https?:\/\//i.test(u) && !/wsrv\.nl/i.test(u)) {
+      list.push('https://wsrv.nl/?url=' + encodeURIComponent(u) + '&q=92');
+    }
     return list;
   }
 
