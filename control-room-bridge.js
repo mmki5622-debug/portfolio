@@ -1,6 +1,6 @@
 (function () {
   const DEFAULT_FIREBASE_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
-  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_permanent_v2';
+  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_permanent_v3';
 
   function getDefaultConfig() {
     return {
@@ -926,38 +926,49 @@
 
   async function fetchExternalTextWithFallback(targetUrl) {
     const isGalleryPage = /behance\.net\/gallery\//i.test(targetUrl);
-    const proxies = [
+    const rawProxies = [
       async () => {
-        const r = await fetchWithTimeout(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`, 6500);
+        const r = await fetchWithTimeout(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`, 7000);
         if (!r.ok) return '';
         const d = await r.json();
         return (d && d.contents) || '';
       },
       async () => {
-        const r = await fetchWithTimeout(`https://corsproxy.io/?${encodeURIComponent(targetUrl)}`, 6500);
+        const r = await fetchWithTimeout(`https://corsproxy.io/?${encodeURIComponent(targetUrl)}`, 7000);
         return r.ok ? await r.text() : '';
       },
       async () => {
-        const r = await fetchWithTimeout(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`, 6500);
+        const r = await fetchWithTimeout(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`, 7000);
         return r.ok ? await r.text() : '';
       }
     ];
-    if (isGalleryPage) {
-      proxies.unshift(async () => {
-        const r = await fetchWithTimeout(`https://r.jina.ai/${targetUrl}`, 8000);
-        return r.ok ? await r.text() : '';
-      });
-    }
 
-    for (const fn of proxies) {
+    let combined = '';
+    for (const fn of rawProxies) {
       try {
         const txt = await fn();
         if (txt && txt.length > 150 && (!isGalleryPage || /project_modules|ccv_id|player\.vimeo\.com|youtube\.com\/embed/i.test(txt))) {
-          return txt;
+          combined = txt;
+          break;
         }
       } catch (e) {}
     }
-    return '';
+
+    if (isGalleryPage) {
+      const hasVidsInRaw = /ccv_id|www-ccv\.adobe\.io|player\.vimeo\.com|youtube\.com\/embed/i.test(combined);
+      if (!combined || !hasVidsInRaw) {
+        try {
+          const r = await fetchWithTimeout(`https://r.jina.ai/${targetUrl}`, 8000);
+          if (r.ok) {
+            const jinaTxt = await r.text();
+            if (jinaTxt && jinaTxt.length > 150) {
+              combined = combined ? (combined + '\n' + jinaTxt) : jinaTxt;
+            }
+          }
+        } catch (e) {}
+      }
+    }
+    return combined;
   }
 
   function parseBehanceRssXml(xmlText) {
@@ -1111,7 +1122,7 @@
           hasVideo: Boolean(p.hasVideo),
           videoDetectedOnly: Boolean(p.videoDetectedOnly),
           enriched: true,
-          cacheVersion: 2,
+          cacheVersion: 3,
           updatedAt: Date.now()
         })
       });
@@ -1809,10 +1820,17 @@
         const { videos, images, hasVideoSignature } = extractBehanceVideosAndImages(html, p.image);
         if (images.length > 1 || videos.length > 0 || hasVideoSignature) {
           p.enriched = true;
+          p.cacheVersion = 3;
         }
 
         if (videos.length > 0) {
-          p.videos = videos;
+          const existingV = Array.isArray(p.videos) ? p.videos : [];
+          const seenVk = new Set(existingV.map(v => (typeof v === 'string' ? v : v.url).split('?')[0]));
+          videos.forEach(v => {
+            const k = v.url.split('?')[0];
+            if (!seenVk.has(k)) { seenVk.add(k); existingV.push(v); }
+          });
+          p.videos = existingV;
           p.hasVideo = true;
           p.videoDetectedOnly = false;
           if (!p.tags.includes('Video')) p.tags = ['Behance', 'Video'];
@@ -1905,7 +1923,8 @@
             const prev = (fbPrev && fbPrev.enriched) ? fbPrev : localPrev;
 
             const mergedVideos = videos.length > 0 ? videos : (prev && Array.isArray(prev.videos) ? prev.videos : []);
-            const mergedGallery = (prev && prev.enriched && Array.isArray(prev.mediaGallery) && prev.mediaGallery.length > 0)
+            const hasFreshGallery = Boolean(prev && prev.enriched && prev.cacheVersion === 3 && Array.isArray(prev.mediaGallery) && prev.mediaGallery.length > 0);
+            const mergedGallery = hasFreshGallery
               ? prev.mediaGallery
               : (images.length > 0 ? images : [rawThumb]).map((src, bIdx) => ({
                   src,
@@ -1924,7 +1943,7 @@
               category: 'branding',
               source: 'behance',
               pubDate: item.pubDate || '',
-              enriched: Boolean(prev && prev.enriched),
+              enriched: hasFreshGallery,
               hasVideo: autoDetectedVideo,
               videoDetectedOnly: mergedVideos.length === 0 && (Boolean(prev && prev.videoDetectedOnly) || titleLooksLikeVideo),
               videos: mergedVideos,
