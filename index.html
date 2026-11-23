@@ -438,6 +438,19 @@
     ::-webkit-scrollbar-track { background: #0A0908; }
     ::-webkit-scrollbar-thumb { background: #4B3B2D; }
     ::-webkit-scrollbar-thumb:hover { background: #C59367; }
+
+    /* Unify Video & Image Boards Width Inside Project Modal */
+    #pm-media-stream > * {
+      width: 100% !important;
+      max-width: 56rem !important; /* max-w-4xl */
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+    #pm-media-stream figure,
+    #pm-media-stream img {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
   </style>
 </head>
 <body class="antialiased selection:bg-[#C59367] selection:text-[#0A0908]">
@@ -1657,7 +1670,7 @@
       ` : '';
 
       const vidsHtml = vids.map((v, i) => `
-        <figure class="rounded-2xl overflow-hidden border border-[#C59367]/45 bg-black shadow-2xl">
+        <figure class="w-full max-w-4xl mx-auto rounded-2xl overflow-hidden border border-[#C59367]/45 bg-black shadow-2xl">
           ${v.kind === 'iframe'
             ? `<div class="aspect-video"><iframe src="${v.url}" class="w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`
             : `<video src="${v.url}" controls playsinline preload="metadata" class="w-full max-h-[78vh] mx-auto bg-black"></video>`}
@@ -1674,7 +1687,7 @@
         </figure>
       `).join('');
 
-      streamEl.innerHTML = audioHtml + vidsHtml + `<div class="w-fit max-w-[92vw] sm:max-w-[540px] mx-auto rounded-2xl overflow-hidden border border-[#C59367]/30 bg-[#060D0C] shadow-2xl">${imgsHtml}</div>`;
+      streamEl.innerHTML = audioHtml + vidsHtml + `<div class="w-full max-w-4xl mx-auto rounded-2xl overflow-hidden border border-[#C59367]/30 bg-[#060D0C] shadow-2xl">${imgsHtml}</div>`;
       if (countEl) {
         if (currentLang === 'ar') {
           countEl.textContent = vids.length > 0
@@ -1940,19 +1953,20 @@
   <script src="./control-room-bridge.js?v=24"></script>
   <script>
     (function () {
-      const FB_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
       const PROFILE_URL = 'https://www.behance.net/kerloshany11';
 
       function getProjectPageUrl(project) {
         if (project && typeof project.url === 'string' && /behance\.net\/gallery\//i.test(project.url.trim())) {
           return project.url.trim();
         }
-        const id = window.currentModalProjectId;
-        const list = Array.isArray(window.projectsData) ? window.projectsData : [];
-        const cur = id ? list.find(p => p && p.id === id) : null;
-        if (cur && typeof cur.url === 'string' && /behance\.net\/gallery\//i.test(cur.url.trim())) {
-          return cur.url.trim();
-        }
+        try {
+          const list = (typeof projectsData !== 'undefined' && Array.isArray(projectsData)) ? projectsData : [];
+          const curId = (typeof currentModalProjectId !== 'undefined') ? currentModalProjectId : null;
+          const cur = curId ? list.find(p => p && p.id === curId) : null;
+          if (cur && typeof cur.url === 'string' && /behance\.net\/gallery\//i.test(cur.url.trim())) {
+            return cur.url.trim();
+          }
+        } catch (e) {}
         const modalLink = document.getElementById('pm-behance-link');
         if (modalLink && modalLink.href && /behance\.net\/gallery\//i.test(modalLink.href)) {
           return modalLink.href;
@@ -1993,16 +2007,15 @@
 
       function applyPermanentModalLayout(project) {
         const streamEl = document.getElementById('pm-media-stream');
-        if (!streamEl || !project) return;
-        if (streamEl.dataset.khInlineReady === '1') {
-          syncBehanceLinks(project);
-          return;
-        }
+        if (!streamEl) return;
 
-        const isAr = typeof currentLang !== 'undefined' && currentLang === 'ar';
-        const title = isAr ? (project.titleAr || project.titleEn || '') : (project.titleEn || project.titleAr || '');
+        const isAr = (typeof currentLang !== 'undefined' && currentLang === 'ar');
+        const title = project
+          ? (isAr ? (project.titleAr || project.titleEn || '') : (project.titleEn || project.titleAr || ''))
+          : (document.getElementById('pm-title')?.textContent || 'Project Board');
         const pageUrl = getProjectPageUrl(project);
 
+        // 1. Replace any Adobe CCV iframe with clean direct Behance card
         streamEl.querySelectorAll('iframe').forEach((ifr) => {
           const src = ifr.getAttribute('src') || '';
           if (/www-ccv\.adobe\.io/i.test(src) || !src || src === 'about:blank') {
@@ -2021,76 +2034,97 @@
           }
         });
 
-        const imgs = [...streamEl.querySelectorAll('img')];
-        const seen = new Set();
-        const figures = [];
+        // 2. Unify all board images into equal max-w-4xl full-width stack
+        if (streamEl.dataset.khInlineReady !== '1') {
+          const imgs = [...streamEl.querySelectorAll('img')];
+          const seen = new Set();
+          const figures = [];
 
-        imgs.forEach((img) => {
-          const src = (img.currentSrc || img.getAttribute('src') || '').trim();
-          const fig = img.closest('figure');
-          if (!src || seen.has(src)) {
-            if (fig) fig.remove();
-            return;
+          imgs.forEach((img) => {
+            const src = (img.currentSrc || img.getAttribute('src') || '').trim();
+            const fig = img.closest('figure');
+            if (!src || seen.has(src)) {
+              if (fig) fig.remove();
+              return;
+            }
+            seen.add(src);
+            const cands = buildCandidates(src);
+            img.setAttribute('data-cands', JSON.stringify(cands));
+            img.setAttribute('data-cidx', '0');
+            img.src = cands[0];
+            img.alt = title;
+            img.className = 'w-full h-auto object-contain block mx-auto';
+            img.onerror = function () {
+              try {
+                const list = JSON.parse(this.getAttribute('data-cands') || '[]');
+                const next = parseInt(this.getAttribute('data-cidx') || '0', 10) + 1;
+                if (next < list.length) {
+                  this.setAttribute('data-cidx', String(next));
+                  this.src = list[next];
+                  return;
+                }
+              } catch (e) {}
+              const parentFig = this.closest('figure') || this.parentElement;
+              if (parentFig) parentFig.remove();
+            };
+
+            const newFig = document.createElement('figure');
+            newFig.className = 'w-full rounded-2xl overflow-hidden border border-[#C59367]/25 bg-[#060D0C] shadow-xl';
+            newFig.appendChild(img);
+            figures.push(newFig);
+          });
+
+          if (figures.length > 0) {
+            const wrap = document.createElement('div');
+            wrap.className = 'w-full max-w-4xl mx-auto space-y-4';
+            figures.forEach(f => wrap.appendChild(f));
+            streamEl.querySelectorAll('figure').forEach(f => f.remove());
+            streamEl.appendChild(wrap);
           }
-          seen.add(src);
-          const cands = buildCandidates(src);
-          img.setAttribute('data-cands', JSON.stringify(cands));
-          img.setAttribute('data-cidx', '0');
-          img.src = cands[0];
-          img.alt = title || 'Project Board';
-          img.className = 'w-full h-auto object-contain block mx-auto';
-          img.onerror = function () {
-            try {
-              const list = JSON.parse(this.getAttribute('data-cands') || '[]');
-              const next = parseInt(this.getAttribute('data-cidx') || '0', 10) + 1;
-              if (next < list.length) {
-                this.setAttribute('data-cidx', String(next));
-                this.src = list[next];
-                return;
-              }
-            } catch (e) {}
-            const parentFig = this.closest('figure') || this.parentElement;
-            if (parentFig) parentFig.remove();
-          };
 
-          const newFig = document.createElement('figure');
-          newFig.className = 'w-full rounded-2xl overflow-hidden border border-[#C59367]/25 bg-[#060D0C] shadow-xl';
-          newFig.appendChild(img);
-          figures.push(newFig);
-        });
-
-        if (figures.length > 0) {
-          const wrap = document.createElement('div');
-          wrap.className = 'w-full max-w-4xl mx-auto space-y-4';
-          figures.forEach(f => wrap.appendChild(f));
-          streamEl.querySelectorAll('figure').forEach(f => f.remove());
-          streamEl.appendChild(wrap);
+          streamEl.dataset.khInlineReady = '1';
         }
 
-        streamEl.dataset.khInlineReady = '1';
         syncBehanceLinks(project);
       }
 
-      function patchOpenModal() {
-        if (typeof window.openProjectModal === 'function' && !window.__khInlineModalHooked) {
-          window.__khInlineModalHooked = true;
+      function ensureHooks() {
+        if (typeof window.renderProjectMediaStream === 'function' && !window.renderProjectMediaStream.__khWrapped) {
+          const origRender = window.renderProjectMediaStream;
+          const wrappedRender = function (p) {
+            const streamEl = document.getElementById('pm-media-stream');
+            if (streamEl) delete streamEl.dataset.khInlineReady;
+            const ret = origRender.apply(this, arguments);
+            applyPermanentModalLayout(p);
+            return ret;
+          };
+          wrappedRender.__khWrapped = true;
+          window.renderProjectMediaStream = wrappedRender;
+          try { renderProjectMediaStream = wrappedRender; } catch (e) {}
+        }
+
+        if (typeof window.openProjectModal === 'function' && !window.openProjectModal.__khWrapped) {
           const origOpen = window.openProjectModal;
-          window.openProjectModal = function (id, focusVideo) {
+          const wrappedOpen = function (id, focusVideo) {
             const streamEl = document.getElementById('pm-media-stream');
             if (streamEl) delete streamEl.dataset.khInlineReady;
             const ret = origOpen.apply(this, arguments);
-            const list = Array.isArray(window.projectsData) ? window.projectsData : [];
-            const proj = list.find(p => p && p.id === id);
-            syncBehanceLinks(proj);
-            setTimeout(() => applyPermanentModalLayout(proj), 80);
-            setTimeout(() => applyPermanentModalLayout(proj), 550);
+            let proj = null;
+            try {
+              const list = (typeof projectsData !== 'undefined' && Array.isArray(projectsData)) ? projectsData : [];
+              proj = list.find(p => p && p.id === id) || null;
+            } catch (e) {}
+            applyPermanentModalLayout(proj);
             return ret;
           };
+          wrappedOpen.__khWrapped = true;
+          window.openProjectModal = wrappedOpen;
+          try { openProjectModal = wrappedOpen; } catch (e) {}
         }
       }
 
-      patchOpenModal();
-      setInterval(patchOpenModal, 400);
+      ensureHooks();
+      setInterval(ensureHooks, 300);
     })();
   </script>
 
