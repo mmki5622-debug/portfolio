@@ -768,6 +768,95 @@
     return 'bh_' + url.replace(/[^a-zA-Z0-9]/g, '_').slice(-40);
   }
 
+
+  /* --------------------------------------------------------------------------
+     FIREBASE AUTHENTICATION (EMAIL/PASSWORD TOKEN FOR PROTECTED WRITES)
+     -------------------------------------------------------------------------- */
+  const KH_AUTH_SESSION_KEY = 'kh_fb_auth_session_v1';
+  let cachedIdToken = null;
+  let cachedTokenExpiry = 0;
+
+  function loadStoredAuthSession() {
+    try {
+      const raw = sessionStorage.getItem(KH_AUTH_SESSION_KEY) || localStorage.getItem(KH_AUTH_SESSION_KEY);
+      if (!raw) return null;
+      const s = JSON.parse(raw);
+      if (s && s.idToken && (!s.expiresAt || Date.now() < s.expiresAt - 10000)) {
+        return s;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveAuthSession(sessionObj, persist) {
+    try {
+      const str = JSON.stringify(sessionObj);
+      sessionStorage.setItem(KH_AUTH_SESSION_KEY, str);
+      if (persist) localStorage.setItem(KH_AUTH_SESSION_KEY, str);
+    } catch (e) {}
+  }
+
+  function clearAuthSession() {
+    cachedIdToken = null;
+    cachedTokenExpiry = 0;
+    try {
+      sessionStorage.removeItem(KH_AUTH_SESSION_KEY);
+      localStorage.removeItem(KH_AUTH_SESSION_KEY);
+    } catch (e) {}
+  }
+
+  async function signInWithEmailPassword(email, password, apiKey, persist = true) {
+    const cleanEmail = String(email || '').trim();
+    const cleanPass = String(password || '');
+    const key = String(apiKey || (activeAppliedConfig && activeAppliedConfig.firebaseApiKey) || '').trim();
+    if (!cleanEmail || !cleanPass) {
+      throw new Error('Email and password are required.');
+    }
+    if (!key) {
+      throw new Error('Firebase Web API Key is not configured.');
+    }
+    const resp = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${encodeURIComponent(key)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: cleanEmail,
+        password: cleanPass,
+        returnSecureToken: true
+      })
+    });
+    const data = await resp.json();
+    if (!resp.ok || !data.idToken) {
+      throw new Error((data && data.error && data.error.message) || 'Firebase sign-in failed.');
+    }
+    const expiresInMs = (Number(data.expiresIn) || 3600) * 1000;
+    const sessionObj = {
+      email: data.email || cleanEmail,
+      localId: data.localId || '',
+      idToken: data.idToken,
+      refreshToken: data.refreshToken || '',
+      expiresAt: Date.now() + expiresInMs
+    };
+    cachedIdToken = sessionObj.idToken;
+    cachedTokenExpiry = sessionObj.expiresAt;
+    saveAuthSession(sessionObj, persist);
+    return sessionObj;
+  }
+
+  async function getValidFirebaseIdToken() {
+    if (cachedIdToken && Date.now() < cachedTokenExpiry - 10000) {
+      return cachedIdToken;
+    }
+    const stored = loadStoredAuthSession();
+    if (stored && stored.idToken) {
+      cachedIdToken = stored.idToken;
+      cachedTokenExpiry = stored.expiresAt || (Date.now() + 3000000);
+      return cachedIdToken;
+    }
+    return null;
+  }
+
   function getActiveFirebaseBaseUrl() {
     const u = (activeAppliedConfig && activeAppliedConfig.firebaseUrl) || DEFAULT_FIREBASE_URL;
     return String(u || '').replace(/\/+$/, '');
@@ -791,8 +880,10 @@
     const fb = getActiveFirebaseBaseUrl();
     const key = getBehanceFirebaseKey(p.url);
     if (!fb || !key) return;
+    const token = await getValidFirebaseIdToken();
+    if (!token) return;
     try {
-      await fetch(`${fb}/behanceCache/${key}.json`, {
+      await fetch(`${fb}/behanceCache/${key}.json?auth=${encodeURIComponent(token)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1981,7 +2072,15 @@
     });
   }
 
-  window.KHControlRoom = { getDefaultConfig, loadConfig, applyConfigToPortfolio, KHHeroShowcase };
+  window.KHControlRoom = {
+    getDefaultConfig,
+    loadConfig,
+    applyConfigToPortfolio,
+    KHHeroShowcase,
+    signInWithEmailPassword,
+    getValidFirebaseIdToken,
+    clearAuthSession
+  };
 
   if (document.getElementById('projects-grid')) {
     installPortfolioEnhancements();
