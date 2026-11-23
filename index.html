@@ -1630,13 +1630,13 @@
           if (alt && !list.includes(alt)) list.push(alt);
         });
       }
+      if (!list.includes(u)) list.push(u);
       if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
-        ['fs', '2800_opt_1', '1400', '1400_opt_1', '1400_webp', 'max_1200', 'disp', 'source'].forEach(sz => {
+        ['1400', 'max_1200', 'disp'].forEach(sz => {
           const alt = u.replace(/\/project_modules\/[^\/]+\//i, '/project_modules/' + sz + '/');
           if (alt && !list.includes(alt)) list.push(alt);
         });
       }
-      if (!list.includes(u)) list.push(u);
       if (/^https?:\/\//i.test(u) && !/wsrv\.nl/i.test(u)) {
         list.push('https://wsrv.nl/?url=' + encodeURIComponent(u) + '&q=92');
       }
@@ -2166,7 +2166,7 @@
     });
   </script>
 
-  <script src="./control-room-bridge.js?v=28"></script>
+  <script src="./control-room-bridge.js?v=29"></script>
   <script>
     (function () {
       const PROFILE_URL = 'https://www.behance.net/kerloshany11';
@@ -2296,14 +2296,15 @@
       function buildCandidates(raw) {
         if (!raw || typeof raw !== 'string') return [];
         const u = raw.trim();
-        const out = [];
+        if (!u) return [];
+        // Keep exact original URL first (rewriting to /fs/ makes Behance CDN return HTTP 200 white placeholder!)
+        const out = [u];
         if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
-          ['fs', '2800_opt_1', '1400', '1400_opt_1', '1400_webp', 'max_1200', 'disp', 'source'].forEach(sz => {
+          ['1400', 'max_1200', 'disp'].forEach(sz => {
             const alt = u.replace(/\/project_modules\/[^\/]+\//i, '/project_modules/' + sz + '/');
             if (alt && !out.includes(alt)) out.push(alt);
           });
         }
-        if (!out.includes(u)) out.push(u);
         if (/^https?:\/\//i.test(u) && !/wsrv\.nl/i.test(u)) {
           out.push('https://wsrv.nl/?url=' + encodeURIComponent(u) + '&q=92');
         }

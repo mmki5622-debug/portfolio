@@ -1,6 +1,6 @@
 (function () {
   const DEFAULT_FIREBASE_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
-  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_permanent_v3';
+  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_permanent_v4';
 
   function getDefaultConfig() {
     return {
@@ -631,13 +631,13 @@
       });
     }
 
+    if (!list.includes(u)) list.push(u);
     if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
-      ['fs', '2800_opt_1', '1400', '1400_opt_1', '1400_webp', 'max_1200', 'disp', 'source'].forEach(sz => {
+      ['1400', 'max_1200', 'disp'].forEach(sz => {
         const alt = u.replace(/\/project_modules\/[^\/]+\//i, '/project_modules/' + sz + '/');
         if (alt && !list.includes(alt)) list.push(alt);
       });
     }
-    if (!list.includes(u)) list.push(u);
     if (/^https?:\/\//i.test(u) && !/wsrv\.nl/i.test(u)) {
       list.push('https://wsrv.nl/?url=' + encodeURIComponent(u) + '&q=92');
     }
@@ -1122,7 +1122,7 @@
           hasVideo: Boolean(p.hasVideo),
           videoDetectedOnly: Boolean(p.videoDetectedOnly),
           enriched: true,
-          cacheVersion: 3,
+          cacheVersion: 4,
           updatedAt: Date.now()
         })
       });
@@ -1820,7 +1820,7 @@
         const { videos, images, hasVideoSignature } = extractBehanceVideosAndImages(html, p.image);
         if (images.length > 1 || videos.length > 0 || hasVideoSignature) {
           p.enriched = true;
-          p.cacheVersion = 3;
+          p.cacheVersion = 4;
         }
 
         if (videos.length > 0) {
@@ -1923,7 +1923,7 @@
             const prev = (fbPrev && fbPrev.enriched) ? fbPrev : localPrev;
 
             const mergedVideos = videos.length > 0 ? videos : (prev && Array.isArray(prev.videos) ? prev.videos : []);
-            const hasFreshGallery = Boolean(prev && prev.enriched && prev.cacheVersion === 3 && Array.isArray(prev.mediaGallery) && prev.mediaGallery.length > 0);
+            const hasFreshGallery = Boolean(prev && prev.enriched && prev.cacheVersion === 4 && Array.isArray(prev.mediaGallery) && prev.mediaGallery.length > 0);
             const mergedGallery = hasFreshGallery
               ? prev.mediaGallery
               : (images.length > 0 ? images : [rawThumb]).map((src, bIdx) => ({
