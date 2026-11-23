@@ -1860,7 +1860,7 @@
 
       const imgsHtml = imgs.map((m, i) => `
         <figure class="w-full bg-[#060D0C] flex justify-center">
-          <img src="${(m.srcCandidates && m.srcCandidates[0]) || m.src}" alt="${title} — ${i + 1}" class="w-full h-auto block" loading="lazy" />
+          <img src="${(m.srcCandidates && m.srcCandidates[0]) || m.src}" alt="${title} — ${i + 1}" class="w-full h-auto block" loading="eager" referrerpolicy="no-referrer" />
         </figure>
       `).join('');
 
@@ -2147,7 +2147,7 @@
     });
   </script>
 
-  <script src="./control-room-bridge.js?v=24"></script>
+  <script src="./control-room-bridge.js?v=25"></script>
   <script>
     (function () {
       const PROFILE_URL = 'https://www.behance.net/kerloshany11';
@@ -2277,13 +2277,14 @@
       function buildCandidates(raw) {
         if (!raw || typeof raw !== 'string') return [];
         const u = raw.trim();
-        const out = [];
+        const out = [u];
         if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
-          const up = u.replace(/\/project_modules\/(?:disp|max_1200|2800_opt_1)\//i, '/project_modules/1400/');
-          if (up !== u) out.push(up);
+          ['1400', 'max_1200', 'disp', 'fs'].forEach(sz => {
+            const alt = u.replace(/\/project_modules\/[^\/]+\//i, '/project_modules/' + sz + '/');
+            if (alt && !out.includes(alt)) out.push(alt);
+          });
         }
-        out.push(u);
-        return [...new Set(out)];
+        return out;
       }
 
       function applyPermanentModalLayout(project) {
@@ -2311,11 +2312,21 @@
             }
             seen.add(src);
             const cands = buildCandidates(src);
+            img.removeAttribute('loading');
+            img.loading = 'eager';
+            img.decoding = 'async';
+            img.referrerPolicy = 'no-referrer';
             img.setAttribute('data-cands', JSON.stringify(cands));
             img.setAttribute('data-cidx', '0');
             img.src = cands[0];
             img.alt = title;
-            img.className = 'w-full h-auto object-contain block mx-auto';
+            img.className = 'w-full h-auto object-contain block mx-auto bg-[#060D0C]';
+            img.onload = function () {
+              if (this.naturalWidth > 0 && this.naturalWidth <= 2 && this.naturalHeight <= 2) {
+                const parentFig = this.closest('figure');
+                if (parentFig) parentFig.remove();
+              }
+            };
             img.onerror = function () {
               try {
                 const list = JSON.parse(this.getAttribute('data-cands') || '[]');
@@ -2342,6 +2353,9 @@
             figures.forEach(f => wrap.appendChild(f));
             streamEl.querySelectorAll('figure').forEach((f) => {
               if (!f.querySelector('video, iframe')) f.remove();
+            });
+            streamEl.querySelectorAll(':scope > div').forEach((d) => {
+              if (!d.querySelector('video, iframe, audio, img') && d.id !== 'pm-behance-loading') d.remove();
             });
             streamEl.appendChild(wrap);
           }

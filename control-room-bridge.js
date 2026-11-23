@@ -1,6 +1,6 @@
 (function () {
   const DEFAULT_FIREBASE_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
-  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_permanent_v1';
+  const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_permanent_v2';
 
   function getDefaultConfig() {
     return {
@@ -629,12 +629,13 @@
       if (hd !== u) list.push(hd);
     }
 
-    if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
-      const hdMod = u.replace(/\/project_modules\/(?:disp|max_1200|2800_opt_1)\//i, '/project_modules/1400/');
-      if (hdMod !== u) list.push(hdMod);
-    }
-
     list.push(u);
+    if (/mir-s3-cdn-cf\.behance\.net\/project_modules\//i.test(u)) {
+      ['1400', 'max_1200', 'disp'].forEach(sz => {
+        const alt = u.replace(/\/project_modules\/[^\/]+\//i, '/project_modules/' + sz + '/');
+        if (alt && !list.includes(alt)) list.push(alt);
+      });
+    }
     return list;
   }
 
@@ -746,16 +747,17 @@
       }
     }
 
-    // Extract ALL unique Behance project_modules images (deduplicated by file hash, picking highest resolution)
-    const sizePriority = { fs: 5, source: 5, '2800_opt_1': 4, '1400': 4, max_1200: 3, disp: 2 };
+    // Extract ALL unique Behance project_modules images (strict image extensions, deduplicated by file hash, web-safe HD priority)
+    const sizePriority = { '1400': 6, '1400_opt_1': 5, 'max_1200': 5, '2800_opt_1': 4, 'fs': 3, 'disp': 2, 'source': 1 };
     const byFileKey = new Map();
     const orderedKeys = [];
-    const modRegex = /https:\/\/mir-s3-cdn-cf\.behance\.net\/project_modules\/([^\/\s"'<>)]+)\/([^"'\s<>)?]+)/gi;
+    const modRegex = /https:\/\/mir-s3-cdn-cf\.behance\.net\/project_modules\/([a-z0-9_]+)\/([a-z0-9._-]+\.(?:jpe?g|png|webp|gif))/gi;
     while ((m = modRegex.exec(html)) !== null) {
       const fullUrl = m[0];
       const sizeFolder = (m[1] || '').toLowerCase();
       const fileKey = (m[2] || '').toLowerCase();
-      if (!fileKey || /spacer\.gif/i.test(fileKey)) continue;
+      if (!fileKey || /spacer|blank|placeholder|loading|default_video|video_thumb/i.test(fileKey)) continue;
+      if (/^(?:100|202|404|hd_placeholder)$/i.test(sizeFolder)) continue;
       const prio = sizePriority[sizeFolder] || 1;
       if (!byFileKey.has(fileKey)) {
         orderedKeys.push(fileKey);
@@ -936,7 +938,7 @@
       }
     ];
     if (isGalleryPage) {
-      proxies.unshift(async () => {
+      proxies.push(async () => {
         const r = await fetchWithTimeout(`https://r.jina.ai/${targetUrl}`, 8000);
         return r.ok ? await r.text() : '';
       });
@@ -1104,6 +1106,7 @@
           hasVideo: Boolean(p.hasVideo),
           videoDetectedOnly: Boolean(p.videoDetectedOnly),
           enriched: true,
+          cacheVersion: 2,
           updatedAt: Date.now()
         })
       });
@@ -1118,10 +1121,7 @@
 
   function loadBehanceCache() {
     const keysToTry = [
-      BEHANCE_ENHANCED_CACHE_KEY,
-      'kh_behance_projects_v11',
-      'kh_behance_projects_v10',
-      'kh_behance_projects_v9'
+      BEHANCE_ENHANCED_CACHE_KEY
     ];
     for (const k of keysToTry) {
       try {
@@ -1684,7 +1684,8 @@
                 data-cidx="0"
                 alt="${title} — ${i + 1}"
                 class="w-full h-auto block"
-                loading="lazy"
+                loading="eager"
+                referrerpolicy="no-referrer"
                 onerror="(function(el){
                   try {
                     const list = JSON.parse(decodeURIComponent(el.getAttribute('data-cands')||'[]'));
@@ -1894,7 +1895,7 @@
             const projectUrl = item.link || 'https://www.behance.net/kerloshany11';
             const fbPrev = fbBehanceCache[getBehanceFirebaseKey(projectUrl)] || null;
             const localPrev = prevByUrl.get(projectUrl) || null;
-            const prev = (fbPrev && fbPrev.enriched) ? fbPrev : localPrev;
+            const prev = (fbPrev && fbPrev.enriched && fbPrev.cacheVersion === 2) ? fbPrev : localPrev;
 
             const mergedVideos = videos.length > 0 ? videos : (prev && Array.isArray(prev.videos) ? prev.videos : []);
             const mergedGallery = (prev && prev.enriched && Array.isArray(prev.mediaGallery) && prev.mediaGallery.length > 0)
