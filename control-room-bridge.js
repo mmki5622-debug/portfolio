@@ -71,6 +71,21 @@
       heroBtnCvAr: 'تحميل السيرة الذاتية (PDF)',
       heroSlideSeconds: 5,
       heroShowcaseEmpty: false,
+      heroBgConfig: {
+        enabled: true,
+        slideSeconds: 5,
+        loop: true,
+        muted: true,
+        opacity: 0.35,
+        items: [
+          {
+            type: 'video',
+            url: './Cinematic_logo_reveal_animation_202606051512-cleaned.mp4',
+            titleEn: 'Top Hero Background',
+            titleAr: 'خلفية الواجهة العلوية'
+          }
+        ]
+      },
       revealVideo1: './Cinematic_logo_reveal_animation_202606051512-cleaned.mp4',
       revealVideo2: './Cinematic_logo_reveal_animation_202606051517.mp4',
       heroShowcaseItems: [
@@ -407,6 +422,154 @@
   /* --------------------------------------------------------------------------
      HIGH-RESOLUTION IMAGE UPGRADER & BEHANCE LINK/MEDIA EXTRACTORS
      -------------------------------------------------------------------------- */
+  function normalizeHeroBgSlides(bgCfg) {
+    const base = getDefaultConfig().heroBgConfig;
+    const merged = { ...base, ...(bgCfg || {}) };
+    let list = Array.isArray(merged.items) ? merged.items.filter(it => it && it.url) : [];
+    if (list.length === 0 && merged.url) {
+      list = [{
+        type: merged.type || (isVideoLikeUrl(merged.url) ? 'video' : 'image'),
+        url: merged.url,
+        titleEn: merged.titleEn || 'Top Hero Slide',
+        titleAr: merged.titleAr || 'شريحة الواجهة العلوية'
+      }];
+    }
+    return {
+      enabled: merged.enabled !== false,
+      slideSeconds: Math.max(2, Number(merged.slideSeconds) || 5),
+      loop: merged.loop !== false,
+      muted: merged.muted !== false,
+      opacity: typeof merged.opacity === 'number' && !Number.isNaN(merged.opacity)
+        ? Math.min(1, Math.max(0.05, merged.opacity))
+        : 0.35,
+      items: list
+    };
+  }
+
+  function isVideoLikeUrl(u) {
+    if (!u || typeof u !== 'string') return false;
+    return u.startsWith('data:video/') || /\.(mp4|webm|mov|m4v)(\?|$)/i.test(u) || /youtube\.com|youtu\.be|vimeo\.com|drive\.google\.com|\/video\/upload/i.test(u);
+  }
+
+  const KHTopHeroBg = {
+    items: [],
+    idx: 0,
+    timer: null,
+    loop: true,
+    muted: true,
+    slideSeconds: 5,
+    initialized: false,
+
+    clearTimer() {
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+    },
+
+    setup(bgCfg) {
+      this.clearTimer();
+      const norm = normalizeHeroBgSlides(bgCfg);
+      const ambientVid = document.getElementById('heroBgAmbientVideo');
+      if (!ambientVid) return;
+
+      const parent = ambientVid.parentElement;
+      if (parent && !document.getElementById('heroBgAmbientImage')) {
+        const img = document.createElement('img');
+        img.id = 'heroBgAmbientImage';
+        img.alt = 'Top Hero Background';
+        img.className = 'hidden w-full h-full object-cover pointer-events-none transition-opacity duration-500';
+        parent.insertBefore(img, ambientVid);
+      }
+
+      const bgWrap = ambientVid.closest('[class*="hero"], .hero-bg, #top > div:first-child') || parent;
+      if (!norm.enabled || norm.items.length === 0) {
+        this.items = [];
+        ambientVid.pause();
+        ambientVid.classList.add('hidden');
+        const img = document.getElementById('heroBgAmbientImage');
+        if (img) img.classList.add('hidden');
+        if (bgWrap && bgWrap !== document.body && !bgWrap.querySelector('#hero-reveal-stage')) {
+          bgWrap.style.display = 'none';
+        }
+        return;
+      }
+
+      if (bgWrap && bgWrap !== document.body && !bgWrap.querySelector('#hero-reveal-stage')) {
+        bgWrap.style.display = '';
+      }
+
+      this.items = norm.items;
+      this.loop = norm.loop;
+      this.muted = norm.muted;
+      this.slideSeconds = norm.slideSeconds;
+      if (this.idx >= this.items.length) this.idx = 0;
+
+      if (!this.initialized) {
+        ambientVid.addEventListener('ended', () => {
+          if (this.items.length > 1) {
+            this.next();
+          } else if (!this.loop) {
+            ambientVid.pause();
+          }
+        });
+        this.initialized = true;
+      }
+
+      this.renderSlide(norm.opacity);
+    },
+
+    renderSlide(opacityVal) {
+      this.clearTimer();
+      const item = this.items[this.idx];
+      if (!item || !item.url) return;
+
+      const ambientVid = document.getElementById('heroBgAmbientVideo');
+      const ambientImg = document.getElementById('heroBgAmbientImage');
+      const opStr = String(opacityVal != null ? opacityVal : 0.35);
+
+      const isImg = item.type === 'image' || (!isVideoLikeUrl(item.url) && item.type !== 'video');
+      if (isImg) {
+        if (ambientVid) {
+          ambientVid.pause();
+          ambientVid.classList.add('hidden');
+        }
+        if (ambientImg) {
+          ambientImg.src = normalizeExternalImageUrl(item.url);
+          ambientImg.style.opacity = opStr;
+          ambientImg.classList.remove('hidden');
+        }
+        if (this.items.length > 1) {
+          this.timer = setTimeout(() => this.next(opacityVal), this.slideSeconds * 1000);
+        }
+      } else {
+        if (ambientImg) ambientImg.classList.add('hidden');
+        if (ambientVid) {
+          const cls = classifyVideoUrl(item.url);
+          const targetSrc = (cls && cls.kind === 'mp4') ? cls.url : item.url;
+          const currentSrc = ambientVid.getAttribute('data-active-url') || ambientVid.getAttribute('src') || '';
+          if (currentSrc !== targetSrc) {
+            ambientVid.src = targetSrc;
+            ambientVid.setAttribute('data-active-url', targetSrc);
+            ambientVid.load();
+          }
+          ambientVid.classList.remove('hidden');
+          ambientVid.loop = this.items.length === 1 && this.loop;
+          ambientVid.muted = this.muted;
+          ambientVid.playsInline = true;
+          ambientVid.style.opacity = opStr;
+          ambientVid.play().catch(() => {});
+        }
+      }
+    },
+
+    next(opacityVal) {
+      if (this.items.length === 0) return;
+      this.idx = (this.idx + 1) % this.items.length;
+      this.renderSlide(opacityVal);
+    }
+  };
+
   function upgradeImageCandidates(rawUrl) {
     if (!rawUrl || typeof rawUrl !== 'string') return [];
     const u = rawUrl.trim();
@@ -1231,6 +1394,7 @@
               ...remote,
               seo: { ...base.seo, ...(remote.seo || {}) },
               typography: { ...base.typography, ...(remote.typography || {}) },
+              heroBgConfig: { ...base.heroBgConfig, ...(remote.heroBgConfig || {}) },
               behanceOverrides: { ...(base.behanceOverrides || {}), ...(remote.behanceOverrides || {}) },
               sections: { ...base.sections, ...(remote.sections || {}) }
             };
@@ -1250,6 +1414,7 @@
             ...fileData,
             seo: { ...base.seo, ...(fileData.seo || {}) },
             typography: { ...base.typography, ...(fileData.typography || {}) },
+            heroBgConfig: { ...base.heroBgConfig, ...(fileData.heroBgConfig || {}) },
             behanceOverrides: { ...(base.behanceOverrides || {}), ...(fileData.behanceOverrides || {}) },
             sections: { ...base.sections, ...(fileData.sections || {}) }
           };
@@ -1264,6 +1429,7 @@
         ...localSaved,
         seo: { ...base.seo, ...(localSaved.seo || {}) },
         typography: { ...base.typography, ...(localSaved.typography || {}) },
+        heroBgConfig: { ...base.heroBgConfig, ...(localSaved.heroBgConfig || {}) },
         behanceOverrides: { ...(base.behanceOverrides || {}), ...(localSaved.behanceOverrides || {}) },
         sections: { ...base.sections, ...(localSaved.sections || {}) }
       };
@@ -1900,26 +2066,7 @@
               { type: 'video', url: cfg.revealVideo2 || './Cinematic_logo_reveal_animation_202606051517.mp4', titleEn: '3D Reveal 02', titleAr: 'تحريك 3D — 02' }
             ]);
     KHHeroShowcase.setup(showcaseItems, cfg.heroSlideSeconds || 5);
-    const ambientVid = document.getElementById('heroBgAmbientVideo');
-    const firstDirectVideoItem = showcaseItems.find(it => {
-      if (!it || it.type !== 'video' || !it.url) return false;
-      const c = classifyVideoUrl(it.url);
-      return !c || c.kind === 'mp4';
-    });
-    if (ambientVid) {
-      const rawTarget = (firstDirectVideoItem && firstDirectVideoItem.url) || cfg.revealVideo1;
-      const cls = classifyVideoUrl(rawTarget);
-      const targetSrc = (cls && cls.kind === 'mp4') ? cls.url : rawTarget;
-      const currentSrc = ambientVid.getAttribute('data-active-url') || ambientVid.getAttribute('src') || '';
-      if (targetSrc && currentSrc !== targetSrc) {
-        ambientVid.src = targetSrc;
-        ambientVid.setAttribute('data-active-url', targetSrc);
-        ambientVid.load();
-      }
-      ambientVid.muted = true;
-      ambientVid.playsInline = true;
-      ambientVid.play().catch(() => {});
-    }
+    KHTopHeroBg.setup(cfg.heroBgConfig);
 
     const skillsGrid = document.querySelector('#skills .lg\\:col-span-7.grid');
     if (skillsGrid && Array.isArray(cfg.skills)) {

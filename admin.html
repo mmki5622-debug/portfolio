@@ -454,11 +454,54 @@
         </div>
       </div>
 
+      <!-- Independent Multi-Slide Top Hero Background (Videos + Images + Slides) -->
+      <div class="panel-card p-6 space-y-4 border-2 border-[#C59367]/40">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="font-extrabold text-base text-[#C59367]">🎬 شرائح خلفية أول الموقع (Top Hero Background — فيديوهات وصور متعددة)</h2>
+            <p class="text-xs text-[#9A9186]">أضف فيديو أو صورة أو عدة شرائح متتالية لخلفية أول الموقع بشكل مستقل تماماً عن مسرح الـ 3D بالأسفل</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <label class="inline-flex items-center gap-2 text-xs font-bold cursor-pointer bg-[#070E0D] px-3.5 py-2 rounded-full border border-[#C59367]/30">
+              <input type="checkbox" id="herobg-enabled" class="accent-[#C59367] w-4 h-4" />
+              <span>تفعيل الخلفية العلوية</span>
+            </label>
+            <label class="px-3.5 py-2 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-extrabold cursor-pointer transition-all">
+              ⬆ رفع من جهازي
+              <input type="file" accept="video/*,image/*" multiple onchange="uploadNewHeroBgFiles(event)" class="hidden" />
+            </label>
+            <button type="button" onclick="addHeroBgItem('video')" class="px-3.5 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ فيديو</button>
+            <button type="button" onclick="addHeroBgItem('image')" class="px-3.5 py-2 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-extrabold">+ صورة</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <label class="flex items-center justify-between gap-2 text-xs bg-[#050B0A] px-3 py-2 rounded-xl border border-[#C59367]/20">
+            <span>مدة الشريحة/الصورة (ث)</span>
+            <input id="herobg-seconds" type="number" min="2" max="30" class="inp !w-16 !py-1 text-center text-xs" />
+          </label>
+          <label class="flex items-center justify-between gap-2 text-xs bg-[#050B0A] px-3 py-2 rounded-xl border border-[#C59367]/20">
+            <span>تكرار مستمر (Loop)</span>
+            <input type="checkbox" id="herobg-loop" class="accent-[#C59367] w-4 h-4" />
+          </label>
+          <label class="flex items-center justify-between gap-2 text-xs bg-[#050B0A] px-3 py-2 rounded-xl border border-[#C59367]/20">
+            <span>كتم الصوت (Muted)</span>
+            <input type="checkbox" id="herobg-muted" class="accent-[#C59367] w-4 h-4" />
+          </label>
+          <label class="flex items-center justify-between gap-2 text-xs bg-[#050B0A] px-3 py-2 rounded-xl border border-[#C59367]/20">
+            <span>الشفافية (%)</span>
+            <input id="herobg-opacity" type="number" min="5" max="100" step="5" class="inp !w-16 !py-1 text-center text-xs" />
+          </label>
+        </div>
+
+        <div id="herobg-editor-list" class="space-y-3"></div>
+      </div>
+
       <!-- 3D Showcase Stage Slides -->
       <div class="panel-card p-6 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 class="font-extrabold text-base text-[#C59367]">🎥 شرائح مسرح الـ 3D والصور (Hero Showcase)</h2>
+            <h2 class="font-extrabold text-base text-[#C59367]">🎥 شرائح مسرح الـ 3D والصور بالأسفل (Motion &amp; 3D Stage — مستقل تماماً)</h2>
             <p class="text-xs text-[#9A9186]">أضف فيديوهات MP4 أو روابط YouTube أو صور للتنقل بينها تلقائياً</p>
           </div>
           <div class="flex flex-wrap items-center gap-2.5">
@@ -725,6 +768,7 @@
       merged.seo = { ...def.seo, ...(merged.seo || {}) };
       merged.typography = { ...def.typography, ...(merged.typography || {}) };
       merged.sections = { ...def.sections, ...(merged.sections || {}) };
+      merged.heroBgConfig = { ...(def.heroBgConfig || { enabled: true, type: 'video', url: './Cinematic_logo_reveal_animation_202606051512-cleaned.mp4', loop: true, muted: true, opacity: 0.35 }), ...(merged.heroBgConfig || {}) };
       if (!Array.isArray(merged.stats) || merged.stats.length < 3) merged.stats = def.stats;
       if (!Array.isArray(merged.skills) || merged.skills.length === 0) merged.skills = def.skills;
       if (!Array.isArray(merged.experience) || merged.experience.length === 0) merged.experience = def.experience;
@@ -956,6 +1000,17 @@
 
       refreshSinglePreview('cfg-logoUrl', 'prev-logoUrl');
       refreshSinglePreview('cfg-portraitUrl', 'prev-portraitUrl');
+      const hbg = cfg.heroBgConfig || {};
+      hbg.items = ensureHeroBgSlidesArray(hbg);
+      if (document.getElementById('herobg-enabled')) document.getElementById('herobg-enabled').checked = hbg.enabled !== false;
+      if (document.getElementById('herobg-seconds')) document.getElementById('herobg-seconds').value = Math.max(2, Number(hbg.slideSeconds) || 5);
+      if (document.getElementById('herobg-loop')) document.getElementById('herobg-loop').checked = hbg.loop !== false;
+      if (document.getElementById('herobg-muted')) document.getElementById('herobg-muted').checked = hbg.muted !== false;
+      if (document.getElementById('herobg-opacity')) {
+        const opVal = typeof hbg.opacity === 'number' ? Math.round(hbg.opacity * 100) : 35;
+        document.getElementById('herobg-opacity').value = Math.min(100, Math.max(5, opVal));
+      }
+      renderHeroBgEditor();
       renderShowcaseEditor();
       renderMarqueeEditor();
       renderProjectsEditor();
@@ -1181,6 +1236,92 @@
     }
 
     /* ---------------- SHOWCASE EDITOR (DEVICE UPLOAD + EXTERNAL LINKS + DELETE) ---------------- */
+    function ensureHeroBgSlidesArray(hbg) {
+      const obj = hbg || {};
+      let arr = Array.isArray(obj.items) ? obj.items.filter(Boolean) : [];
+      if (arr.length === 0 && obj.url) {
+        arr = [{ type: obj.type || 'video', url: obj.url, titleEn: obj.titleEn || 'Top Slide', titleAr: obj.titleAr || 'شريحة علوية' }];
+      }
+      return arr;
+    }
+
+    function renderHeroBgEditor() {
+      const box = document.getElementById('herobg-editor-list');
+      if (!box) return;
+      if (!cfg.heroBgConfig) cfg.heroBgConfig = {};
+      cfg.heroBgConfig.items = ensureHeroBgSlidesArray(cfg.heroBgConfig);
+      const list = cfg.heroBgConfig.items;
+      if (list.length === 0) {
+        box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-3">لا توجد شرائح في الخلفية العلوية — أضف فيديو أو صورة أو عدة شرائح من الأزرار بالأعلى.</p>';
+        return;
+      }
+      box.innerHTML = list.map((it, i) => `
+        <div class="sub-card p-3.5 flex flex-wrap md:flex-nowrap items-center gap-3">
+          ${renderMiniPreview(it.url, it.type)}
+          <select onchange="cfg.heroBgConfig.items[${i}].type=this.value;renderHeroBgEditor()" class="inp !w-28">
+            <option value="video" ${it.type==='video'?'selected':''}>فيديو 🎬</option>
+            <option value="image" ${it.type==='image'?'selected':''}>صورة 🖼️</option>
+          </select>
+          <input value="${esc(it.url)}" oninput="cfg.heroBgConfig.items[${i}].url=this.value" dir="ltr" class="inp flex-1 min-w-[200px]" placeholder="رابط فيديو MP4 / YouTube أو رابط صورة / من جهازك" />
+          <label class="px-3 py-2 rounded-xl bg-[#0E3E3F] border border-[#C59367]/45 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-bold cursor-pointer shrink-0">
+            ⬆ من جهازي
+            <input type="file" accept="video/*,image/*" onchange="replaceHeroBgFile(event, ${i})" class="hidden" />
+          </label>
+          <button type="button" onclick="cfg.heroBgConfig.items.splice(${i},1);renderHeroBgEditor();showToast('تم حذف الشريحة')" class="px-3 py-2 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-600 hover:text-white text-xs font-bold shrink-0">🗑️ حذف</button>
+        </div>
+      `).join('');
+    }
+    function addHeroBgItem(type = 'video') {
+      if (!cfg.heroBgConfig) cfg.heroBgConfig = {};
+      cfg.heroBgConfig.items = ensureHeroBgSlidesArray(cfg.heroBgConfig);
+      cfg.heroBgConfig.items.push({ type, url: '', titleEn: type === 'image' ? 'Hero Image Slide' : 'Hero Video Slide', titleAr: type === 'image' ? 'شريحة صورة علوية' : 'شريحة فيديو علوية' });
+      renderHeroBgEditor();
+    }
+    async function uploadNewHeroBgFiles(event) {
+      const files = Array.from(event.target.files || []);
+      event.target.value = '';
+      if (!cfg.heroBgConfig) cfg.heroBgConfig = {};
+      cfg.heroBgConfig.items = ensureHeroBgSlidesArray(cfg.heroBgConfig);
+      for (const file of files) {
+        const res = await handleDeviceMediaUpload(file);
+        if (res && res.url) {
+          const cleanName = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ');
+          cfg.heroBgConfig.items.push({ type: res.type, url: res.url, titleEn: cleanName, titleAr: cleanName });
+          renderHeroBgEditor();
+        }
+      }
+    }
+    async function replaceHeroBgFile(event, idx) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      const res = await handleDeviceMediaUpload(file);
+      if (res && res.url && cfg.heroBgConfig && cfg.heroBgConfig.items[idx]) {
+        cfg.heroBgConfig.items[idx].url = res.url;
+        cfg.heroBgConfig.items[idx].type = res.type;
+        renderHeroBgEditor();
+      }
+    }
+    function refreshHeroBgPreview() {
+      const box = document.getElementById('herobg-preview-box');
+      const url = (document.getElementById('herobg-url')?.value || '').trim();
+      if (!box) return;
+      box.innerHTML = renderMiniPreview(url, 'video');
+    }
+
+    async function uploadHeroBgFile(event) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      if (!file) return;
+      const res = await handleDeviceMediaUpload(file, 'video');
+      if (res && res.url) {
+        const inp = document.getElementById('herobg-url');
+        if (inp) inp.value = res.url;
+        if (!cfg.heroBgConfig) cfg.heroBgConfig = {};
+        cfg.heroBgConfig.url = res.url;
+        refreshHeroBgPreview();
+      }
+    }
+
     function renderShowcaseEditor() {
       const box = document.getElementById('showcase-editor-list');
       const list = Array.isArray(cfg.heroShowcaseItems) ? cfg.heroShowcaseItems : [];
@@ -1651,6 +1792,24 @@
         const el = document.getElementById('cfg-' + k);
         if (el) cfg[k] = el.value.trim();
       });
+      const rawOp = Number(document.getElementById('herobg-opacity')?.value);
+      const normOp = Number.isFinite(rawOp) ? Math.min(1, Math.max(0.05, rawOp / 100)) : 0.35;
+      const cleanBgItems = ensureHeroBgSlidesArray(cfg.heroBgConfig)
+        .map(it => ({
+          type: it.type === 'image' ? 'image' : 'video',
+          url: String(it.url || '').trim(),
+          titleEn: it.titleEn || '',
+          titleAr: it.titleAr || ''
+        }))
+        .filter(it => it.url);
+      cfg.heroBgConfig = {
+        enabled: document.getElementById('herobg-enabled')?.checked !== false,
+        slideSeconds: Math.max(2, Number(document.getElementById('herobg-seconds')?.value) || 5),
+        loop: document.getElementById('herobg-loop')?.checked !== false,
+        muted: document.getElementById('herobg-muted')?.checked !== false,
+        opacity: normOp,
+        items: cleanBgItems
+      };
       cfg.heroSlideSeconds = Number(document.getElementById('cfg-heroSlideSeconds').value) || 5;
       cfg.marqueeSpeedSeconds = Number(document.getElementById('cfg-marqueeSpeedSeconds').value) || 28;
       cfg.heroShowcaseEmpty = !Array.isArray(cfg.heroShowcaseItems) || cfg.heroShowcaseItems.length === 0;
