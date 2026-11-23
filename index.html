@@ -451,6 +451,22 @@
       width: 100% !important;
       max-width: 100% !important;
     }
+    /* Auto-fit Vertical / Square Video Players */
+    #pm-media-stream figure.kh-vid-portrait {
+      max-width: 420px !important;
+    }
+    #pm-media-stream figure.kh-vid-square {
+      max-width: 560px !important;
+    }
+    #pm-media-stream figure.kh-vid-portrait .kh-iframe-box {
+      aspect-ratio: 9 / 16 !important;
+    }
+    #pm-media-stream figure.kh-vid-square .kh-iframe-box {
+      aspect-ratio: 1 / 1 !important;
+    }
+    #pm-media-stream figure.kh-vid-landscape .kh-iframe-box {
+      aspect-ratio: 16 / 9 !important;
+    }
   </style>
 </head>
 <body class="antialiased selection:bg-[#C59367] selection:text-[#0A0908]">
@@ -1983,14 +1999,98 @@
           pmLink.rel = 'noopener noreferrer';
           pmLink.style.display = '';
         }
-        const streamEl = document.getElementById('pm-media-stream');
-        if (streamEl) {
-          streamEl.querySelectorAll('a[href*="behance.net"]').forEach((a) => {
-            a.href = targetUrl;
-            a.target = '_blank';
-            a.rel = 'noopener noreferrer';
-          });
-        }
+      }
+
+      function applyRatioClass(fig, mode) {
+        if (!fig) return;
+        fig.classList.remove('kh-vid-portrait', 'kh-vid-square', 'kh-vid-landscape');
+        fig.classList.add('kh-vid-' + mode);
+      }
+
+      function autoFitVideoPlayers(streamEl, project) {
+        if (!streamEl) return;
+
+        // A. Native <video> elements: auto-detect exact width & height
+        streamEl.querySelectorAll('video').forEach((vid) => {
+          const fig = vid.closest('figure');
+          if (!fig) return;
+          const fit = () => {
+            const w = vid.videoWidth || 0;
+            const h = vid.videoHeight || 0;
+            if (!w || !h) return;
+            const ratio = w / h;
+            if (ratio < 0.85) {
+              applyRatioClass(fig, 'portrait');
+            } else if (ratio <= 1.15) {
+              applyRatioClass(fig, 'square');
+            } else {
+              applyRatioClass(fig, 'landscape');
+            }
+          };
+          if (vid.readyState >= 1) fit();
+          else vid.addEventListener('loadedmetadata', fit, { once: true });
+        });
+
+        // B. <iframe> players (Behance Adobe CCV, YouTube, Vimeo, Drive)
+        streamEl.querySelectorAll('iframe').forEach((ifr, idx) => {
+          const fig = ifr.closest('figure');
+          if (!fig || fig.dataset.khRatioWired === '1') return;
+          fig.dataset.khRatioWired = '1';
+
+          const box = ifr.parentElement;
+          if (box) box.classList.add('kh-iframe-box');
+
+          const src = ifr.getAttribute('src') || '';
+          const vMeta = (project && Array.isArray(project.videos) && project.videos[idx]) ? project.videos[idx] : null;
+          let detected = 'landscape';
+
+          if (vMeta && vMeta.width && vMeta.height) {
+            const r = Number(vMeta.width) / Number(vMeta.height);
+            if (r < 0.85) detected = 'portrait';
+            else if (r <= 1.15) detected = 'square';
+          } else if (/shorts\/|reel|vertical|9x16|portrait/i.test(src)) {
+            detected = 'portrait';
+          } else {
+            const attrW = parseFloat(ifr.getAttribute('width') || '0');
+            const attrH = parseFloat(ifr.getAttribute('height') || '0');
+            if (attrW > 0 && attrH > 0) {
+              const r = attrW / attrH;
+              if (r < 0.85) detected = 'portrait';
+              else if (r <= 1.15) detected = 'square';
+            }
+          }
+          applyRatioClass(fig, detected);
+
+          // Add a compact ratio toggle button in figcaption for cross-origin iframes (like Adobe CCV)
+          const cap = fig.querySelector('figcaption');
+          if (cap && !cap.querySelector('.kh-ratio-switcher')) {
+            const modes = [
+              { id: 'landscape', label: '16:9' },
+              { id: 'portrait', label: '9:16' },
+              { id: 'square', label: '1:1' }
+            ];
+            const wrap = document.createElement('div');
+            wrap.className = 'kh-ratio-switcher flex items-center gap-1';
+            modes.forEach((m) => {
+              const btn = document.createElement('button');
+              btn.type = 'button';
+              btn.textContent = m.label;
+              btn.className = 'px-2 py-0.5 rounded font-mono text-[10px] border transition-colors ' +
+                (m.id === detected ? 'bg-[#C59367] text-[#0A0908] border-[#C59367] font-bold' : 'border-[#C59367]/35 text-[#C9BFB2] hover:border-[#C59367]');
+              btn.onclick = (e) => {
+                e.stopPropagation();
+                applyRatioClass(fig, m.id);
+                wrap.querySelectorAll('button').forEach((b) => {
+                  const active = b === btn;
+                  b.className = 'px-2 py-0.5 rounded font-mono text-[10px] border transition-colors ' +
+                    (active ? 'bg-[#C59367] text-[#0A0908] border-[#C59367] font-bold' : 'border-[#C59367]/35 text-[#C9BFB2] hover:border-[#C59367]');
+                });
+              };
+              wrap.appendChild(btn);
+            });
+            cap.appendChild(wrap);
+          }
+        });
       }
 
       function buildCandidates(raw) {
@@ -2009,33 +2109,14 @@
         const streamEl = document.getElementById('pm-media-stream');
         if (!streamEl) return;
 
-        const isAr = (typeof currentLang !== 'undefined' && currentLang === 'ar');
-        const title = project
-          ? (isAr ? (project.titleAr || project.titleEn || '') : (project.titleEn || project.titleAr || ''))
-          : (document.getElementById('pm-title')?.textContent || 'Project Board');
-        const pageUrl = getProjectPageUrl(project);
+        autoFitVideoPlayers(streamEl, project);
 
-        // 1. Replace any Adobe CCV iframe with clean direct Behance card
-        streamEl.querySelectorAll('iframe').forEach((ifr) => {
-          const src = ifr.getAttribute('src') || '';
-          if (/www-ccv\.adobe\.io/i.test(src) || !src || src === 'about:blank') {
-            const card = document.createElement('div');
-            card.className = 'w-full max-w-4xl mx-auto rounded-2xl border border-[#C59367]/40 bg-[#060D0C] p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl';
-            card.innerHTML = `
-              <div class="space-y-1 text-center sm:text-start">
-                <div class="text-sm font-bold text-[#F2EADF]">${isAr ? 'فيديو المشروع على Behance' : 'Behance Project Video'}</div>
-                <div class="text-xs text-[#9A9186]">${isAr ? 'مشغل Adobe CCV يمنع التشغيل المباشر خارج Behance. افتح صفحة المشروع لمشاهدة الفيديو بجودته الكاملة.' : 'Adobe CCV restricts direct playback outside Behance. Open the project page to watch the full video.'}</div>
-              </div>
-              <a href="${pageUrl}" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#060D0C] text-xs font-extrabold shrink-0">${isAr ? 'مشاهدة على Behance ↗' : 'WATCH ON BEHANCE ↗'}</a>
-            `;
-            const fig = ifr.closest('figure');
-            if (fig) fig.replaceWith(card);
-            else ifr.replaceWith(card);
-          }
-        });
-
-        // 2. Unify all board images into equal max-w-4xl full-width stack
         if (streamEl.dataset.khInlineReady !== '1') {
+          const isAr = (typeof currentLang !== 'undefined' && currentLang === 'ar');
+          const title = project
+            ? (isAr ? (project.titleAr || project.titleEn || '') : (project.titleEn || project.titleAr || ''))
+            : (document.getElementById('pm-title')?.textContent || 'Project Board');
+
           const imgs = [...streamEl.querySelectorAll('img')];
           const seen = new Set();
           const figures = [];
@@ -2078,7 +2159,9 @@
             const wrap = document.createElement('div');
             wrap.className = 'w-full max-w-4xl mx-auto space-y-4';
             figures.forEach(f => wrap.appendChild(f));
-            streamEl.querySelectorAll('figure').forEach(f => f.remove());
+            streamEl.querySelectorAll('figure').forEach((f) => {
+              if (!f.querySelector('video, iframe')) f.remove();
+            });
             streamEl.appendChild(wrap);
           }
 
