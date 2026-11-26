@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="./control-room-bridge.js?v=34"></script>
+  <script src="./control-room-bridge.js?v=35"></script>
   <style>
     body {
       background-color: #060D0C;
@@ -1548,9 +1548,12 @@
         const boards = Array.isArray(p.extraBoards) ? p.extraBoards : [];
         return `
         <div class="sub-card p-4 space-y-3.5">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-wrap justify-between items-center gap-2">
             <span class="text-xs font-extrabold text-[#C59367]">مشروع #${i + 1}</span>
-            <button type="button" onclick="cfg.projects.splice(${i},1);renderProjectsEditor();showToast('تم حذف المشروع')" class="px-3 py-1 rounded-full bg-red-950/60 border border-red-500/40 text-xs text-red-300 hover:bg-red-600 hover:text-white font-bold">🗑️ حذف المشروع</button>
+            <div class="flex items-center gap-2">
+              ${/behance\.net\/gallery\//i.test(p.url || '') ? `<button type="button" onclick="importBehanceProjectByUrl(cfg.projects[${i}].url)" class="px-3 py-1 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-bold transition-all">↻ إعادة سحب من Behance</button>` : ''}
+              <button type="button" onclick="cfg.projects.splice(${i},1);renderProjectsEditor();showToast('تم حذف المشروع')" class="px-3 py-1 rounded-full bg-red-950/60 border border-red-500/40 text-xs text-red-300 hover:bg-red-600 hover:text-white font-bold">🗑️ حذف المشروع</button>
+            </div>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
             <input value="${esc(p.titleEn)}" oninput="cfg.projects[${i}].titleEn=this.value" dir="ltr" class="inp" placeholder="Project Title EN" />
@@ -1612,78 +1615,61 @@
       `;
       }).join('');
     }
-    async function importBehanceProjectByUrl() {
+    async function importBehanceProjectByUrl(overrideUrl = '') {
       const inp = document.getElementById('bh-manual-import-url');
       const btn = document.getElementById('btn-import-bh-url');
-      const rawUrl = (inp && inp.value || '').trim();
+      const rawUrl = (overrideUrl || (inp && inp.value) || '').trim();
       if (!rawUrl || !/behance\.net\/gallery\//i.test(rawUrl)) {
         showToast('⚠️ من فضلك ضع رابط مشروع Behance صحيح (يحتوي على behance.net/gallery/)');
         return;
       }
       if (btn) {
         btn.disabled = true;
-        btn.textContent = '⏳ جاري سحب المشروع...';
+        btn.textContent = '⏳ جاري سحب البيانات والصور والفيديو...';
       }
       try {
-        let html = '';
-        if (window.KHControlRoom && window.KHControlRoom.fetchExternalTextWithFallback) {
-          html = await window.KHControlRoom.fetchExternalTextWithFallback(rawUrl);
-        }
-        let title = '';
-        let desc = '';
-        let ogImage = '';
-        let videos = [];
-        let images = [];
-
-        if (html) {
-          const ogTitleM = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
-            || html.match(/<title[^>]*>([^<]+)<\/title>/i);
-          if (ogTitleM && ogTitleM[1]) {
-            title = ogTitleM[1].replace(/\s*::\s*Behance.*$/i, '').replace(/\s*on Behance.*$/i, '').trim();
-          }
-          const ogDescM = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["']/i);
-          if (ogDescM && ogDescM[1]) desc = ogDescM[1].trim();
-
-          const ogImgM = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i);
-          if (ogImgM && ogImgM[1]) ogImage = ogImgM[1].trim();
-
-          if (window.KHControlRoom && window.KHControlRoom.extractBehanceVideosAndImages) {
-            const extracted = window.KHControlRoom.extractBehanceVideosAndImages(html, ogImage);
-            videos = Array.isArray(extracted.videos) ? extracted.videos : [];
-            images = Array.isArray(extracted.images) ? extracted.images : [];
-          }
+        let meta = { title: '', desc: '', cover: '', videos: [], images: [], hasVideoSignature: false };
+        if (window.KHControlRoom && window.KHControlRoom.fetchBehanceProjectMetadata) {
+          meta = await window.KHControlRoom.fetchBehanceProjectMetadata(rawUrl);
         }
 
+        let title = (meta.title || '').trim();
         if (!title) {
-          const slugM = rawUrl.match(/behance\.net\/gallery\/\d+\/([^/?#]+)/i);
-          title = slugM ? decodeURIComponent(slugM[1]).replace(/[-_]+/g, ' ') : 'Behance Imported Project';
+          const slugM = rawUrl.match(/behance\.net\/gallery\/(\d+)(?:\/([^/?#]+))?/i);
+          const slugText = slugM && slugM[2] ? decodeURIComponent(slugM[2]).replace(/[-_]+/g, ' ').trim() : '';
+          title = slugText || (slugM ? `Behance Project #${slugM[1]}` : 'Behance Imported Project');
         }
 
-        const cover = ogImage || images[0] || '';
+        const desc = (meta.desc || '').trim();
+        const videos = Array.isArray(meta.videos) ? meta.videos : [];
+        const images = Array.isArray(meta.images) ? meta.images : [];
+        const cover = (meta.cover || images[0] || '').trim();
+
         const extraBoards = [
           ...videos.map(v => (typeof v === 'string' ? v : v.url)).filter(Boolean),
           ...images.filter(u => u && u !== cover)
         ];
 
-        const hasVid = videos.length > 0;
-        const cType = hasVid ? (images.length > 1 ? 'mixed' : 'video') : 'images';
+        const hasVid = videos.length > 0 || Boolean(meta.hasVideoSignature);
+        const cType = hasVid ? (images.length > 1 ? 'mixed' : 'video') : (images.length > 0 ? 'images' : 'auto');
 
         if (!Array.isArray(cfg.projects)) cfg.projects = [];
         const existingIdx = cfg.projects.findIndex(p => p && p.url && p.url.trim() === rawUrl);
+        const prevProj = existingIdx >= 0 ? cfg.projects[existingIdx] : null;
         const projObj = {
-          id: existingIdx >= 0 ? cfg.projects[existingIdx].id : ('proj-bh-' + Date.now()),
-          category: 'branding',
+          id: prevProj ? prevProj.id : ('proj-bh-' + Date.now()),
+          category: (prevProj && prevProj.category) || 'branding',
           contentType: cType,
           titleEn: title,
           titleAr: title,
-          roleEn: 'Behance Project',
-          roleAr: 'مشروع Behance',
-          descEn: desc,
-          descAr: desc,
-          image: cover,
+          roleEn: (prevProj && prevProj.roleEn) || 'Behance Project',
+          roleAr: (prevProj && prevProj.roleAr) || 'مشروع Behance',
+          descEn: desc || (prevProj && prevProj.descEn) || '',
+          descAr: desc || (prevProj && prevProj.descAr) || '',
+          image: cover || (prevProj && prevProj.image) || '',
           url: rawUrl,
           tags: hasVid ? ['Behance', 'Video'] : ['Behance'],
-          extraBoards
+          extraBoards: extraBoards.length > 0 ? extraBoards : ((prevProj && prevProj.extraBoards) || [])
         };
 
         if (existingIdx >= 0) {
@@ -1693,8 +1679,12 @@
         }
 
         renderProjectsEditor();
-        if (inp) inp.value = '';
-        showToast(`✅ تم سحب "${title}" (${videos.length} فيديو · ${images.length} صورة) — اضغط "حفظ ونشر مباشر"!`);
+        if (!overrideUrl && inp) inp.value = '';
+        if (!cover && extraBoards.length === 0) {
+          showToast('⚠️ Behance حجب السحب التلقائي لهذا الرابط تحديداً — تم إضافته ويمكنك لصق الغلاف/الفيديو يدوياً أو الضغط على ↻ إعادة سحب');
+        } else {
+          showToast(`✅ تم سحب "${title}" (${videos.length} فيديو · ${images.length} صورة) — اضغط "حفظ ونشر مباشر"!`);
+        }
       } catch (err) {
         showToast('❌ تعذر سحب المشروع حالياً — تأكد من الرابط وحاول مرة أخرى');
       } finally {

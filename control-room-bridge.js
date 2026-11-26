@@ -948,17 +948,21 @@
     const isGalleryPage = /behance\.net\/gallery\//i.test(targetUrl);
     const rawProxies = [
       async () => {
-        const r = await fetchWithTimeout(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`, 7000);
+        const r = await fetchWithTimeout(`https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`, 8500);
+        return r.ok ? await r.text() : '';
+      },
+      async () => {
+        const r = await fetchWithTimeout(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`, 8500);
         if (!r.ok) return '';
         const d = await r.json();
         return (d && d.contents) || '';
       },
       async () => {
-        const r = await fetchWithTimeout(`https://corsproxy.io/?${encodeURIComponent(targetUrl)}`, 7000);
+        const r = await fetchWithTimeout(`https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}`, 8500);
         return r.ok ? await r.text() : '';
       },
       async () => {
-        const r = await fetchWithTimeout(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`, 7000);
+        const r = await fetchWithTimeout(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`, 8500);
         return r.ok ? await r.text() : '';
       }
     ];
@@ -967,7 +971,7 @@
     for (const fn of rawProxies) {
       try {
         const txt = await fn();
-        if (txt && txt.length > 150 && (!isGalleryPage || /project_modules|ccv_id|player\.vimeo\.com|youtube\.com\/embed/i.test(txt))) {
+        if (txt && txt.length > 150 && (!isGalleryPage || /project_modules|ccv_id|player\.vimeo\.com|youtube\.com\/embed|og:title|mir-s3-cdn-cf\.behance\.net/i.test(txt))) {
           combined = txt;
           break;
         }
@@ -978,10 +982,10 @@
       const hasVidsInRaw = /ccv_id|www-ccv\.adobe\.io|player\.vimeo\.com|youtube\.com\/embed/i.test(combined);
       if (!combined || !hasVidsInRaw) {
         try {
-          const r = await fetchWithTimeout(`https://r.jina.ai/${targetUrl}`, 8000);
+          const r = await fetchWithTimeout(`https://r.jina.ai/${targetUrl}`, 10000);
           if (r.ok) {
             const jinaTxt = await r.text();
-            if (jinaTxt && jinaTxt.length > 150) {
+            if (jinaTxt && jinaTxt.length > 120) {
               combined = combined ? (combined + '\n' + jinaTxt) : jinaTxt;
             }
           }
@@ -989,6 +993,139 @@
       }
     }
     return combined;
+  }
+
+  function extractMetaTagContent(html, key) {
+    if (!html) return '';
+    const escKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const r1 = new RegExp(`<meta[^>]+(?:property|name)=["']${escKey}["'][^>]+content=["']([^"']+)["']`, 'i');
+    const r2 = new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["']${escKey}["']`, 'i');
+    const m = html.match(r1) || html.match(r2);
+    return m && m[1] ? m[1].trim() : '';
+  }
+
+  function decodeHtmlEntities(str) {
+    if (!str) return '';
+    try {
+      const ta = document.createElement('textarea');
+      ta.innerHTML = str;
+      return ta.value;
+    } catch (e) {
+      return str.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    }
+  }
+
+  async function fetchBehanceProjectMetadata(rawUrl) {
+    const cleanUrl = String(rawUrl || '').trim();
+    const result = {
+      title: '',
+      desc: '',
+      cover: '',
+      videos: [],
+      images: [],
+      hasVideoSignature: false
+    };
+    if (!cleanUrl) return result;
+
+    // Run HTML/Jina fetch AND Microlink API AND Behance oEmbed in parallel for maximum reliability
+    const [rawText, microlinkData, oembedData] = await Promise.all([
+      fetchExternalTextWithFallback(cleanUrl).catch(() => ''),
+      fetchWithTimeout(`https://api.microlink.io/?url=${encodeURIComponent(cleanUrl)}`, 9000)
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null),
+      fetchWithTimeout(`https://noembed.com/embed?url=${encodeURIComponent(cleanUrl)}`, 7000)
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null)
+    ]);
+
+    // 1. Parse raw HTML / Jina Markdown
+    if (rawText) {
+      let t = extractMetaTagContent(rawText, 'og:title') || extractMetaTagContent(rawText, 'twitter:title');
+      if (!t) {
+        const titleTag = rawText.match(/<title[^>]*>([^<]+)<\/title>/i);
+        if (titleTag && titleTag[1]) t = titleTag[1];
+      }
+      if (!t) {
+        // Jina.ai Markdown header: "Title: ..."
+        const jinaTitle = rawText.match(/^Title:\s*(.+)$/im);
+        if (jinaTitle && jinaTitle[1]) t = jinaTitle[1];
+      }
+      if (!t) {
+        // Behance JSON state: "name":"..."
+        const jsonName = rawText.match(/"project"\s*:\s*\{[^{}]{0,400}"name"\s*:\s*"([^"]+)"/i);
+        if (jsonName && jsonName[1]) t = jsonName[1];
+      }
+      if (t) {
+        result.title = decodeHtmlEntities(t)
+          .replace(/\s*::\s*Behance.*$/i, '')
+          .replace(/\s*on Behance.*$/i, '')
+          .replace(/\s*\|\s*Behance.*$/i, '')
+          .trim();
+      }
+
+      let d = extractMetaTagContent(rawText, 'og:description') || extractMetaTagContent(rawText, 'description');
+      if (d) result.desc = decodeHtmlEntities(d).trim();
+
+      let img = extractMetaTagContent(rawText, 'og:image') || extractMetaTagContent(rawText, 'twitter:image');
+      if (!img) {
+        // Match Behance cover image in HTML/JSON/Markdown
+        const covM = rawText.match(/https:\/\/mir-s3-cdn-cf\.behance\.net\/projects\/[a-z0-9_]+\/[a-z0-9._-]+\.(?:jpe?g|png|webp)/i);
+        if (covM) img = covM[0];
+      }
+      if (img) result.cover = img.trim();
+
+      const extracted = extractBehanceVideosAndImages(rawText, result.cover);
+      result.videos = Array.isArray(extracted.videos) ? extracted.videos : [];
+      result.images = Array.isArray(extracted.images) ? extracted.images : [];
+      result.hasVideoSignature = Boolean(extracted.hasVideoSignature);
+    }
+
+    // 2. Fallback / Enrich from Microlink API (bypasses Akamai/Cloudflare cleanly)
+    if (microlinkData && microlinkData.status === 'success' && microlinkData.data) {
+      const md = microlinkData.data;
+      if (!result.title && md.title) {
+        result.title = String(md.title)
+          .replace(/\s*::\s*Behance.*$/i, '')
+          .replace(/\s*on Behance.*$/i, '')
+          .replace(/\s*\|\s*Behance.*$/i, '')
+          .trim();
+      }
+      if (!result.desc && md.description) {
+        result.desc = String(md.description).trim();
+      }
+      if (!result.cover && md.image && md.image.url) {
+        result.cover = String(md.image.url).trim();
+      }
+      if (md.video && md.video.url) {
+        const cv = classifyVideoUrl(md.video.url);
+        if (cv && !result.videos.some(v => v.url.split('?')[0] === cv.url.split('?')[0])) {
+          result.videos.push(cv);
+          result.hasVideoSignature = true;
+        }
+      }
+    }
+
+    // 3. Fallback / Enrich from noembed / oEmbed
+    if (oembedData && !oembedData.error) {
+      if (!result.title && oembedData.title) {
+        result.title = String(oembedData.title).replace(/\s*::\s*Behance.*$/i, '').trim();
+      }
+      if (!result.cover && oembedData.thumbnail_url) {
+        result.cover = String(oembedData.thumbnail_url).trim();
+      }
+    }
+
+    // 4. Clean cover fallback from extracted images
+    if (!result.cover && result.images.length > 0) {
+      result.cover = result.images[0];
+    }
+
+    // 5. Filter out generic "Behance" / blocked titles
+    if (/^(behance|just a moment|access denied|attention required)$/i.test(result.title)) {
+      result.title = '';
+    }
+
+    return result;
   }
 
   function parseBehanceRssXml(xmlText) {
@@ -2498,7 +2635,8 @@
     fetchExternalTextWithFallback,
     parseBehanceRssXml,
     loadBehanceCache,
-    extractBehanceVideosAndImages
+    extractBehanceVideosAndImages,
+    fetchBehanceProjectMetadata
   };
 
   if (document.getElementById('projects-grid')) {
