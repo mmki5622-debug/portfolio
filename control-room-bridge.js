@@ -1,13 +1,12 @@
 (function () {
   const DEFAULT_FIREBASE_URL = 'https://kerlos-hany-default-rtdb.europe-west1.firebasedatabase.app';
-  const DEFAULT_FIREBASE_API_KEY = 'AIzaSyBDfbnVLEdQme6GElE5FJp7jqQ3Fhj6G5o';
   const BEHANCE_ENHANCED_CACHE_KEY = 'kh_behance_projects_permanent_v4';
 
   function getDefaultConfig() {
     return {
       firebaseUrl: DEFAULT_FIREBASE_URL,
-      firebaseApiKey: DEFAULT_FIREBASE_API_KEY,
-      firebaseAuthEmail: 'hkerlos@gmail.com',
+      firebaseApiKey: '',
+      firebaseAuthEmail: '',
       adminPassword: 'keloshany2026',
       cloudinaryCloud: '',
       cloudinaryPreset: '',
@@ -1160,7 +1159,7 @@
   async function signInWithEmailPassword(email, password, apiKey, persist = true) {
     const cleanEmail = String(email || '').trim();
     const cleanPass = String(password || '');
-    const key = String(apiKey || (activeAppliedConfig && activeAppliedConfig.firebaseApiKey) || DEFAULT_FIREBASE_API_KEY).trim();
+    const key = String(apiKey || (activeAppliedConfig && activeAppliedConfig.firebaseApiKey) || '').trim();
     if (!cleanEmail || !cleanPass) {
       throw new Error('Email and password are required.');
     }

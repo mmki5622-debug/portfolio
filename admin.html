@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="./control-room-bridge.js?v=32"></script>
+  <script src="./control-room-bridge.js?v=33"></script>
   <style>
     body {
       background-color: #060D0C;
@@ -98,9 +98,9 @@
         <input id="login-pass" type="password" required placeholder="كلمة المرور..." class="inp text-center" />
         <div class="text-right space-y-2 pt-1 border-t border-[#C59367]/15">
           <div class="text-[11px] font-bold text-[#C59367]">تسجيل دخول Firebase للحفظ التلقائي (اختياري):</div>
-          <input id="login-fb-email" type="email" dir="ltr" value="hkerlos@gmail.com" placeholder="hkerlos@gmail.com أو mmki5622@gmail.com" class="inp text-xs" />
+          <input id="login-fb-email" type="email" dir="ltr" placeholder="hkerlos@gmail.com أو mmki5622@gmail.com" class="inp text-xs" />
           <input id="login-fb-pass" type="password" dir="ltr" placeholder="باسورد حساب Firebase" class="inp text-xs" />
-          <input id="login-fb-apikey" type="text" dir="ltr" value="AIzaSyBDfbnVLEdQme6GElE5FJp7jqQ3Fhj6G5o" placeholder="Firebase Web API Key (AIza...)" class="inp text-xs" />
+          <input id="login-fb-apikey" type="text" dir="ltr" placeholder="Firebase Web API Key (AIza...)" class="inp text-xs" />
         </div>
         <p id="login-err" class="hidden text-xs text-red-400 font-bold">كلمة المرور غير صحيحة</p>
         <button type="submit" class="w-full py-3 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#060D0C] font-extrabold text-sm hover:brightness-110 transition-all">
@@ -987,13 +987,13 @@
         showToast('❌ دالة تسجيل الدخول غير متوفرة في control-room-bridge.js');
         return false;
       }
-      const defaultEmail = prefillEmail || document.getElementById('cfg-firebaseAuthEmail')?.value || cfg.firebaseAuthEmail || 'hkerlos@gmail.com';
-      const defaultKey = (prefillKey || document.getElementById('cfg-firebaseApiKey')?.value || cfg.firebaseApiKey || 'AIzaSyBDfbnVLEdQme6GElE5FJp7jqQ3Fhj6G5o').trim();
-      const email = prompt('أدخل بريد Firebase المصرح له (hkerlos@gmail.com أو mmki5622@gmail.com):', defaultEmail);
+      const defaultEmail = prefillEmail || document.getElementById('cfg-firebaseAuthEmail')?.value || cfg.firebaseAuthEmail || '';
+      const defaultKey = (prefillKey || document.getElementById('cfg-firebaseApiKey')?.value || cfg.firebaseApiKey || '').trim();
+      const email = prompt('أدخل بريد Firebase المصرح له:', defaultEmail);
       if (!email) return false;
       const password = prompt('أدخل باسورد حساب Firebase:');
       if (!password) return false;
-      const apiKey = defaultKey || prompt('أدخل Firebase Web API Key (من Project settings ← General):', 'AIzaSyBDfbnVLEdQme6GElE5FJp7jqQ3Fhj6G5o');
+      const apiKey = prompt('أدخل Firebase Web API Key (AIza...):', defaultKey);
       if (!apiKey) return false;
 
       try {
@@ -2176,12 +2176,16 @@
               res = await pushConfigToFirebase(fb);
             }
           }
-          if (!res.ok) throw new Error('Firebase PUT failed (' + res.status + ')');
+          if (!res.ok) {
+            let errDetail = '';
+            try { errDetail = await res.text(); } catch (e) {}
+            throw new Error('HTTP ' + res.status + (errDetail ? ' — ' + errDetail.slice(0, 120) : ''));
+          }
         }
         updateFirebaseAuthUi();
         showToast('✅ تم حفظ ونشر جميع التعديلات وإعدادات السيو بنجاح!');
       } catch (err) {
-        showToast('⚠️ تم الحفظ محلياً — تأكد من تسجيل الدخول أو قواعد Firebase');
+        showToast('⚠️ تم الحفظ محلياً فقط — سبب رفض Firebase: ' + (err && err.message ? err.message : 'غير معروف'));
       } finally {
         btn.disabled = false;
         btn.textContent = '💾 حفظ ونشر مباشر (Firebase)';
