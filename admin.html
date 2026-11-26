@@ -598,6 +598,20 @@
          TAB 4: PROJECTS & BEHANCE OVERRIDES
          ====================================================================== -->
     <section id="tab-projects" class="tab-panel hidden space-y-6">
+      <!-- Manual Behance URL Importer -->
+      <div class="panel-card p-6 space-y-3 border-2 border-[#C59367]/45">
+        <div>
+          <h2 class="font-extrabold text-base text-[#C59367]">⚡ سحب أي مشروع من Behance يدوياً بالرابط (حتى لو قديم أو غير ظاهر في التلقائي)</h2>
+          <p class="text-xs text-[#9A9186] mt-0.5">الصق رابط أي مشروع من Behance (مثال: <span dir="ltr" class="font-mono text-[#C59367]">https://www.behance.net/gallery/...</span>) واضغط سحب، وسيتم استيراد الاسم والغلاف وكامل اللوحات والفيديوهات تلقائياً وإضافته لقائمة مشاريعك للتعديل.</p>
+        </div>
+        <div class="flex flex-wrap sm:flex-nowrap gap-2.5">
+          <input id="bh-manual-import-url" dir="ltr" class="inp flex-1" placeholder="https://www.behance.net/gallery/..." onkeydown="if(event.key==='Enter'){event.preventDefault();importBehanceProjectByUrl();}" />
+          <button type="button" id="btn-import-bh-url" onclick="importBehanceProjectByUrl()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#060D0C] font-extrabold text-xs shrink-0 hover:brightness-110 transition-all">
+            ⬇ سحب المشروع بالرابط
+          </button>
+        </div>
+      </div>
+
       <!-- Manual Projects -->
       <div class="panel-card p-6 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
@@ -614,10 +628,13 @@
       <div class="panel-card p-6 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 class="font-extrabold text-base text-[#C59367]">🔗 تخصيص مشاريع Behance (إضافة فيديو أو لوحات إضافية)</h2>
-            <p class="text-xs text-[#9A9186]">ضع رابط أي مشروع من Behance لإجبار نوعه (فيديو / صور) أو إرفاق روابط فيديو وصور إضافية تعمل داخل موقعك</p>
+            <h2 class="font-extrabold text-base text-[#C59367]">🔗 مشاريع Behance المسحوبة تلقائياً (إضافة فيديو أو صور خارجية لكل مشروع)</h2>
+            <p class="text-xs text-[#9A9186]">يتم سحب كل مشاريع Behance تلقائياً هنا لتتمكن من إرفاق فيديو أو صورة خارجية أو تغيير نوع العرض لأي مشروع بضغطة واحدة</p>
           </div>
-          <button type="button" onclick="addBehanceOverride()" class="px-4 py-2 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-extrabold">+ إضافة تخصيص Behance</button>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" id="btn-sync-bh-admin" onclick="syncBehanceProjectsIntoAdmin(true)" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] hover:brightness-110 text-xs font-extrabold">↻ سحب مشاريع Behance الآن</button>
+            <button type="button" onclick="addBehanceOverride()" class="px-4 py-2 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 text-[#F2EADF] hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-extrabold">+ إضافة رابط يدوي</button>
+          </div>
         </div>
         <div id="behance-overrides-list" class="space-y-3"></div>
       </div>
@@ -627,9 +644,19 @@
          TAB 5: YOUTUBE VIDEOS
          ====================================================================== -->
     <section id="tab-youtube" class="tab-panel hidden panel-card p-6 space-y-5">
-      <div class="flex items-center justify-between">
-        <h2 class="font-extrabold text-base text-[#C59367]">🎬 قائمة فيديوهات استوديو يوتيوب</h2>
-        <button type="button" onclick="addYouTubeItem()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة فيديو</button>
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="font-extrabold text-base text-[#C59367]">🎬 قائمة فيديوهات استوديو يوتيوب (تحديث تلقائي بالأعلى مشاهدة وتفاعلاً)</h2>
+          <p class="text-xs text-[#9A9186] mt-0.5">عند التفعيل، يقوم الموقع تلقائياً بسحب وترتيب الفيديوهات الأعلى مشاهدة وتفاعلاً من قناتك باستمرار.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <label class="inline-flex items-center gap-2 text-xs font-bold cursor-pointer bg-[#070E0D] px-3.5 py-2 rounded-full border border-[#C59367]/30">
+            <input type="checkbox" id="cfg-youtubeAutoTop" class="accent-[#C59367] w-4 h-4" />
+            <span>تحديث تلقائي بالأعلى مشاهدة وتفاعلاً</span>
+          </label>
+          <button type="button" id="btn-sync-yt-top" onclick="syncTopYouTubeInAdmin()" class="px-4 py-2 rounded-full bg-[#0E3E3F] border border-[#C59367]/50 hover:bg-[#C59367] hover:text-[#060D0C] text-xs font-extrabold transition-all">↻ سحب الأعلى مشاهدة الآن</button>
+          <button type="button" onclick="addYouTubeItem()" class="px-4 py-2 rounded-full bg-[#C59367] text-[#060D0C] text-xs font-extrabold">+ إضافة فيديو</button>
+        </div>
       </div>
       <div id="yt-editor-list" class="space-y-3"></div>
     </section>
@@ -650,10 +677,26 @@
          ====================================================================== -->
     <section id="tab-about" class="tab-panel hidden space-y-6">
       <div class="panel-card p-6 space-y-4">
-        <h2 class="font-extrabold text-base text-[#C59367]">👤 النبذة التعريفية (About Me)</h2>
+        <h2 class="font-extrabold text-base text-[#C59367]">👤 قسم المنهجية والنبذة التعريفية (THE APPROACH / About Me)</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div><label class="block text-xs font-bold mb-1">الوصف بالإنجليزية (About EN)</label><textarea id="cfg-aboutDescEn" dir="ltr" rows="4" class="inp"></textarea></div>
-          <div><label class="block text-xs font-bold mb-1">الوصف بالعربية (About AR)</label><textarea id="cfg-aboutDescAr" rows="4" class="inp"></textarea></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان الصغير (Eyebrow EN)</label><input id="cfg-aboutEyebrowEn" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان الصغير (Eyebrow AR)</label><input id="cfg-aboutEyebrowAr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان السطر 1 (EN)</label><input id="cfg-aboutTitle1En" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان السطر 1 (AR)</label><input id="cfg-aboutTitle1Ar" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان السطر 2 (EN)</label><input id="cfg-aboutTitle2En" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان السطر 2 (AR)</label><input id="cfg-aboutTitle2Ar" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان الذهبي السطر 3 (EN)</label><input id="cfg-aboutTitle3En" dir="ltr" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">العنوان الذهبي السطر 3 (AR)</label><input id="cfg-aboutTitle3Ar" class="inp" /></div>
+          <div><label class="block text-xs font-bold mb-1">الوصف بالإنجليزية (About EN)</label><textarea id="cfg-aboutDescEn" dir="ltr" rows="3" class="inp"></textarea></div>
+          <div><label class="block text-xs font-bold mb-1">الوصف بالعربية (About AR)</label><textarea id="cfg-aboutDescAr" rows="3" class="inp"></textarea></div>
+        </div>
+        <div class="sub-card p-4 space-y-3">
+          <div class="text-xs font-extrabold text-[#C59367]">الأسطر الثلاثة تحت الوصف (البرامج وسنوات العمل والموقع)</div>
+          <div class="grid grid-cols-1 gap-3">
+            <div><label class="block text-[11px] mb-1">السطر 1 (مثال: INDEPENDENT PRACTICE / 2015—PRESENT)</label><input id="cfg-aboutLine1" dir="ltr" class="inp text-xs" /></div>
+            <div><label class="block text-[11px] mb-1">السطر 2 (مثال: EGYPT &amp; REMOTE COLLABORATION)</label><input id="cfg-aboutLine2" dir="ltr" class="inp text-xs" /></div>
+            <div><label class="block text-[11px] mb-1">السطر 3 الذهبي (البرامج والأدوات)</label><input id="cfg-aboutLine3" dir="ltr" class="inp text-xs" /></div>
+          </div>
         </div>
       </div>
 
@@ -836,7 +879,7 @@
     function normalizeCfg(raw, def) {
       const merged = { ...def, ...(raw || {}) };
       // Fill empty string critical fields with defaults so forms are never blank
-      ['brandName','brandTagline','logoUrl','portraitUrl','whatsapp','email','location','behanceUrl','youtubeUrl','linkedinUrl','cvUrl','availEn','availAr','heroEyebrowEn','heroEyebrowAr','heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar','heroBtnWorkEn','heroBtnWorkAr','heroBtnCvEn','heroBtnCvAr','heroSubEn','heroSubAr','navWorkEn','navWorkAr','navServicesEn','navServicesAr','navCinemaEn','navCinemaAr','navExperienceEn','navExperienceAr','navCtaEn','navCtaAr','heroMetaTop','heroMetaSub','heroWatermark1','heroWatermark2','heroCoordCode','heroCoordLoc','practiceTitle1En','practiceTitle1Ar','practiceTitle2En','practiceTitle2Ar','practiceTitle3En','practiceTitle3Ar','practiceDescEn','practiceDescAr','workTitle1En','workTitle1Ar','workTitle2En','workTitle2Ar','ytTitle1En','ytTitle1Ar','ytTitle2En','ytTitle2Ar','moveTitle1En','moveTitle1Ar','moveTitle2En','moveTitle2Ar','moveTitle3En','moveTitle3Ar','moveDescEn','moveDescAr','ctaTitle1En','ctaTitle1Ar','ctaTitle2En','ctaTitle2Ar','aboutDescEn','aboutDescAr','firebaseUrl','adminPassword','navWorkEn','navWorkAr','navServicesEn','navServicesAr','navCinemaEn','navCinemaAr','navExperienceEn','navExperienceAr','navCtaEn','navCtaAr','heroMetaTop','heroMetaSub','heroWatermark1','heroWatermark2','heroCoordCode','heroCoordLoc','practiceTitle1En','practiceTitle1Ar','practiceTitle2En','practiceTitle2Ar','practiceTitle3En','practiceTitle3Ar','practiceDescEn','practiceDescAr','workTitle1En','workTitle1Ar','workTitle2En','workTitle2Ar','ytTitle1En','ytTitle1Ar','ytTitle2En','ytTitle2Ar','moveTitle1En','moveTitle1Ar','moveTitle2En','moveTitle2Ar','moveTitle3En','moveTitle3Ar','moveDescEn','moveDescAr','ctaTitle1En','ctaTitle1Ar','ctaTitle2En','ctaTitle2Ar'].forEach(k => {
+      ['brandName','brandTagline','logoUrl','portraitUrl','whatsapp','email','location','behanceUrl','youtubeUrl','linkedinUrl','cvUrl','availEn','availAr','heroEyebrowEn','heroEyebrowAr','heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar','heroBtnWorkEn','heroBtnWorkAr','heroBtnCvEn','heroBtnCvAr','heroSubEn','heroSubAr','navWorkEn','navWorkAr','navServicesEn','navServicesAr','navCinemaEn','navCinemaAr','navExperienceEn','navExperienceAr','navCtaEn','navCtaAr','heroMetaTop','heroMetaSub','heroWatermark1','heroWatermark2','heroCoordCode','heroCoordLoc','practiceTitle1En','practiceTitle1Ar','practiceTitle2En','practiceTitle2Ar','practiceTitle3En','practiceTitle3Ar','practiceDescEn','practiceDescAr','workTitle1En','workTitle1Ar','workTitle2En','workTitle2Ar','ytTitle1En','ytTitle1Ar','ytTitle2En','ytTitle2Ar','moveTitle1En','moveTitle1Ar','moveTitle2En','moveTitle2Ar','moveTitle3En','moveTitle3Ar','moveDescEn','moveDescAr','ctaTitle1En','ctaTitle1Ar','ctaTitle2En','ctaTitle2Ar','aboutEyebrowEn','aboutEyebrowAr','aboutTitle1En','aboutTitle1Ar','aboutTitle2En','aboutTitle2Ar','aboutTitle3En','aboutTitle3Ar','aboutLine1','aboutLine2','aboutLine3','aboutDescEn','aboutDescAr','firebaseUrl','adminPassword','navWorkEn','navWorkAr','navServicesEn','navServicesAr','navCinemaEn','navCinemaAr','navExperienceEn','navExperienceAr','navCtaEn','navCtaAr','heroMetaTop','heroMetaSub','heroWatermark1','heroWatermark2','heroCoordCode','heroCoordLoc','practiceTitle1En','practiceTitle1Ar','practiceTitle2En','practiceTitle2Ar','practiceTitle3En','practiceTitle3Ar','practiceDescEn','practiceDescAr','workTitle1En','workTitle1Ar','workTitle2En','workTitle2Ar','ytTitle1En','ytTitle1Ar','ytTitle2En','ytTitle2Ar','moveTitle1En','moveTitle1Ar','moveTitle2En','moveTitle2Ar','moveTitle3En','moveTitle3Ar','moveDescEn','moveDescAr','ctaTitle1En','ctaTitle1Ar','ctaTitle2En','ctaTitle2Ar'].forEach(k => {
         if (!merged[k]) merged[k] = def[k];
       });
       merged.seo = { ...def.seo, ...(merged.seo || {}) };
@@ -1053,7 +1096,7 @@
         'behanceUrl','youtubeUrl','linkedinUrl','cvUrl','availEn','availAr','heroEyebrowEn','heroEyebrowAr',
         'heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar',
         'heroBtnWorkEn','heroBtnWorkAr','heroBtnCvEn','heroBtnCvAr','heroSubEn','heroSubAr','navWorkEn','navWorkAr','navServicesEn','navServicesAr','navCinemaEn','navCinemaAr','navExperienceEn','navExperienceAr','navCtaEn','navCtaAr','heroMetaTop','heroMetaSub','heroWatermark1','heroWatermark2','heroCoordCode','heroCoordLoc','practiceTitle1En','practiceTitle1Ar','practiceTitle2En','practiceTitle2Ar','practiceTitle3En','practiceTitle3Ar','practiceDescEn','practiceDescAr','workTitle1En','workTitle1Ar','workTitle2En','workTitle2Ar','ytTitle1En','ytTitle1Ar','ytTitle2En','ytTitle2Ar','moveTitle1En','moveTitle1Ar','moveTitle2En','moveTitle2Ar','moveTitle3En','moveTitle3Ar','moveDescEn','moveDescAr','ctaTitle1En','ctaTitle1Ar','ctaTitle2En','ctaTitle2Ar','heroSlideSeconds','marqueeSpeedSeconds','navWorkEn','navWorkAr','navServicesEn','navServicesAr','navCinemaEn','navCinemaAr','navExperienceEn','navExperienceAr','navCtaEn','navCtaAr','heroMetaTop','heroMetaSub','heroWatermark1','heroWatermark2','heroCoordCode','heroCoordLoc','practiceTitle1En','practiceTitle1Ar','practiceTitle2En','practiceTitle2Ar','practiceTitle3En','practiceTitle3Ar','practiceDescEn','practiceDescAr','workTitle1En','workTitle1Ar','workTitle2En','workTitle2Ar','ytTitle1En','ytTitle1Ar','ytTitle2En','ytTitle2Ar','moveTitle1En','moveTitle1Ar','moveTitle2En','moveTitle2Ar','moveTitle3En','moveTitle3Ar','moveDescEn','moveDescAr','ctaTitle1En','ctaTitle1Ar','ctaTitle2En','ctaTitle2Ar',
-        'aboutDescEn','aboutDescAr','firebaseUrl','adminPassword','firebaseApiKey','firebaseAuthEmail','cloudinaryCloud','cloudinaryPreset'
+        'aboutEyebrowEn','aboutEyebrowAr','aboutTitle1En','aboutTitle1Ar','aboutTitle2En','aboutTitle2Ar','aboutTitle3En','aboutTitle3Ar','aboutLine1','aboutLine2','aboutLine3','aboutDescEn','aboutDescAr','firebaseUrl','adminPassword','firebaseApiKey','firebaseAuthEmail','cloudinaryCloud','cloudinaryPreset'
       ];
       simpleFields.forEach(k => {
         const el = document.getElementById('cfg-' + k);
@@ -1089,6 +1132,7 @@
       renderMarqueeEditor();
       renderProjectsEditor();
       renderBehanceOverridesEditor();
+      if (document.getElementById('cfg-youtubeAutoTop')) document.getElementById('cfg-youtubeAutoTop').checked = cfg.youtubeAutoTop !== false;
       renderYtEditor();
       renderExpEditor();
       renderStatsEditor();
@@ -1528,6 +1572,99 @@
       `;
       }).join('');
     }
+    async function importBehanceProjectByUrl() {
+      const inp = document.getElementById('bh-manual-import-url');
+      const btn = document.getElementById('btn-import-bh-url');
+      const rawUrl = (inp && inp.value || '').trim();
+      if (!rawUrl || !/behance\.net\/gallery\//i.test(rawUrl)) {
+        showToast('⚠️ من فضلك ضع رابط مشروع Behance صحيح (يحتوي على behance.net/gallery/)');
+        return;
+      }
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ جاري سحب المشروع...';
+      }
+      try {
+        let html = '';
+        if (window.KHControlRoom && window.KHControlRoom.fetchExternalTextWithFallback) {
+          html = await window.KHControlRoom.fetchExternalTextWithFallback(rawUrl);
+        }
+        let title = '';
+        let desc = '';
+        let ogImage = '';
+        let videos = [];
+        let images = [];
+
+        if (html) {
+          const ogTitleM = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
+            || html.match(/<title[^>]*>([^<]+)<\/title>/i);
+          if (ogTitleM && ogTitleM[1]) {
+            title = ogTitleM[1].replace(/\s*::\s*Behance.*$/i, '').replace(/\s*on Behance.*$/i, '').trim();
+          }
+          const ogDescM = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["']/i);
+          if (ogDescM && ogDescM[1]) desc = ogDescM[1].trim();
+
+          const ogImgM = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i);
+          if (ogImgM && ogImgM[1]) ogImage = ogImgM[1].trim();
+
+          if (window.KHControlRoom && window.KHControlRoom.extractBehanceVideosAndImages) {
+            const extracted = window.KHControlRoom.extractBehanceVideosAndImages(html, ogImage);
+            videos = Array.isArray(extracted.videos) ? extracted.videos : [];
+            images = Array.isArray(extracted.images) ? extracted.images : [];
+          }
+        }
+
+        if (!title) {
+          const slugM = rawUrl.match(/behance\.net\/gallery\/\d+\/([^/?#]+)/i);
+          title = slugM ? decodeURIComponent(slugM[1]).replace(/[-_]+/g, ' ') : 'Behance Imported Project';
+        }
+
+        const cover = ogImage || images[0] || '';
+        const extraBoards = [
+          ...videos.map(v => (typeof v === 'string' ? v : v.url)).filter(Boolean),
+          ...images.filter(u => u && u !== cover)
+        ];
+
+        const hasVid = videos.length > 0;
+        const cType = hasVid ? (images.length > 1 ? 'mixed' : 'video') : 'images';
+
+        if (!Array.isArray(cfg.projects)) cfg.projects = [];
+        const existingIdx = cfg.projects.findIndex(p => p && p.url && p.url.trim() === rawUrl);
+        const projObj = {
+          id: existingIdx >= 0 ? cfg.projects[existingIdx].id : ('proj-bh-' + Date.now()),
+          category: 'branding',
+          contentType: cType,
+          titleEn: title,
+          titleAr: title,
+          roleEn: 'Behance Project',
+          roleAr: 'مشروع Behance',
+          descEn: desc,
+          descAr: desc,
+          image: cover,
+          url: rawUrl,
+          tags: hasVid ? ['Behance', 'Video'] : ['Behance'],
+          extraBoards
+        };
+
+        if (existingIdx >= 0) {
+          cfg.projects[existingIdx] = projObj;
+        } else {
+          cfg.projects.unshift(projObj);
+        }
+
+        renderProjectsEditor();
+        if (inp) inp.value = '';
+        showToast(`✅ تم سحب "${title}" (${videos.length} فيديو · ${images.length} صورة) — اضغط "حفظ ونشر مباشر"!`);
+      } catch (err) {
+        showToast('❌ تعذر سحب المشروع حالياً — تأكد من الرابط وحاول مرة أخرى');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = '⬇ سحب المشروع بالرابط';
+        }
+      }
+    }
+
     function addManualProject() {
       cfg.projects.unshift({
         id: 'proj-' + Date.now(),
@@ -1576,20 +1713,111 @@
     }
 
     /* ---------------- BEHANCE OVERRIDES EDITOR (DEVICE UPLOAD + LINKS + DELETE) ---------------- */
+    async function syncBehanceProjectsIntoAdmin(showMsg = false) {
+      const btn = document.getElementById('btn-sync-bh-admin');
+      if (btn) btn.textContent = '⏳ جاري السحب...';
+      try {
+        if (!cfg.behanceOverrides || typeof cfg.behanceOverrides !== 'object') cfg.behanceOverrides = {};
+        let found = [];
+        // 1. Read from local Behance cache first
+        if (window.KHControlRoom && window.KHControlRoom.loadBehanceCache) {
+          const cached = window.KHControlRoom.loadBehanceCache();
+          if (Array.isArray(cached) && cached.length > 0) {
+            found = cached.map(p => ({ url: p.url, title: p.titleEn || p.titleAr || '', thumb: p.image || '' }));
+          }
+        }
+        // 2. Also fetch fresh Behance RSS feed
+        const rssUrl = 'https://www.behance.net/feeds/user?username=kerloshany11';
+        try {
+          const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && Array.isArray(data.items) && data.items.length > 0) {
+              data.items.slice(0, 15).forEach(it => {
+                const rawHtml = it.content || it.description || '';
+                const imgM = rawHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
+                const thumb = it.thumbnail || (imgM ? imgM[1] : '');
+                if (it.link && !found.some(x => x.url === it.link)) {
+                  found.push({ url: it.link, title: it.title || '', thumb });
+                }
+              });
+            }
+          }
+        } catch (e) {}
+
+        let added = 0;
+        found.forEach(item => {
+          if (!item.url || !/behance\.net\/gallery\//i.test(item.url)) return;
+          if (!cfg.behanceOverrides[item.url]) {
+            cfg.behanceOverrides[item.url] = {
+              titleEn: item.title || '',
+              coverImage: item.thumb || '',
+              contentType: 'auto',
+              hidden: false,
+              extraMedia: []
+            };
+            added++;
+          } else {
+            if (!cfg.behanceOverrides[item.url].titleEn && item.title) cfg.behanceOverrides[item.url].titleEn = item.title;
+            if (!cfg.behanceOverrides[item.url].coverImage && item.thumb) cfg.behanceOverrides[item.url].coverImage = item.thumb;
+          }
+        });
+        renderBehanceOverridesEditor();
+        if (showMsg) {
+          showToast(added > 0 ? `✅ تم سحب وإضافة ${added} مشروع من Behance تلقائياً!` : '✅ جميع مشاريع Behance محدّثة وموجودة بالأسفل');
+        }
+      } catch (e) {
+        if (showMsg) showToast('⚠️ تعذر السحب المباشر حالياً — حاول مرة أخرى');
+      } finally {
+        if (btn) btn.textContent = '↻ سحب مشاريع Behance الآن';
+      }
+    }
+
+    async function syncTopYouTubeInAdmin() {
+      const btn = document.getElementById('btn-sync-yt-top');
+      if (btn) btn.textContent = '⏳ جاري جلب الأعلى مشاهدة...';
+      try {
+        if (window.KHControlRoom && window.KHControlRoom.fetchTopYouTubeVideos) {
+          const topVids = await window.KHControlRoom.fetchTopYouTubeVideos(cfg.youtubeChannelId || 'UCa1Wez7khhiAY96MkOM8aSA');
+          if (topVids && topVids.length > 0) {
+            cfg.youtubeVideos = topVids;
+            renderYtEditor();
+            showToast(`✅ تم تحديث القائمة بأعلى ${topVids.length} فيديوهات مشاهدة وتفاعلاً!`);
+          } else {
+            showToast('⚠️ لم يتم العثور على فيديوهات جديدة حالياً');
+          }
+        }
+      } catch (e) {
+        showToast('⚠️ تعذر الاتصال بقناة يوتيوب حالياً');
+      } finally {
+        if (btn) btn.textContent = '↻ سحب الأعلى مشاهدة الآن';
+      }
+    }
+
     function renderBehanceOverridesEditor() {
       const box = document.getElementById('behance-overrides-list');
       const entries = Object.entries(cfg.behanceOverrides || {});
       if (entries.length === 0) {
-        box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-3">لا توجد تخصيصات Behance حالياً.</p>';
+        box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-3">لا توجد مشاريع Behance مسحوبة بعد — اضغط "↻ سحب مشاريع Behance الآن".</p>';
         return;
       }
       box.innerHTML = entries.map(([url, ov], i) => {
         const media = Array.isArray(ov.extraMedia) ? ov.extraMedia : [];
         return `
         <div class="sub-card p-4 space-y-3">
-          <div class="flex flex-wrap justify-between items-center gap-2">
-            <span class="text-xs font-mono text-[#C59367] truncate" dir="ltr">${esc(url)}</span>
-            <div class="flex items-center gap-2">
+          <div class="flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              ${ov.coverImage ? renderMiniPreview(ov.coverImage, 'image') : ''}
+              <div class="min-w-0">
+                <div class="text-xs font-extrabold text-[#F2EADF] truncate">${esc(ov.titleEn || 'مشروع Behance')}</div>
+                <a href="${esc(url)}" target="_blank" class="text-[11px] font-mono text-[#C59367] hover:underline truncate block" dir="ltr">${esc(url)}</a>
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <label class="inline-flex items-center gap-1.5 text-[11px] text-[#C9BFB2] bg-[#050B0A] px-2.5 py-1.5 rounded-xl border border-[#C59367]/25 cursor-pointer">
+                <input type="checkbox" ${ov.hidden ? 'checked' : ''} onchange="cfg.behanceOverrides[Object.keys(cfg.behanceOverrides)[${i}]].hidden=this.checked" class="accent-[#C59367]" />
+                <span>إخفاء</span>
+              </label>
               <select onchange="updateBehanceOverrideType(${i}, this.value)" class="inp !w-36 !py-1.5 text-xs">
                 <option value="auto" ${(ov.contentType||'auto')==='auto'?'selected':''}>تلقائي</option>
                 <option value="video" ${ov.contentType==='video'?'selected':''}>فيديو ▶</option>
@@ -1860,7 +2088,7 @@
         'behanceUrl','youtubeUrl','linkedinUrl','cvUrl','availEn','availAr','heroEyebrowEn','heroEyebrowAr',
         'heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar',
         'heroBtnWorkEn','heroBtnWorkAr','heroBtnCvEn','heroBtnCvAr','heroSubEn','heroSubAr','navWorkEn','navWorkAr','navServicesEn','navServicesAr','navCinemaEn','navCinemaAr','navExperienceEn','navExperienceAr','navCtaEn','navCtaAr','heroMetaTop','heroMetaSub','heroWatermark1','heroWatermark2','heroCoordCode','heroCoordLoc','practiceTitle1En','practiceTitle1Ar','practiceTitle2En','practiceTitle2Ar','practiceTitle3En','practiceTitle3Ar','practiceDescEn','practiceDescAr','workTitle1En','workTitle1Ar','workTitle2En','workTitle2Ar','ytTitle1En','ytTitle1Ar','ytTitle2En','ytTitle2Ar','moveTitle1En','moveTitle1Ar','moveTitle2En','moveTitle2Ar','moveTitle3En','moveTitle3Ar','moveDescEn','moveDescAr','ctaTitle1En','ctaTitle1Ar','ctaTitle2En','ctaTitle2Ar',
-        'aboutDescEn','aboutDescAr','firebaseUrl','adminPassword','firebaseApiKey','firebaseAuthEmail','cloudinaryCloud','cloudinaryPreset'
+        'aboutEyebrowEn','aboutEyebrowAr','aboutTitle1En','aboutTitle1Ar','aboutTitle2En','aboutTitle2Ar','aboutTitle3En','aboutTitle3Ar','aboutLine1','aboutLine2','aboutLine3','aboutDescEn','aboutDescAr','firebaseUrl','adminPassword','firebaseApiKey','firebaseAuthEmail','cloudinaryCloud','cloudinaryPreset'
       ];
       simpleFields.forEach(k => {
         const el = document.getElementById('cfg-' + k);
@@ -1884,6 +2112,7 @@
         opacity: normOp,
         items: cleanBgItems
       };
+      cfg.youtubeAutoTop = document.getElementById('cfg-youtubeAutoTop')?.checked !== false;
       cfg.heroSlideSeconds = Number(document.getElementById('cfg-heroSlideSeconds').value) || 5;
       cfg.marqueeSpeedSeconds = Number(document.getElementById('cfg-marqueeSpeedSeconds').value) || 28;
       cfg.heroShowcaseEmpty = !Array.isArray(cfg.heroShowcaseItems) || cfg.heroShowcaseItems.length === 0;
@@ -2008,7 +2237,7 @@
       reader.readAsText(file);
     }
 
-    initAdmin();
+    initAdmin().then(() => { syncBehanceProjectsIntoAdmin(false); });
   </script>
 </body>
 </html>

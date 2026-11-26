@@ -20,6 +20,8 @@
       behanceUrl: 'https://www.behance.net/kerloshany11',
       behanceOverrides: {},
       youtubeUrl: 'https://www.youtube.com/@kerloshany-m8e',
+      youtubeChannelId: 'UCa1Wez7khhiAY96MkOM8aSA',
+      youtubeAutoTop: true,
       linkedinUrl: 'https://www.linkedin.com/in/kerlos-hany-391453187/',
       seo: {
         siteTitle: 'Kerlos Hany | Graphic, Brand Identity & 3D Designer',
@@ -160,6 +162,17 @@
       heroTitle3Ar: 'وتجارب 3D لا تُنسى',
       heroSubEn: "I'm Kerlos Hany Nassif — a Graphic & 3D Designer with 6+ years of experience transforming brand visions into memorable logos, commercial 3D product renders, and high-impact visual campaigns.",
       heroSubAr: 'أنا كيرلس هاني نصيف — مصمم جرافيك و3D بخبرة تتجاوز 6 سنوات في تحويل رؤى العلامات التجارية إلى شعارات خالدة، وتصميمات منتجات 3D واقعية، وحملات إعلانية مؤثرة.',
+      aboutEyebrowEn: 'THE APPROACH',
+      aboutEyebrowAr: 'المنهجية',
+      aboutTitle1En: 'STRATEGY BEFORE',
+      aboutTitle1Ar: 'الاستراتيجية قبل',
+      aboutTitle2En: 'DESIGN.',
+      aboutTitle2Ar: 'التصميم.',
+      aboutTitle3En: 'MAKE IT COUNT.',
+      aboutTitle3Ar: 'اجعل لها أثراً.',
+      aboutLine1: 'INDEPENDENT PRACTICE / 2015—PRESENT',
+      aboutLine2: 'EGYPT & REMOTE COLLABORATION',
+      aboutLine3: 'PHOTOSHOP · ILLUSTRATOR · AFTER EFFECTS · CINEMA 4D · BLENDER',
       aboutDescEn: "I'm Kerlos Hany Nassif, a Graphic Designer with over 6 years of experience specializing in Logo Design, Brand Identity, Motion Graphics, and 3D Visualization. Based in Tanta, Egypt, I help brands transform ideas into clear, impactful, and memorable visual identities that stand out in competitive markets.",
       aboutDescAr: 'أنا كيرلس هاني نصيف، مصمم جرافيك بخبرة أكثر من 6 سنوات متخصص في تصميم الشعارات، الهويات البصرية، الموشن جرافيك، والتصميم ثلاثي الأبعاد (Cinema 4D). أساعد العلامات التجارية على بناء حضور بصري قوي ومؤثر في الأسواق التنافسية.',
       stats: [
@@ -451,16 +464,14 @@
         color: ${aColor} !important;
       }
 
-      /* Light Sections (#about, #experience) Text Color */
-      #about, #experience,
-      #about .text-\\[\\#021411\\],
-      #experience .text-\\[\\#021411\\] {
+      /* Light Sections (#practice, #experience) Text Color */
+      #practice, #experience,
+      #practice .text-\[\#021411\],
+      #experience .text-\[\#021411\] {
         color: ${lColor} !important;
       }
-      #about p, #experience p,
-      #about .text-\\[\\#021411\\]\\/80,
-      #about .text-\\[\\#021411\\]\\/70,
-      #experience .text-\\[\\#021411\\]\\/75 {
+      #practice p, #experience p,
+      #experience .text-\[\#021411\]\/75 {
         color: ${lColor} !important;
         opacity: 0.84;
       }
@@ -987,6 +998,113 @@
       });
     } catch (e) {
       return [];
+    }
+  }
+
+
+  function parseYouTubeFeedXml(xmlText) {
+    try {
+      const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
+      const entries = Array.from(doc.querySelectorAll('entry'));
+      if (entries.length === 0) return [];
+      return entries.map(entry => {
+        const idEl = entry.getElementsByTagName('yt:videoId')[0] || entry.querySelector('videoId');
+        const id = (idEl && idEl.textContent ? idEl.textContent.trim() : '');
+        const title = entry.querySelector('title')?.textContent?.trim() || 'YouTube Video';
+        const statsEl = entry.getElementsByTagName('media:statistics')[0];
+        const ratingEl = entry.getElementsByTagName('media:starRating')[0];
+        const views = Number(statsEl?.getAttribute('views') || 0);
+        const likes = Number(ratingEl?.getAttribute('count') || 0);
+        const engagementScore = views + (likes * 25);
+        return {
+          id,
+          titleEn: title,
+          titleAr: title,
+          duration: views > 0 ? `${views.toLocaleString()} views` : 'HD',
+          views,
+          likes,
+          engagementScore,
+          isNew: false
+        };
+      }).filter(v => v.id);
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async function fetchTopYouTubeVideos(channelId) {
+    const cid = String(channelId || 'UCa1Wez7khhiAY96MkOM8aSA').trim();
+    if (!cid) return [];
+    const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(cid)}`;
+    let xmlText = '';
+    try {
+      xmlText = await fetchExternalTextWithFallback(feedUrl);
+    } catch (e) {}
+
+    let parsed = xmlText ? parseYouTubeFeedXml(xmlText) : [];
+    if (parsed.length === 0) {
+      try {
+        const res = await fetchWithTimeout(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`, 6500);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.items)) {
+            parsed = data.items.map(it => {
+              const m = String(it.link || it.guid || '').match(/(?:v=|youtu\.be\/|video:)([a-zA-Z0-9_-]{11})/i);
+              const vidId = m ? m[1] : '';
+              return {
+                id: vidId,
+                titleEn: it.title || 'YouTube Video',
+                titleAr: it.title || 'فيديو يوتيوب',
+                duration: 'HD',
+                views: 0,
+                likes: 0,
+                engagementScore: 0,
+                isNew: false
+              };
+            }).filter(v => v.id);
+          }
+        }
+      } catch (e) {}
+    }
+
+    if (parsed.length > 0) {
+      parsed.sort((a, b) => (b.engagementScore - a.engagementScore) || (b.views - a.views));
+      try {
+        localStorage.setItem('kh_yt_top_cache_v1', JSON.stringify({ ts: Date.now(), items: parsed.slice(0, 8) }));
+      } catch (e) {}
+    }
+    return parsed.slice(0, 8);
+  }
+
+  async function syncTopYouTubeToPortfolio(cfg) {
+    if (!cfg || cfg.youtubeAutoTop === false) return;
+    const cid = cfg.youtubeChannelId || 'UCa1Wez7khhiAY96MkOM8aSA';
+    // 1. Load cached top videos immediately if available
+    try {
+      const cached = JSON.parse(localStorage.getItem('kh_yt_top_cache_v1') || 'null');
+      if (cached && Array.isArray(cached.items) && cached.items.length > 0 && typeof ytPlaylist !== 'undefined') {
+        ytPlaylist = [...cached.items];
+        if (typeof renderYouTubePlaylist === 'function') renderYouTubePlaylist();
+        if (typeof FlashMediaDeck !== 'undefined') {
+          FlashMediaDeck.currentIndex = 0;
+          FlashMediaDeck.loadCurrentFrame(false);
+          FlashMediaDeck.updateUI();
+        }
+      }
+    } catch (e) {}
+
+    // 2. Fetch fresh top-viewed & highest-engagement videos live
+    const topVids = await fetchTopYouTubeVideos(cid);
+    if (topVids.length > 0 && typeof ytPlaylist !== 'undefined') {
+      ytPlaylist = [...topVids];
+      if (typeof renderYouTubePlaylist === 'function') renderYouTubePlaylist();
+      if (typeof FlashMediaDeck !== 'undefined') {
+        FlashMediaDeck.currentIndex = 0;
+        FlashMediaDeck.loadCurrentFrame(false);
+        FlashMediaDeck.updateUI();
+      }
+      const badge = document.getElementById('yt-feed-badge');
+      if (badge) badge.textContent = 'YOUTUBE TOP VIEWED & ENGAGED · LIVE';
     }
   }
 
@@ -2032,6 +2150,14 @@
     i18nStrings.ar.heroTitle3 = cfg.heroTitle3Ar;
     i18nStrings.en.heroSubtitle = cfg.heroSubEn;
     i18nStrings.ar.heroSubtitle = cfg.heroSubAr;
+    i18nStrings.en.aboutEyebrow = cfg.aboutEyebrowEn || 'THE APPROACH';
+    i18nStrings.ar.aboutEyebrow = cfg.aboutEyebrowAr || 'المنهجية';
+    i18nStrings.en.aboutTitle1 = cfg.aboutTitle1En || 'STRATEGY BEFORE';
+    i18nStrings.ar.aboutTitle1 = cfg.aboutTitle1Ar || 'الاستراتيجية قبل';
+    i18nStrings.en.aboutTitle2 = cfg.aboutTitle2En || 'DESIGN.';
+    i18nStrings.ar.aboutTitle2 = cfg.aboutTitle2Ar || 'التصميم.';
+    i18nStrings.en.aboutTitle3 = cfg.aboutTitle3En || 'MAKE IT COUNT.';
+    i18nStrings.ar.aboutTitle3 = cfg.aboutTitle3Ar || 'اجعل لها أثراً.';
     i18nStrings.en.aboutDesc = cfg.aboutDescEn;
     i18nStrings.ar.aboutDesc = cfg.aboutDescAr;
     i18nStrings.en.navWork = cfg.navWorkEn || 'WORK';
@@ -2085,6 +2211,9 @@
     setById('hero-wm-2', cfg.heroWatermark2);
     setById('hero-coord-code', cfg.heroCoordCode);
     setById('hero-coord-loc', cfg.heroCoordLoc);
+    setById('about-line-1', cfg.aboutLine1);
+    setById('about-line-2', cfg.aboutLine2);
+    setById('about-line-3', cfg.aboutLine3);
 
     if (Array.isArray(cfg.stats) && cfg.stats.length >= 3) {
       i18nStrings.en.statYears = cfg.stats[0].en;
@@ -2288,6 +2417,9 @@
       FlashMediaDeck.loadCurrentFrame();
       FlashMediaDeck.updateUI();
     }
+    if (cfg.youtubeAutoTop !== false) {
+      syncTopYouTubeToPortfolio(cfg);
+    }
 
     const revealStageBox = document.getElementById('motion-feature') || document.querySelector('#top .mb-12.rounded-3xl.glass-card');
     if (revealStageBox) {
@@ -2352,7 +2484,12 @@
     KHHeroShowcase,
     signInWithEmailPassword,
     getValidFirebaseIdToken,
-    clearAuthSession
+    clearAuthSession,
+    fetchTopYouTubeVideos,
+    fetchExternalTextWithFallback,
+    parseBehanceRssXml,
+    loadBehanceCache,
+    extractBehanceVideosAndImages
   };
 
   if (document.getElementById('projects-grid')) {
