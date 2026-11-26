@@ -873,7 +873,14 @@
   function applyBehanceOverridesToProject(p, cfg) {
     const overrides = cfg && cfg.behanceOverrides;
     if (!p || !overrides || !p.url) return;
-    const ov = overrides[p.url];
+    const safeKey = getBehanceFirebaseKey(p.url);
+    let ov = overrides[safeKey] || overrides[p.url];
+    if (!ov) {
+      const cleanTarget = p.url.trim().replace(/\/+$/, '');
+      ov = Object.values(overrides).find(
+        item => item && item.url && String(item.url).trim().replace(/\/+$/, '') === cleanTarget
+      );
+    }
     if (!ov) return;
 
     if (ov.hidden === true) p.hidden = true;

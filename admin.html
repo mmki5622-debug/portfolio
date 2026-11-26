@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="./control-room-bridge.js?v=33"></script>
+  <script src="./control-room-bridge.js?v=34"></script>
   <style>
     body {
       background-color: #060D0C;
@@ -98,7 +98,7 @@
         <input id="login-pass" type="password" required placeholder="كلمة المرور..." class="inp text-center" />
         <div class="text-right space-y-2 pt-1 border-t border-[#C59367]/15">
           <div class="text-[11px] font-bold text-[#C59367]">تسجيل دخول Firebase للحفظ التلقائي (اختياري):</div>
-          <input id="login-fb-email" type="email" dir="ltr" placeholder="hkerlos@gmail.com أو mmki5622@gmail.com" class="inp text-xs" />
+          <input id="login-fb-email" type="email" dir="ltr" placeholder="البريد الإلكتروني (Firebase Email)" class="inp text-xs" />
           <input id="login-fb-pass" type="password" dir="ltr" placeholder="باسورد حساب Firebase" class="inp text-xs" />
           <input id="login-fb-apikey" type="text" dir="ltr" placeholder="Firebase Web API Key (AIza...)" class="inp text-xs" />
         </div>
@@ -815,7 +815,7 @@
           <div><label class="block text-xs font-bold mb-1">رابط قاعدة بيانات Firebase</label><input id="cfg-firebaseUrl" dir="ltr" class="inp" /></div>
           <div><label class="block text-xs font-bold mb-1">كلمة مرور غرفة التحكم</label><input id="cfg-adminPassword" dir="ltr" class="inp" /></div>
           <div><label class="block text-xs font-bold mb-1">Firebase Web API Key (للحفظ التلقائي)</label><input id="cfg-firebaseApiKey" dir="ltr" class="inp" placeholder="AIza..." /></div>
-          <div><label class="block text-xs font-bold mb-1">بريد Firebase المصرح له (hkerlos / mmki5622)</label><input id="cfg-firebaseAuthEmail" dir="ltr" class="inp" placeholder="hkerlos@gmail.com" /></div>
+          <div><label class="block text-xs font-bold mb-1">بريد Firebase المصرح له</label><input id="cfg-firebaseAuthEmail" dir="ltr" class="inp" placeholder="البريد الإلكتروني" /></div>
           <div><label class="block text-xs font-bold mb-1">Cloudinary Cloud Name (اختياري)</label><input id="cfg-cloudinaryCloud" dir="ltr" class="inp" /></div>
           <div><label class="block text-xs font-bold mb-1">Cloudinary Upload Preset (اختياري)</label><input id="cfg-cloudinaryPreset" dir="ltr" class="inp" /></div>
         </div>
@@ -876,6 +876,46 @@
       document.querySelector(`.tab-btn[data-tab="${name}"]`)?.classList.add('active');
     }
 
+    function toFirebaseSafeBehanceKey(rawUrl) {
+      const s = String(rawUrl || '').trim();
+      const m = s.match(/behance\.net\/gallery\/(\d+)/i);
+      if (m) return 'bh_' + m[1];
+      const cleaned = s.replace(/[.$#\[\]\/\s]+/g, '_').replace(/^_+|_+$/g, '');
+      return 'bh_' + (cleaned ? cleaned.slice(-48) : String(Date.now()));
+    }
+
+    function sanitizeBehanceOverridesMap(mapObj) {
+      const out = {};
+      if (!mapObj || typeof mapObj !== 'object') return out;
+      Object.entries(mapObj).forEach(([k, v]) => {
+        if (!v || typeof v !== 'object') return;
+        const url = (v.url && String(v.url).trim()) || (/^https?:\/\//i.test(k) ? k.trim() : '');
+        const safeKey = toFirebaseSafeBehanceKey(url || k);
+        out[safeKey] = {
+          ...v,
+          url: url || (v.url || '')
+        };
+      });
+      return out;
+    }
+
+    function sanitizeKeysForFirebase(node) {
+      if (Array.isArray(node)) {
+        return node.map(item => sanitizeKeysForFirebase(item));
+      }
+      if (node && typeof node === 'object') {
+        const cleanObj = {};
+        Object.entries(node).forEach(([k, v]) => {
+          if (v === undefined) return;
+          let safeK = String(k || '').replace(/[.$#\[\]\/]/g, '_').trim();
+          if (!safeK) safeK = 'k_' + Math.random().toString(36).slice(2, 8);
+          cleanObj[safeK] = sanitizeKeysForFirebase(v);
+        });
+        return cleanObj;
+      }
+      return node;
+    }
+
     function normalizeCfg(raw, def) {
       const merged = { ...def, ...(raw || {}) };
       // Fill empty string critical fields with defaults so forms are never blank
@@ -893,7 +933,7 @@
       if (!Array.isArray(merged.projects)) merged.projects = [];
       if (!Array.isArray(merged.heroShowcaseItems)) merged.heroShowcaseItems = def.heroShowcaseItems;
       if (!Array.isArray(merged.clientLogos)) merged.clientLogos = def.clientLogos || [];
-      if (!merged.behanceOverrides || typeof merged.behanceOverrides !== 'object') merged.behanceOverrides = {};
+      merged.behanceOverrides = sanitizeBehanceOverridesMap(merged.behanceOverrides);
       return merged;
     }
 
@@ -1746,10 +1786,13 @@
         } catch (e) {}
 
         let added = 0;
+        cfg.behanceOverrides = sanitizeBehanceOverridesMap(cfg.behanceOverrides);
         found.forEach(item => {
           if (!item.url || !/behance\.net\/gallery\//i.test(item.url)) return;
-          if (!cfg.behanceOverrides[item.url]) {
-            cfg.behanceOverrides[item.url] = {
+          const safeKey = toFirebaseSafeBehanceKey(item.url);
+          if (!cfg.behanceOverrides[safeKey]) {
+            cfg.behanceOverrides[safeKey] = {
+              url: item.url,
               titleEn: item.title || '',
               coverImage: item.thumb || '',
               contentType: 'auto',
@@ -1758,8 +1801,9 @@
             };
             added++;
           } else {
-            if (!cfg.behanceOverrides[item.url].titleEn && item.title) cfg.behanceOverrides[item.url].titleEn = item.title;
-            if (!cfg.behanceOverrides[item.url].coverImage && item.thumb) cfg.behanceOverrides[item.url].coverImage = item.thumb;
+            cfg.behanceOverrides[safeKey].url = item.url;
+            if (!cfg.behanceOverrides[safeKey].titleEn && item.title) cfg.behanceOverrides[safeKey].titleEn = item.title;
+            if (!cfg.behanceOverrides[safeKey].coverImage && item.thumb) cfg.behanceOverrides[safeKey].coverImage = item.thumb;
           }
         });
         renderBehanceOverridesEditor();
@@ -1801,7 +1845,8 @@
         box.innerHTML = '<p class="text-xs text-[#9A9186] text-center py-3">لا توجد مشاريع Behance مسحوبة بعد — اضغط "↻ سحب مشاريع Behance الآن".</p>';
         return;
       }
-      box.innerHTML = entries.map(([url, ov], i) => {
+      box.innerHTML = entries.map(([key, ov], i) => {
+        const displayUrl = (ov && ov.url) ? ov.url : key;
         const media = Array.isArray(ov.extraMedia) ? ov.extraMedia : [];
         return `
         <div class="sub-card p-4 space-y-3">
@@ -1810,7 +1855,7 @@
               ${ov.coverImage ? renderMiniPreview(ov.coverImage, 'image') : ''}
               <div class="min-w-0">
                 <div class="text-xs font-extrabold text-[#F2EADF] truncate">${esc(ov.titleEn || 'مشروع Behance')}</div>
-                <a href="${esc(url)}" target="_blank" class="text-[11px] font-mono text-[#C59367] hover:underline truncate block" dir="ltr">${esc(url)}</a>
+                <a href="${esc(displayUrl)}" target="_blank" class="text-[11px] font-mono text-[#C59367] hover:underline truncate block" dir="ltr">${esc(displayUrl)}</a>
               </div>
             </div>
             <div class="flex flex-wrap items-center gap-2">
@@ -1850,7 +1895,9 @@
     function addBehanceOverride() {
       const url = prompt('ضع رابط مشروع Behance بالكامل:');
       if (!url || !url.trim()) return;
-      cfg.behanceOverrides[url.trim()] = { contentType: 'video', extraMedia: [] };
+      const cleanUrl = url.trim();
+      const safeKey = toFirebaseSafeBehanceKey(cleanUrl);
+      cfg.behanceOverrides[safeKey] = { url: cleanUrl, contentType: 'video', extraMedia: [] };
       renderBehanceOverridesEditor();
     }
     function deleteBehanceOverride(idx) {
@@ -2153,10 +2200,12 @@
       const targetUrl = token
         ? `${fbUrl}/portfolioConfig.json?auth=${encodeURIComponent(token)}`
         : `${fbUrl}/portfolioConfig.json`;
+      cfg.behanceOverrides = sanitizeBehanceOverridesMap(cfg.behanceOverrides);
+      const safePayload = sanitizeKeysForFirebase(cfg);
       return await fetch(targetUrl, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cfg)
+        body: JSON.stringify(safePayload)
       });
     }
 
