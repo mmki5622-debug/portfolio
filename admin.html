@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="./control-room-bridge.js"></script>
+  <script src="./control-room-bridge.js?v=32"></script>
   <style>
     body {
       background-color: #060D0C;
@@ -98,9 +98,9 @@
         <input id="login-pass" type="password" required placeholder="كلمة المرور..." class="inp text-center" />
         <div class="text-right space-y-2 pt-1 border-t border-[#C59367]/15">
           <div class="text-[11px] font-bold text-[#C59367]">تسجيل دخول Firebase للحفظ التلقائي (اختياري):</div>
-          <input id="login-fb-email" type="email" dir="ltr" placeholder="hkerlos@gmail.com أو mmki5622@gmail.com" class="inp text-xs" />
+          <input id="login-fb-email" type="email" dir="ltr" value="hkerlos@gmail.com" placeholder="hkerlos@gmail.com أو mmki5622@gmail.com" class="inp text-xs" />
           <input id="login-fb-pass" type="password" dir="ltr" placeholder="باسورد حساب Firebase" class="inp text-xs" />
-          <input id="login-fb-apikey" type="text" dir="ltr" placeholder="Firebase Web API Key (AIza...)" class="inp text-xs" />
+          <input id="login-fb-apikey" type="text" dir="ltr" value="AIzaSyBDfbnVLEdQme6GElE5FJp7jqQ3Fhj6G5o" placeholder="Firebase Web API Key (AIza...)" class="inp text-xs" />
         </div>
         <p id="login-err" class="hidden text-xs text-red-400 font-bold">كلمة المرور غير صحيحة</p>
         <button type="submit" class="w-full py-3 rounded-full bg-gradient-to-r from-[#C59367] to-[#A06620] text-[#060D0C] font-extrabold text-sm hover:brightness-110 transition-all">
@@ -879,7 +879,7 @@
     function normalizeCfg(raw, def) {
       const merged = { ...def, ...(raw || {}) };
       // Fill empty string critical fields with defaults so forms are never blank
-      ['brandName','brandTagline','logoUrl','portraitUrl','whatsapp','email','location','behanceUrl','youtubeUrl','linkedinUrl','cvUrl','availEn','availAr','heroEyebrowEn','heroEyebrowAr','heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar','heroBtnWorkEn','heroBtnWorkAr','heroBtnCvEn','heroBtnCvAr','heroSubEn','heroSubAr','navWorkEn','navWorkAr','navServicesEn','navServicesAr','navCinemaEn','navCinemaAr','navExperienceEn','navExperienceAr','navCtaEn','navCtaAr','heroMetaTop','heroMetaSub','heroWatermark1','heroWatermark2','heroCoordCode','heroCoordLoc','practiceTitle1En','practiceTitle1Ar','practiceTitle2En','practiceTitle2Ar','practiceTitle3En','practiceTitle3Ar','practiceDescEn','practiceDescAr','workTitle1En','workTitle1Ar','workTitle2En','workTitle2Ar','ytTitle1En','ytTitle1Ar','ytTitle2En','ytTitle2Ar','moveTitle1En','moveTitle1Ar','moveTitle2En','moveTitle2Ar','moveTitle3En','moveTitle3Ar','moveDescEn','moveDescAr','ctaTitle1En','ctaTitle1Ar','ctaTitle2En','ctaTitle2Ar','aboutEyebrowEn','aboutEyebrowAr','aboutTitle1En','aboutTitle1Ar','aboutTitle2En','aboutTitle2Ar','aboutTitle3En','aboutTitle3Ar','aboutLine1','aboutLine2','aboutLine3','aboutDescEn','aboutDescAr','firebaseUrl','adminPassword','navWorkEn','navWorkAr','navServicesEn','navServicesAr','navCinemaEn','navCinemaAr','navExperienceEn','navExperienceAr','navCtaEn','navCtaAr','heroMetaTop','heroMetaSub','heroWatermark1','heroWatermark2','heroCoordCode','heroCoordLoc','practiceTitle1En','practiceTitle1Ar','practiceTitle2En','practiceTitle2Ar','practiceTitle3En','practiceTitle3Ar','practiceDescEn','practiceDescAr','workTitle1En','workTitle1Ar','workTitle2En','workTitle2Ar','ytTitle1En','ytTitle1Ar','ytTitle2En','ytTitle2Ar','moveTitle1En','moveTitle1Ar','moveTitle2En','moveTitle2Ar','moveTitle3En','moveTitle3Ar','moveDescEn','moveDescAr','ctaTitle1En','ctaTitle1Ar','ctaTitle2En','ctaTitle2Ar'].forEach(k => {
+      ['brandName','brandTagline','logoUrl','portraitUrl','whatsapp','email','location','behanceUrl','youtubeUrl','linkedinUrl','cvUrl','availEn','availAr','heroEyebrowEn','heroEyebrowAr','heroTitle1En','heroTitle1Ar','heroTitle2En','heroTitle2Ar','heroTitle3En','heroTitle3Ar','heroBtnWorkEn','heroBtnWorkAr','heroBtnCvEn','heroBtnCvAr','heroSubEn','heroSubAr','navWorkEn','navWorkAr','navServicesEn','navServicesAr','navCinemaEn','navCinemaAr','navExperienceEn','navExperienceAr','navCtaEn','navCtaAr','heroMetaTop','heroMetaSub','heroWatermark1','heroWatermark2','heroCoordCode','heroCoordLoc','practiceTitle1En','practiceTitle1Ar','practiceTitle2En','practiceTitle2Ar','practiceTitle3En','practiceTitle3Ar','practiceDescEn','practiceDescAr','workTitle1En','workTitle1Ar','workTitle2En','workTitle2Ar','ytTitle1En','ytTitle1Ar','ytTitle2En','ytTitle2Ar','moveTitle1En','moveTitle1Ar','moveTitle2En','moveTitle2Ar','moveTitle3En','moveTitle3Ar','moveDescEn','moveDescAr','ctaTitle1En','ctaTitle1Ar','ctaTitle2En','ctaTitle2Ar','aboutEyebrowEn','aboutEyebrowAr','aboutTitle1En','aboutTitle1Ar','aboutTitle2En','aboutTitle2Ar','aboutTitle3En','aboutTitle3Ar','aboutLine1','aboutLine2','aboutLine3','aboutDescEn','aboutDescAr','firebaseUrl','firebaseApiKey','firebaseAuthEmail','adminPassword','navWorkEn','navWorkAr','navServicesEn','navServicesAr','navCinemaEn','navCinemaAr','navExperienceEn','navExperienceAr','navCtaEn','navCtaAr','heroMetaTop','heroMetaSub','heroWatermark1','heroWatermark2','heroCoordCode','heroCoordLoc','practiceTitle1En','practiceTitle1Ar','practiceTitle2En','practiceTitle2Ar','practiceTitle3En','practiceTitle3Ar','practiceDescEn','practiceDescAr','workTitle1En','workTitle1Ar','workTitle2En','workTitle2Ar','ytTitle1En','ytTitle1Ar','ytTitle2En','ytTitle2Ar','moveTitle1En','moveTitle1Ar','moveTitle2En','moveTitle2Ar','moveTitle3En','moveTitle3Ar','moveDescEn','moveDescAr','ctaTitle1En','ctaTitle1Ar','ctaTitle2En','ctaTitle2Ar'].forEach(k => {
         if (!merged[k]) merged[k] = def[k];
       });
       merged.seo = { ...def.seo, ...(merged.seo || {}) };
@@ -988,12 +988,12 @@
         return false;
       }
       const defaultEmail = prefillEmail || document.getElementById('cfg-firebaseAuthEmail')?.value || cfg.firebaseAuthEmail || 'hkerlos@gmail.com';
-      const defaultKey = prefillKey || document.getElementById('cfg-firebaseApiKey')?.value || cfg.firebaseApiKey || '';
+      const defaultKey = (prefillKey || document.getElementById('cfg-firebaseApiKey')?.value || cfg.firebaseApiKey || 'AIzaSyBDfbnVLEdQme6GElE5FJp7jqQ3Fhj6G5o').trim();
       const email = prompt('أدخل بريد Firebase المصرح له (hkerlos@gmail.com أو mmki5622@gmail.com):', defaultEmail);
       if (!email) return false;
       const password = prompt('أدخل باسورد حساب Firebase:');
       if (!password) return false;
-      const apiKey = prompt('أدخل Firebase Web API Key (من Project settings ← General):', defaultKey);
+      const apiKey = defaultKey || prompt('أدخل Firebase Web API Key (من Project settings ← General):', 'AIzaSyBDfbnVLEdQme6GElE5FJp7jqQ3Fhj6G5o');
       if (!apiKey) return false;
 
       try {
