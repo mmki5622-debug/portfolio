@@ -599,7 +599,7 @@
          ====================================================================== -->
     <section id="tab-projects" class="tab-panel hidden space-y-6">
       <!-- Manual Behance URL Importer -->
-      <div class="panel-card p-6 space-y-3 border-2 border-[#C59367]/45">
+      <div class="panel-card p-6 space-y-4 border-2 border-[#C59367]/45">
         <div>
           <h2 class="font-extrabold text-base text-[#C59367]">⚡ سحب أي مشروع من Behance يدوياً بالرابط (حتى لو قديم أو غير ظاهر في التلقائي)</h2>
           <p class="text-xs text-[#9A9186] mt-0.5">الصق رابط أي مشروع من Behance (مثال: <span dir="ltr" class="font-mono text-[#C59367]">https://www.behance.net/gallery/...</span>) واضغط سحب، وسيتم استيراد الاسم والغلاف وكامل اللوحات والفيديوهات تلقائياً وإضافته لقائمة مشاريعك للتعديل.</p>
@@ -610,6 +610,24 @@
             ⬇ سحب المشروع بالرابط
           </button>
         </div>
+
+        <!-- Direct Page Source (Ctrl+U) Importer — 100% Bypass for Akamai/Blocked Old Projects -->
+        <details class="sub-card p-4 space-y-3 border border-[#C59367]/30">
+          <summary class="cursor-pointer text-xs font-extrabold text-[#C59367] flex items-center justify-between gap-2 select-none">
+            <span>🧩 سحب مضمون 100% من كود الصفحة (Ctrl+U) — للمشاريع القديمة أو المحجوبة من Behance</span>
+            <span class="text-[10px] font-normal text-[#9A9186]">اضغط للفتح ▾</span>
+          </summary>
+          <p class="text-[11px] text-[#9A9186] leading-relaxed pt-1">
+            افتح صفحة المشروع على Behance في متصفحك ← اضغط <span dir="ltr" class="font-mono text-[#F2EADF]">Ctrl + U</span> ← ثم <span dir="ltr" class="font-mono text-[#F2EADF]">Ctrl + A</span> ثم <span dir="ltr" class="font-mono text-[#F2EADF]">Ctrl + C</span> ← والصق الكود هنا واضغط استخراج. سيستخرج الاسم والغلاف وكل الصور والفيديوهات فوراً بدون أي حجب.
+          </p>
+          <textarea id="bh-source-html-input" dir="ltr" rows="4" class="inp font-mono text-[11px]" placeholder="الصق كود صفحة المشروع هنا (<!DOCTYPE html>...)"></textarea>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-[11px] text-[#9A9186]">يدعم استخراج فيديوهات Behance (Adobe CCV) و Vimeo و YouTube و MP4 وكامل اللوحات HD.</span>
+            <button type="button" onclick="importBehanceProjectFromHtmlSource()" class="px-5 py-2 rounded-xl bg-[#0E3E3F] border border-[#C59367]/60 hover:bg-[#C59367] hover:text-[#060D0C] text-[#F2EADF] font-extrabold text-xs transition-all">
+              ⚡ استخراج المشروع من الكود
+            </button>
+          </div>
+        </details>
       </div>
 
       <!-- Manual Projects -->
@@ -1693,6 +1711,121 @@
           btn.textContent = '⬇ سحب المشروع بالرابط';
         }
       }
+    }
+
+    function importBehanceProjectFromHtmlSource() {
+      const ta = document.getElementById('bh-source-html-input');
+      const urlInp = document.getElementById('bh-manual-import-url');
+      const rawHtml = (ta && ta.value || '').trim();
+      if (!rawHtml || rawHtml.length < 100) {
+        showToast('⚠️ من فضلك الصق كود صفحة المشروع بالكامل (Ctrl+U ثم Ctrl+A ثم Ctrl+C)');
+        return;
+      }
+
+      const decodeEnt = (str) => {
+        if (!str) return '';
+        const tmp = document.createElement('textarea');
+        tmp.innerHTML = str;
+        return tmp.value;
+      };
+      const getMeta = (key) => {
+        const escK = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const r1 = new RegExp(`<meta[^>]+(?:property|name)=["']${escK}["'][^>]+content=["']([^"']+)["']`, 'i');
+        const r2 = new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["']${escK}["']`, 'i');
+        const m = rawHtml.match(r1) || rawHtml.match(r2);
+        return m && m[1] ? decodeEnt(m[1]).trim() : '';
+      };
+
+      // 1. Extract URL
+      let projUrl = (urlInp && urlInp.value || '').trim();
+      if (!/behance\.net\/gallery\//i.test(projUrl)) {
+        const ogUrl = getMeta('og:url');
+        const canonM = rawHtml.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["']/i);
+        const anyGalleryM = rawHtml.match(/https:\/\/(?:www\.)?behance\.net\/gallery\/\d+\/[^"'\s<>)]+/i);
+        projUrl = (/behance\.net\/gallery\//i.test(ogUrl) && ogUrl)
+          || (canonM && /behance\.net\/gallery\//i.test(canonM[1]) && canonM[1])
+          || (anyGalleryM && anyGalleryM[0])
+          || '';
+      }
+
+      // 2. Extract Title & Description
+      let title = getMeta('og:title') || getMeta('twitter:title');
+      if (!title) {
+        const tTag = rawHtml.match(/<title[^>]*>([^<]+)<\/title>/i);
+        if (tTag && tTag[1]) title = decodeEnt(tTag[1]);
+      }
+      if (title) {
+        title = title.replace(/\s*::\s*Behance.*$/i, '').replace(/\s*on Behance.*$/i, '').replace(/\s*\|\s*Behance.*$/i, '').trim();
+      }
+      if (!title && projUrl) {
+        const slugM = projUrl.match(/behance\.net\/gallery\/(\d+)(?:\/([^/?#]+))?/i);
+        const slugText = slugM && slugM[2] ? decodeURIComponent(slugM[2]).replace(/[-_]+/g, ' ').trim() : '';
+        title = slugText || (slugM ? `Behance Project #${slugM[1]}` : 'Behance Project');
+      }
+      if (!title) title = 'Behance Imported Project';
+
+      const desc = getMeta('og:description') || getMeta('description') || '';
+
+      // 3. Extract Cover Image
+      let cover = getMeta('og:image') || getMeta('twitter:image');
+      if (!cover) {
+        const covM = rawHtml.match(/https:\/\/mir-s3-cdn-cf\.behance\.net\/projects\/[a-z0-9_]+\/[a-z0-9._-]+\.(?:jpe?g|png|webp)/i);
+        if (covM) cover = covM[0];
+      }
+
+      // 4. Extract Videos & High-Res Boards using bridge extractor
+      let videos = [];
+      let images = [];
+      let hasVideoSig = false;
+      if (window.KHControlRoom && window.KHControlRoom.extractBehanceVideosAndImages) {
+        const ext = window.KHControlRoom.extractBehanceVideosAndImages(rawHtml, cover);
+        videos = Array.isArray(ext.videos) ? ext.videos : [];
+        images = Array.isArray(ext.images) ? ext.images : [];
+        hasVideoSig = Boolean(ext.hasVideoSignature);
+      }
+
+      if (!cover && images.length > 0) cover = images[0];
+
+      const extraBoards = [
+        ...videos.map(v => (typeof v === 'string' ? v : v.url)).filter(Boolean),
+        ...images.filter(u => u && u !== cover)
+      ];
+
+      const hasVid = videos.length > 0 || hasVideoSig;
+      const cType = hasVid ? (images.length > 1 ? 'mixed' : 'video') : (images.length > 0 ? 'images' : 'auto');
+
+      if (!Array.isArray(cfg.projects)) cfg.projects = [];
+      const existingIdx = projUrl
+        ? cfg.projects.findIndex(p => p && p.url && p.url.trim() === projUrl)
+        : -1;
+      const prevProj = existingIdx >= 0 ? cfg.projects[existingIdx] : null;
+
+      const projObj = {
+        id: prevProj ? prevProj.id : ('proj-bh-' + Date.now()),
+        category: (prevProj && prevProj.category) || 'branding',
+        contentType: cType,
+        titleEn: title,
+        titleAr: title,
+        roleEn: (prevProj && prevProj.roleEn) || 'Behance Project',
+        roleAr: (prevProj && prevProj.roleAr) || 'مشروع Behance',
+        descEn: desc || (prevProj && prevProj.descEn) || '',
+        descAr: desc || (prevProj && prevProj.descAr) || '',
+        image: cover || (prevProj && prevProj.image) || '',
+        url: projUrl,
+        tags: hasVid ? ['Behance', 'Video'] : ['Behance'],
+        extraBoards
+      };
+
+      if (existingIdx >= 0) {
+        cfg.projects[existingIdx] = projObj;
+      } else {
+        cfg.projects.unshift(projObj);
+      }
+
+      renderProjectsEditor();
+      if (ta) ta.value = '';
+      if (urlInp) urlInp.value = '';
+      showToast(`✅ تم استخراج "${title}" بنجاح (${videos.length} فيديو · ${images.length} صورة) — اضغط "حفظ ونشر مباشر"!`);
     }
 
     function addManualProject() {
